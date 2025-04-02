@@ -1,589 +1,602 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Placeholder.dev</title>
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placeholder.dev</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-    body {
-      background-color: #1e1e2f;
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      color: #c3aed6;
-    }
+        body {
+          background-color: #1e1e2f;
+          margin: 0;
+          font-family: 'Poppins', sans-serif;
+          color: #c3aed6;
+        }
 
-    .container {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      padding: 20px;
-    }
+        .container {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          padding: 20px;
+        }
 
-    .logo {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background-color: #c3aed6;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 20px;
-    }
+        .logo {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          background-color: #c3aed6;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 20px;
+        }
 
-    .logo img {
-      width: 60%;
-      height: 60%;
-    }
+        .logo img {
+          width: 60%;
+          height: 60%;
+        }
 
-    .text {
-      font-size: 48px;
-      font-weight: 600;
-      margin-bottom: 20px;
-    }
+        .text {
+          font-size: 48px;
+          font-weight: 600;
+          margin-bottom: 20px;
+        }
 
-    input#url, button.redirect-button {
-      font-family: 'Poppins', sans-serif;
-      font-size: 24px;
-      border-radius: 10px;
-    }
+        input#url, button.redirect-button {
+          font-family: 'Poppins', sans-serif;
+          font-size: 24px;
+          border-radius: 10px;
+        }
 
-    input#url {
-      width: 80%;
-      max-width: 600px;
-      height: 50px;
-      background-color: #38304c;
-      color: #c3aed6;
-      border: none;
-      padding: 10px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
+        input#url {
+          width: 80%;
+          max-width: 600px;
+          height: 50px;
+          background-color: #38304c;
+          color: #c3aed6;
+          border: none;
+          padding: 10px;
+          margin-bottom: 20px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
 
-    input#url::placeholder {
-      color: #c3aed6;
-    }
+        input#url::placeholder {
+          color: #c3aed6;
+        }
 
-    button.redirect-button {
-      background-color: #b5838d;
-      border: none;
-      color: #1e1e2f;
-      padding: 10px;
-      width: 200px;
-      height: 50px;
-      margin-bottom: 20px;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
+        button.redirect-button {
+          background-color: #b5838d;
+          border: none;
+          color: #1e1e2f;
+          padding: 10px;
+          width: 200px;
+          height: 50px;
+          margin-bottom: 20px;
+          cursor: pointer;
+          transition: background-color 0.3s ease, transform 0.3s ease;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
 
-    button.redirect-button:hover {
-      background-color: #6d6875;
-      transform: scale(1.05);
-    }
+        button.redirect-button:hover {
+          background-color: #6d6875;
+          transform: scale(1.05);
+        }
 
-    .new-image {
-      margin-top: 20px;
-      margin-bottom: 20px;
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-    }
+        .new-image {
+          margin-top: 20px;
+          margin-bottom: 20px;
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+        }
 
-    .toggle-bar {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #38304c;
-      padding: 10px 0;
-      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
-      position: absolute;
-      bottom: 0;
-    }
+        .toggle-bar {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color: #38304c;
+          padding: 10px 0;
+          box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
+          position: absolute;
+          bottom: 0;
+        }
 
-    .toggle-button {
-      background-color: #b5838d;
-      border: none;
-      color: #1e1e2f;
-      font-size: 16px;
-      padding: 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+        .toggle-button {
+          background-color: #b5838d;
+          border: none;
+          color: #1e1e2f;
+          font-size: 16px;
+          padding: 10px;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
 
-    .toggle-button:hover {
-      background-color: #6d6875;
-    }
+        .toggle-button:hover {
+          background-color: #6d6875;
+        }
 
-    .bookmarks-text {
-      font-size: 16px;
-      margin-left: 10px;
-    }
+        .bookmarks-text {
+          font-size: 16px;
+          margin-left: 10px;
+        }
 
-    .rectangle {
-      position: fixed;
-      bottom: 60px;
-      width: 100%;
-      height: 150px;
-      background-color: #38304c;
-      display: none;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px;
-      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
-    }
+        .rectangle {
+          position: fixed;
+          bottom: 60px;
+          width: 100%;
+          height: 150px;
+          background-color: #38304c;
+          display: none;
+          justify-content: space-between;
+          align-items: center;
+          padding: 20px;
+          box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
+        }
 
-    .add-bookmark-button {
-      font-size: 16px;
-      background-color: #b5838d;
-      border: none;
-      color: #1e1e2f;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+        .add-bookmark-button {
+          font-size: 16px;
+          background-color: #b5838d;
+          border: none;
+          color: #1e1e2f;
+          padding: 10px 20px;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
 
-    .add-bookmark-button:hover {
-      background-color: #6d6875;
-    }
+        .add-bookmark-button:hover {
+          background-color: #6d6875;
+        }
 
-    .bookmark-container {
-      display: flex;
-      overflow-x: auto;
-      flex-wrap: nowrap;
-      justify-content: flex-start;
-      margin-bottom: 10px;
-      max-height: 150px;
-    }
+        .bookmark-container {
+          display: flex;
+          overflow-x: auto;
+          flex-wrap: nowrap;
+          justify-content: flex-start;
+          margin-bottom: 10px;
+          max-height: 150px;
+        }
 
-    .bookmark-button {
-      background-color: #b5838d;
-      border: none;
-      color: #1e1e2f;
-      font-size: 16px;
-      padding: 10px;
-      margin-right: 5px;
-      border-radius: 5px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      transition: background-color 0.3s ease;
-    }
+        .bookmark-button {
+          background-color: #b5838d;
+          border: none;
+          color: #1e1e2f;
+          font-size: 16px;
+          padding: 10px;
+          margin-right: 5px;
+          border-radius: 5px;
+          cursor: pointer;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          transition: background-color 0.3s ease;
+        }
 
-    .bookmark-button:hover {
-      background-color: #6d6875;
-    }
+        .bookmark-button:hover {
+          background-color: #6d6875;
+        }
 
-    .delete-button {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      background-color: transparent;
-      border: none;
-      color: #CF6679;
-      font-size: 16px;
-      cursor: pointer;
-    }
+        .delete-button {
+          position: absolute;
+          top: 5px;
+          right: 5px;
+          background-color: transparent;
+          border: none;
+          color: #CF6679;
+          font-size: 16px;
+          cursor: pointer;
+        }
 
-    .delete-button:hover {
-      color: darkred;
-    }
+        .delete-button:hover {
+          color: darkred;
+        }
 
-    .bookmark-button img {
-      width: 32px;
-      height: 32px;
-      margin-bottom: 5px;
-    }
+        .bookmark-button img {
+          width: 32px;
+          height: 32px;
+          margin-bottom: 5px;
+        }
 
-    .bookmark-button span {
-      white-space: nowrap;
-    }
+        .bookmark-button span {
+          white-space: nowrap;
+        }
 
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: none;
-      justify-content: center;
-      align-items: center;
-    }
+        .overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          display: none;
+          justify-content: center;
+          align-items: center;
+        }
 
-    .prompt-box {
-      background-color: #38304c;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      width: 300px;
-      text-align: center;
-      position: relative;
-    }
+        .prompt-box {
+          background-color: #38304c;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          width: 300px;
+          text-align: center;
+          position: relative;
+        }
 
-    .prompt-message {
-      font-size: 18px;
-      margin-bottom: 15px;
-      color: #c3aed6;
-    }
+        .prompt-message {
+          font-size: 18px;
+          margin-bottom: 15px;
+          color: #c3aed6;
+        }
 
-    .prompt-input {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #c3aed6;
-      border-radius: 4px;
-      margin-bottom: 15px;
-      background-color: #1e1e2f;
-      color: #c3aed6;
-    }
+        .prompt-input {
+          width: 100%;
+          padding: 8px;
+          border: 1px solid #c3aed6;
+          border-radius: 4px;
+          margin-bottom: 15px;
+          background-color: #1e1e2f;
+          color: #c3aed6;
+        }
 
-    .prompt-button {
-      padding: 8px 20px;
-      background-color: #b5838d;
-      color: #1e1e2f;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
+        .prompt-button {
+          padding: 8px 20px;
+          background-color: #b5838d;
+          color: #1e1e2f;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+        }
 
-    .prompt-button:hover {
-      background-color: #6d6875;
-    }
+        .prompt-button:hover {
+          background-color: #6d6875;
+        }
 
-    .close-button {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      background-color: transparent;
-      border: none;
-      color: #c3aed6;
-      font-size: 16px;
-      cursor: pointer;
-    }
+        .close-button {
+          position: absolute;
+          top: 5px;
+          right: 5px;
+          background-color: transparent;
+          border: none;
+          color: #c3aed6;
+          font-size: 16px;
+          cursor: pointer;
+        }
 
-    .close-button:hover {
-      color: #CF6679;
-    }
+        .close-button:hover {
+          color: #CF6679;
+        }
 
-    .edit-button {
-      position: absolute;
-      top: 20px;
-      right: 5px;
-      background-color: transparent;
-      border: none;
-      color: #FFD700;
-      font-size: 13px;
-      cursor: pointer;
-    }
+        .edit-button {
+          position: absolute;
+          top: 20px;
+          right: 5px;
+          background-color: transparent;
+          border: none;
+          color: #FFD700;
+          font-size: 13px;
+          cursor: pointer;
+        }
 
-    .edit-button:hover {
-      color: #FFA500;
-    }
+        .edit-button:hover {
+          color: #FFA500;
+        }
 
-    .footer {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      background-color: #38304c;
-      color: #c3aed6;
-      padding: 10px 0;
-      text-align: center;
-      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
-    }
+        .footer {
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          background-color: #38304c;
+          color: #c3aed6;
+          padding: 10px 0;
+          text-align: center;
+          box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
+        }
 
-    .footer a {
-      color: #b5838d;
-      text-decoration: none;
-      margin: 0 10px;
-    }
+        .footer a {
+          color: #b5838d;
+          text-decoration: none;
+          margin: 0 10px;
+        }
 
-    .footer a:hover {
-      text-decoration: underline;
-    }
-</style>
+        .footer a:hover {
+          text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="logo">
-      <img src="https://via.placeholder.com/50" alt="Placeholder Logo">
+    <div class="container">
+        <div class="logo">
+            <img src="https://via.placeholder.com/50" alt="Placeholder Logo">
+        </div>
+        <div class="text">Placeholder.dev</div>
+        <input type="text" id="url" placeholder="Enter URL or Google Search">
+        <button class="redirect-button" onclick="redirect(event)">Launch</button>
+        <img src="https://lh3.googleusercontent.com/a/ACg8ocKlmLbwR14KND2gVGIzp_yF-REPA8xNxpimGRjH4ererw=s288-c-no" class="new-image" alt="User Image">
+        <div class="toggle-bar">
+            <div class="bookmarks-text">Bookmarks</div>
+            <div class="toggle-button" onclick="toggleBookmarkBar()">+</div>
+        </div>
+        <div class="rectangle">
+            <div class="bookmark-container" id="bookmarkButtons"></div>
+            <button class="add-bookmark-button" onclick="addBookmark()">Save as Bookmark</button>
+        </div>
     </div>
-    <div class="text">Placeholder.dev</div>
-    <input type="text" id="url" placeholder="Enter URL or Google Search">
-    <button class="redirect-button" onclick="redirect()">Launch</button>
-    <img src="https://lh3.googleusercontent.com/a/ACg8ocKlmLbwR14KND2gVGIzp_yF-REPA8xNxpimGRjH4ererw=s288-c-no" class="new-image" alt="User Image">
-    <div class="toggle-bar">
-      <div class="bookmarks-text">Bookmarks</div>
-      <div class="toggle-button" onclick="toggleBookmarkBar()">+</div>
+
+    <div class="footer">
+        <a href="#">Home</a> | <a href="#">About</a> | <a href="#">Services</a> | <a href="#">FAQ</a> | <a href="#">Contact</a>
     </div>
-    <div class="rectangle">
-      <div class="bookmark-container" id="bookmarkButtons"></div>
-      <button class="add-bookmark-button" onclick="addBookmark()">Save as Bookmark</button>
+
+    <div class="overlay" id="overlay">
+        <div class="prompt-box">
+            <button class="close-button" onclick="closePrompt()">X</button>
+            <p class="prompt-message" id="prompt-message"></p>
+            <input type="text" class="prompt-input" id="prompt-input">
+            <button class="prompt-button" onclick="submitPrompt()">OK</button>
+        </div>
     </div>
-  </div>
 
-  <div class="footer">
-    <a href="#">Home</a> | <a href="#">About</a> | <a href="#">Services</a> | <a href="#">FAQ</a> | <a href="#">Contact</a>
-  </div>
-
-  <div class="overlay" id="overlay">
-    <div class="prompt-box">
-        <button class="close-button" onclick="closePrompt()">X</button>
-        <p class="prompt-message" id="prompt-message"></p>
-        <input type="text" class="prompt-input" id="prompt-input">
-        <button class="prompt-button" onclick="submitPrompt()">OK</button>
-    </div>
-  </div>
-
-  <script>
-    var bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
-    renderBookmarkButtons();
-
-    function redirect() {
-      var input = document.getElementById('url').value;
-      var url;
-
-      if (isValidURL(input)) {
-        if (!input.startsWith('http') && !input.startsWith('https')) {
-          url = 'https://' + input;
-        } else {
-          url = input;
-        }
-      } else {
-        url = 'https://www.google.com/search?q=' + encodeURIComponent(input);
-      }
-      
-      var isShiftPressed = event.shiftKey;
-      if (isShiftPressed) {
-          window.location.href = url;
-          setTimeout(function() {
-              window.location.href = url + "/?";
-          }, 500);
-          return;
-      }
-
-      var iframe = document.createElement('iframe');
-      iframe.src = 'loading.html';
-      iframe.style.position = 'fixed';
-      iframe.style.top = '0';
-      iframe.style.left = '0';
-      iframe.style.width = '100%';
-      iframe.style.height = '100%';
-      iframe.style.border = 'none';
-      document.body.appendChild(iframe);
-      
-      var blobbypass = window.open('loading.html');
-      setTimeout(function() {
-          var windowOpenValue = blobbypass || "Blocked";
-          if (windowOpenValue === "Blocked" || !blobbypass || blobbypass.closed || typeof blobbypass.closed === "undefined") {
-              window.location.href = url;
-          } else {
-              blobbypass.location.href = url;
-              setTimeout(function() {
-                  document.body.removeChild(iframe);
-              }, 500);
-          }
-      }, 1000);
-    }
-
-    function isValidURL(str) {
-      const pattern = /^(https?:\/\/)?([\w\d-]+\.)+[\w]{2,}(\/.*)?$/;
-      return pattern.test(str);
-    }
-
-    async function customPrompt(message, defaultValue) {
-      document.getElementById("prompt-message").innerText = message;
-      document.getElementById("prompt-input").value = defaultValue || "";
-      document.getElementById("overlay").style.display = "flex";
-
-      return new Promise(resolve => {
-        submitPrompt = function() {
-          var userInput = document.getElementById("prompt-input").value;
-          document.getElementById("overlay").style.display = "none";
-          resolve(userInput);
-          submitPrompt = null;
-        }
-      });
-    }
-
-    function addBookmark() {
-      var input = document.getElementById('url').value; 
-      customPrompt("Enter bookmark name:").then(function(bookmarkName) {
-        if (!bookmarkName) return;
-
-        if (!isValidURL(input)) {
-          bookmarks.push({ name: bookmarkName, url: 'https://www.google.com/search?q=' + encodeURIComponent(input) });
-          renderBookmarkButtons();
-          saveBookmarks();
-          return;
-        }
-
-        if (!input.startsWith('http') && !input.startsWith('https')) {
-          input = 'https://' + input;
-        }
-
-        bookmarks.push({ name: bookmarkName, url: input });
+    <script>
+        var bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
         renderBookmarkButtons();
-        saveBookmarks();
-      });
-    }
 
-    function renderBookmarkButtons() {
-      var container = document.getElementById('bookmarkButtons');
-      container.innerHTML = '';
+        function redirect(event) {
+            var input = document.getElementById('url').value;
+            var url;
 
-      bookmarks.forEach(function(bookmark) {
-        var button = document.createElement('button');
-        button.className = 'bookmark-button';
-        var faviconURL = getFaviconURL(bookmark.url);
-        if (faviconURL) {
-          var faviconImg = document.createElement('img');
-          faviconImg.src = faviconURL;
-          faviconImg.alt = "Favicon";
-          button.appendChild(faviconImg);
-        }
-        var urlSpan = document.createElement('span');
-        urlSpan.textContent = bookmark.name;
-        button.appendChild(urlSpan);
+            if (isValidURL(input)) {
+                if (!input.startsWith('http') && !input.startsWith('https')) {
+                    url = 'https://' + input;
+                } else {
+                    url = input;
+                }
+            } else {
+                url = 'https://www.google.com/search?q=' + encodeURIComponent(input);
+            }
 
-        var deleteButton = document.createElement('button');
-        deleteButton.className = 'delete-button';
-        deleteButton.textContent = 'X';
-        deleteButton.onclick = function(event) {
-          event.stopPropagation();
-          deleteBookmark(bookmark);
-        };
-        button.appendChild(deleteButton);
-
-        var editButton = document.createElement('button');
-        editButton.className = 'edit-button';
-        editButton.textContent = '🖉';
-        editButton.onclick = function(event) {
-          event.stopPropagation();
-          editBookmark(bookmark);
-        };
-        button.appendChild(editButton);
-    
-        button.onclick = function(event) {
-          var isShiftPressed = event.shiftKey;
-          if (isShiftPressed) {
-            window.location.href = bookmark.url;
-            setTimeout(function() {
-              window.location.href = bookmark.url + "/?";
-            }, 500);
-            return;
-          }
-          
-          var iframe = document.createElement('iframe');
-          iframe.src = 'loading.html';
-          iframe.style.position = 'fixed';
-          iframe.style.top = '0';
-          iframe.style.left = '0';
-          iframe.style.width = '100%';
-          iframe.style.height = '100%';
-          iframe.style.border = 'none';
-          document.body.appendChild(iframe);
-          var blobbypass = window.open('loading.html');
-          setTimeout(function() {
-              var windowOpenValue = blobbypass || "Blocked";
-              if (windowOpenValue === "Blocked" || !blobbypass || blobbypass.closed || typeof blobbypass.closed === "undefined") {
-                window.location.href = bookmark.url;
-              } else {
-                blobbypass.location.href = bookmark.url;
+            var isShiftPressed = event.shiftKey;
+            if (isShiftPressed) {
+                window.location.href = url;
                 setTimeout(function() {
-                  document.body.removeChild(iframe);
+                    window.location.href = url + "/?";
                 }, 500);
-              }
-           }, 1000);
-        };
-        container.appendChild(button);
-      });
-    }
+                return;
+            }
 
-    function deleteBookmark(bookmark) {
-      bookmarks = bookmarks.filter(function(item) {
-        return item !== bookmark;
-      });
-      renderBookmarkButtons();
-      saveBookmarks();
-    }
-    
-    function editBookmarkName(bookmark) {
-      customPrompt("Enter new name for bookmark:", bookmark.name)
-        .then(function (newName) {
-          if (!newName) return;
+            var iframe = document.createElement('iframe');
+            iframe.src = 'loading.html';
+            iframe.style.position = 'fixed';
+            iframe.style.top = '0';
+            iframe.style.left = '0';
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            document.body.appendChild(iframe);
 
-          bookmark.name = newName;
-          renderBookmarkButtons();
-          saveBookmarks();
-        });
-    }
+            var blobbypass = window.open('loading.html');
+            setTimeout(function() {
+                var windowOpenValue = blobbypass || "Blocked";
+                if (windowOpenValue === "Blocked" || !blobbypass || blobbypass.closed || typeof blobbypass.closed === "undefined") {
+                    window.location.href = url;
+                } else {
+                    blobbypass.location.href = url;
+                    setTimeout(function() {
+                        document.body.removeChild(iframe);
+                    }, 500);
+                }
+            }, 1000);
+        }
 
-    function editBookmarkUrl(bookmark) {
-      customPrompt("Enter new URL for bookmark:", bookmark.url)
-        .then(function (newUrl) {
-          if (!newUrl) return;
+        function isValidURL(str) {
+            const pattern = /^(https?:\/\/)?([\w\d-]+\.)+[\w]{2,}(\/.*)?$/;
+            return pattern.test(str);
+        }
 
-          if (!isValidURL(newUrl)) {
-            bookmark.url = 'https://www.google.com/search?q=' + encodeURIComponent(newUrl);
+        async function customPrompt(message, defaultValue) {
+            document.getElementById("prompt-message").innerText = message;
+            document.getElementById("prompt-input").value = defaultValue || "";
+            document.getElementById("overlay").style.display = "flex";
+
+            return new Promise(resolve => {
+                submitPrompt = function() {
+                    var userInput = document.getElementById("prompt-input").value;
+                    document.getElementById("overlay").style.display = "none";
+                    resolve(userInput);
+                    submitPrompt = null;
+                }
+            });
+        }
+
+        function addBookmark() {
+            var input = document.getElementById('url').value; 
+            customPrompt("Enter bookmark name:").then(function(bookmarkName) {
+                if (!bookmarkName) return;
+
+                if (!isValidURL(input)) {
+                    bookmarks.push({ name: bookmarkName, url: 'https://www.google.com/search?q=' + encodeURIComponent(input) });
+                    renderBookmarkButtons();
+                    saveBookmarks();
+                    return;
+                }
+
+                if (!input.startsWith('http') && !input.startsWith('https')) {
+                    input = 'https://' + input;
+                }
+
+                bookmarks.push({ name: bookmarkName, url: input });
+                renderBookmarkButtons();
+                saveBookmarks();
+            });
+        }
+
+        function renderBookmarkButtons() {
+            var container = document.getElementById('bookmarkButtons');
+            container.innerHTML = '';
+
+            bookmarks.forEach(function(bookmark) {
+                var button = document.createElement('button');
+                button.className = 'bookmark-button';
+                var faviconURL = getFaviconURL(bookmark.url);
+                if (faviconURL) {
+                    var faviconImg = document.createElement('img');
+                    faviconImg.src = faviconURL;
+                    faviconImg.alt = "Favicon";
+                    button.appendChild(faviconImg);
+                }
+                var urlSpan = document.createElement('span');
+                urlSpan.textContent = bookmark.name;
+                button.appendChild(urlSpan);
+
+                var deleteButton = document.createElement('button');
+                deleteButton.className = 'delete-button';
+                deleteButton.textContent = 'X';
+                deleteButton.onclick = function(event) {
+                    event.stopPropagation();
+                    deleteBookmark(bookmark);
+                };
+                button.appendChild(deleteButton);
+
+                var editButton = document.createElement('button');
+                editButton.className = 'edit-button';
+                editButton.textContent = '🖉';
+                editButton.onclick = function(event) {
+                    event.stopPropagation();
+                    editBookmark(bookmark);
+                };
+                button.appendChild(editButton);
+        
+                button.onclick = function(event) {
+                    var isShiftPressed = event.shiftKey;
+                    if (isShiftPressed) {
+                        window.location.href = bookmark.url;
+                        setTimeout(function() {
+                            window.location.href = bookmark.url + "/?";
+                        }, 500);
+                        return;
+                    }
+                    
+                    var iframe = document.createElement('iframe');
+                    iframe.src = 'loading.html';
+                    iframe.style.position = 'fixed';
+                    iframe.style.top = '0';
+                    iframe.style.left = '0';
+                    iframe.style.width = '100%';
+                    iframe.style.height = '100%';
+                    iframe.style.border = 'none';
+                    document.body.appendChild(iframe);
+                    var blobbypass = window.open('loading.html');
+                    setTimeout(function() {
+                        var windowOpenValue = blobbypass || "Blocked";
+                        if (windowOpenValue === "Blocked" || !blobbypass || blobbypass.closed || typeof blobbypass.closed === "undefined") {
+                            window.location.href = bookmark.url;
+                        } else {
+                            blobbypass.location.href = bookmark.url;
+                            setTimeout(function() {
+                                document.body.removeChild(iframe);
+                            }, 500);
+                        }
+                     }, 1000);
+                };
+                container.appendChild(button);
+            });
+        }
+
+        function deleteBookmark(bookmark) {
+            bookmarks = bookmarks.filter(function(item) {
+                return item !== bookmark;
+            });
             renderBookmarkButtons();
             saveBookmarks();
-            return;
-          }
+        }
+        
+        function editBookmarkName(bookmark) {
+            customPrompt("Enter new name for bookmark:", bookmark.name)
+                .then(function (newName) {
+                    if (!newName) return;
 
-          if (!newUrl.startsWith("http") && !newUrl.startsWith("https")) {
-            newUrl = "https://" + newUrl;
-          }
+                    bookmark.name = newName;
+                    renderBookmarkButtons();
+                    saveBookmarks();
+                });
+        }
 
-          bookmark.url = newUrl;
-          renderBookmarkButtons();
-          saveBookmarks();
-        });
-    }
-    
-    function editBookmark(bookmark) {
-      var overlay = document.createElement('div');
-      overlay.classList.add('edit-overlay');
-      var editOptions = document.createElement('div');
-      editOptions.classList.add('edit-options');
-      editOptions.style.position = 'relative';
+        function editBookmarkUrl(bookmark) {
+            customPrompt("Enter new URL for bookmark:", bookmark.url)
+                .then(function (newUrl) {
+                    if (!newUrl) return;
 
-      var editNameButton = document.createElement('button');
-      editNameButton.textContent = "Edit Name";
-      editNameButton.onclick = function() {
-        editBookmarkName(bookmark);
-        document.body.removeChild(overlay);
-      };
-      editOptions.appendChild(editNameButton);
+                    if (!isValidURL(newUrl)) {
+                        bookmark.url = 'https://www.google.com/search?q=' + encodeURIComponent(newUrl);
+                        renderBookmarkButtons();
+                        saveBookmarks();
+                        return;
+                    }
 
-      var editUrlButton = document.createElement('button');
-      editUrlButton.textContent = "Edit URL";
-      editUrlButton.onclick = function() {
-        editBookmarkUrl(bookmark);
-        document.body.removeChild(overlay);
-      };
-      editOptions.appendChild(editUrlButton);
+                    if (!newUrl.startsWith("http") && !newUrl.startsWith("https")) {
+                        newUrl = "https://" + newUrl;
+                    }
 
-      var closeButton = document.createElement('button');
-      closeButton.textContent = "X";
-      closeButton.classList.add('close-button');
-      closeButton.style.top = 'calc(50% - 36px)';
-      closeButton.style.right = 'calc(50% - 116px)';
-      closeButton.onclick = function() {
-        document.body.removeChild(overlay);
-      };
-      overlay.appendChild(closeButton);
+                    bookmark.url = newUrl;
+                    renderBookmarkButtons();
+                    saveBookmarks();
+                });
+        }
+        
+        function editBookmark(bookmark) {
+            var overlay = document.createElement('div');
+            overlay.classList.add('edit-overlay');
+            var editOptions = document.createElement('div');
+            editOptions.classList.add('edit-options');
+            editOptions.style.position = 'relative';
 
-      overlay.appendChild(editOptions);
-      document.body.appendChild(overlay);
-   
+            var editNameButton = document.createElement('button');
+            editNameButton.textContent = "Edit Name";
+            editNameButton.onclick = function() {
+                editBookmarkName(bookmark);
+                document.body.removeChild(overlay);
+            };
+            editOptions.appendChild(editNameButton);
+
+            var editUrlButton = document.createElement('button');
+            editUrlButton.textContent = "Edit URL";
+            editUrlButton.onclick = function() {
+                editBookmarkUrl(bookmark);
+                document.body.removeChild(overlay);
+            };
+            editOptions.appendChild(editUrlButton);
+
+            var closeButton = document.createElement('button');
+            closeButton.textContent = "X";
+            closeButton.classList.add('close-button');
+            closeButton.style.top = 'calc(50% - 36px)';
+            closeButton.style.right = 'calc(50% - 116px)';
+            closeButton.onclick = function() {
+                document.body.removeChild(overlay);
+            };
+            overlay.appendChild(closeButton);
+
+            overlay.appendChild(editOptions);
+            document.body.appendChild(overlay);
+        }
+
+        function saveBookmarks() {
+            localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+        }
+
+        function getFaviconURL(url) {
+            var link = document.createElement('a');
+            link.href = url;
+            return link.protocol + '//' + link.hostname + '/favicon.ico';
+        }
+
+        function toggleBookmarkBar() {
+            var rectangle
