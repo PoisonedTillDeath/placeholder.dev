@@ -5,7 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Placeholder.dev</title>
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Varela+Round:wght@400&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    body {
+      background-color: #1e1e2f;
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      color: #c3aed6;
+    }
 
     .container {
       position: relative;
@@ -14,11 +21,33 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background-color: #121212;
+      padding: 20px;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #c3aed6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .logo img {
+      width: 60%;
+      height: 60%;
+    }
+
+    .text {
+      font-size: 48px;
+      font-weight: 600;
+      margin-bottom: 20px;
     }
 
     input#url, button.redirect-button {
-      font-family: 'Varela Round', sans-serif;
+      font-family: 'Poppins', sans-serif;
       font-size: 24px;
       border-radius: 10px;
     }
@@ -27,40 +56,34 @@
       width: 80%;
       max-width: 600px;
       height: 50px;
-      background-color: #1E1E1E;
-      color: #BB86FC;
+      background-color: #38304c;
+      color: #c3aed6;
       border: none;
       padding: 10px;
       margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
-    body {
-      background-color: #121212;
-      margin: 0;
-      font-family: 'Varela Round', sans-serif;
-      color: #BB86FC;
+    input#url::placeholder {
+      color: #c3aed6;
     }
 
     button.redirect-button {
-      background-color: #03DAC6;
+      background-color: #b5838d;
       border: none;
-      color: #121212;
+      color: #1e1e2f;
       padding: 10px;
       width: 200px;
       height: 50px;
       margin-bottom: 20px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     button.redirect-button:hover {
-      background-color: #018786;
-    }
-
-    .text {
-      font-size: 48px;
-      font-weight: bold;
-      margin-bottom: 20px;
+      background-color: #6d6875;
+      transform: scale(1.05);
     }
 
     .new-image {
@@ -71,12 +94,44 @@
       border-radius: 50%;
     }
 
-    .rectangle {
+    .toggle-bar {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #38304c;
+      padding: 10px 0;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
       position: absolute;
       bottom: 0;
+    }
+
+    .toggle-button {
+      background-color: #b5838d;
+      border: none;
+      color: #1e1e2f;
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .toggle-button:hover {
+      background-color: #6d6875;
+    }
+
+    .bookmarks-text {
+      font-size: 16px;
+      margin-left: 10px;
+    }
+
+    .rectangle {
+      position: fixed;
+      bottom: 60px;
       width: 100%;
       height: 150px;
-      background-color: #1E1E1E;
+      background-color: #38304c;
       display: none;
       justify-content: space-between;
       align-items: center;
@@ -86,9 +141,9 @@
 
     .add-bookmark-button {
       font-size: 16px;
-      background-color: #BB86FC;
+      background-color: #b5838d;
       border: none;
-      color: #121212;
+      color: #1e1e2f;
       padding: 10px 20px;
       border-radius: 5px;
       cursor: pointer;
@@ -96,7 +151,7 @@
     }
 
     .add-bookmark-button:hover {
-      background-color: #9A67EA;
+      background-color: #6d6875;
     }
 
     .bookmark-container {
@@ -109,9 +164,9 @@
     }
 
     .bookmark-button {
-      background-color: #BB86FC;
+      background-color: #b5838d;
       border: none;
-      color: #121212;
+      color: #1e1e2f;
       font-size: 16px;
       padding: 10px;
       margin-right: 5px;
@@ -126,7 +181,7 @@
     }
 
     .bookmark-button:hover {
-      background-color: #9A67EA;
+      background-color: #6d6875;
     }
 
     .delete-button {
@@ -142,38 +197,6 @@
 
     .delete-button:hover {
       color: darkred;
-    }
-
-    .toggle-bar {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #1E1E1E;
-      padding: 10px 0;
-      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
-      position: absolute;
-      top: calc(100% - 44px);
-    }
-
-    .toggle-button {
-      background-color: #03DAC6;
-      border: none;
-      color: #121212;
-      font-size: 16px;
-      padding: 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .toggle-button:hover {
-      background-color: #018786;
-    }
-
-    .bookmarks-text {
-      font-size: 16px;
-      margin-left: 10px;
     }
 
     .bookmark-button img {
@@ -199,7 +222,7 @@
     }
 
     .prompt-box {
-      background-color: #1E1E1E;
+      background-color: #38304c;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -211,23 +234,23 @@
     .prompt-message {
       font-size: 18px;
       margin-bottom: 15px;
-      color: #BB86FC;
+      color: #c3aed6;
     }
 
     .prompt-input {
       width: 100%;
       padding: 8px;
-      border: 1px solid #BB86FC;
+      border: 1px solid #c3aed6;
       border-radius: 4px;
       margin-bottom: 15px;
-      background-color: #121212;
-      color: #BB86FC;
+      background-color: #1e1e2f;
+      color: #c3aed6;
     }
 
     .prompt-button {
       padding: 8px 20px;
-      background-color: #03DAC6;
-      color: #121212;
+      background-color: #b5838d;
+      color: #1e1e2f;
       border: none;
       border-radius: 4px;
       cursor: pointer;
@@ -235,7 +258,7 @@
     }
 
     .prompt-button:hover {
-      background-color: #018786;
+      background-color: #6d6875;
     }
 
     .close-button {
@@ -244,7 +267,7 @@
       right: 5px;
       background-color: transparent;
       border: none;
-      color: #BB86FC;
+      color: #c3aed6;
       font-size: 16px;
       cursor: pointer;
     }
@@ -268,52 +291,37 @@
       color: #FFA500;
     }
 
-    .edit-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
+    .footer {
+      position: absolute;
+      bottom: 0;
       width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .edit-options {
-      background-color: #1E1E1E;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: #38304c;
+      color: #c3aed6;
+      padding: 10px 0;
       text-align: center;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
     }
 
-    .edit-button-container {
-      display: flex;
-      justify-content: space-around;
+    .footer a {
+      color: #b5838d;
+      text-decoration: none;
+      margin: 0 10px;
     }
 
-    .edit-options button {
-      background-color: #03DAC6;
-      color: #121212;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      margin: 5px;
-      transition: background-color 0.3s;
-    }
-
-    .edit-options button:hover {
-      background-color: #018786;
+    .footer a:hover {
+      text-decoration: underline;
     }
 </style>
 </head>
 <body>
   <div class="container">
+    <div class="logo">
+      <img src="https://via.placeholder.com/50" alt="Placeholder Logo">
+    </div>
     <div class="text">Placeholder.dev</div>
     <input type="text" id="url" placeholder="Enter URL or Google Search">
     <button class="redirect-button" onclick="redirect()">Launch</button>
+    <img src="https://lh3.googleusercontent.com/a/ACg8ocKlmLbwR14KND2gVGIzp_yF-REPA8xNxpimGRjH4ererw=s288-c-no" class="new-image" alt="User Image">
     <div class="toggle-bar">
       <div class="bookmarks-text">Bookmarks</div>
       <div class="toggle-button" onclick="toggleBookmarkBar()">+</div>
@@ -322,6 +330,10 @@
       <div class="bookmark-container" id="bookmarkButtons"></div>
       <button class="add-bookmark-button" onclick="addBookmark()">Save as Bookmark</button>
     </div>
+  </div>
+
+  <div class="footer">
+    <a href="#">Home</a> | <a href="#">About</a> | <a href="#">Services</a> | <a href="#">FAQ</a> | <a href="#">Contact</a>
   </div>
 
   <div class="overlay" id="overlay">
@@ -574,35 +586,4 @@
 
       overlay.appendChild(editOptions);
       document.body.appendChild(overlay);
-    }
-
-    function getFaviconURL(url) {
-      return 'https://www.google.com/s2/favicons?sz=64&domain=' + encodeURIComponent(url);
-    }
-
-    function toggleBookmarkBar() {
-      var bar = document.querySelector('.rectangle');
-      var toggleButton = document.querySelector('.toggle-button');
-      var toggleBar = document.querySelector('.toggle-bar');
-
-      if (bar.style.display === 'none' || bar.style.display === '') {
-        bar.style.display = 'flex';
-        toggleButton.textContent = '-';
-        toggleBar.style.top = 'calc(100% - 194px)';
-      } else {
-        bar.style.display = 'none';
-        toggleButton.textContent = '+';
-        toggleBar.style.top = 'calc(100% - 44px)';
-      }
-    }
-
-    function saveBookmarks() {
-      localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-    }
-    
-    function closePrompt() {
-      document.getElementById("overlay").style.display = "none";
-    }
-
-    document.getElementById('url').addEventListener('keydown', function(event) {
-      if (event
+   
