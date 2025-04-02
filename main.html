@@ -434,6 +434,20 @@
       <div class="bookmark-container" id="bookmarkButtons"></div>
       <button class="add-bookmark-button" onclick="addBookmark()">Save as Bookmark</button>
     </div>
+    
+    <!-- New Sections Added -->
+    <div class="instructions">
+      <h2>Instructions</h2>
+      <p>Consider including a short description or guide on how users can utilize the features of your site effectively.</p>
+    </div>
+    <div class="interactive-elements">
+      <h2>Interactive Elements</h2>
+      <p>A sprinkle of animations or hover effects can make the user experience more dynamic and engaging.</p>
+    </div>
+    <div class="search-bar-functionality">
+      <h2>Search Bar Functionality</h2>
+      <p>Adding features like auto-suggestions or displaying recent searches could make the search experience smoother.</p>
+    </div>
   </div>
 
   <div class="overlay" id="overlay">
@@ -467,7 +481,7 @@
         if (isShiftPressed) {
             window.location.href = url;
 	    setTimeout(function() {
-       	      window.location.href = url + "/?";
+              window.location.href = url + "/?";
 	    }, 500);
             return;
         }
@@ -485,7 +499,7 @@
         var blobbypass = window.open('loading.html');
         setTimeout(function() {
             var windowOpenValue = blobbypass || "Blocked";
-  	    if (windowOpenValue === "Blocked" || !blobbypass || blobbypass.closed || typeof blobbypass.closed === "undefined") {
+   	    if (windowOpenValue === "Blocked" || !blobbypass || blobbypass.closed || typeof blobbypass.closed === "undefined") {
 		window.location.href = url;
             } else {
                 blobbypass.location.href = url;
@@ -496,7 +510,7 @@
         }, 1000);
     }
 
-   function isValidURL(str) {
+    function isValidURL(str) {
 	const pattern = /^(https?:\/\/)?([\w\d-]+\.)+[\w]{2,}(\/.*)?$/;
 	return pattern.test(str);
     }
@@ -568,16 +582,16 @@
 	var editButton = document.createElement('button');
    	editButton.className = 'edit-button';
    	editButton.textContent = '🖉';
-    	editButton.onclick = function(event) {
+     	editButton.onclick = function(event) {
         event.stopPropagation();
         editBookmark(bookmark);
-    	};
+     	};
    	button.appendChild(editButton);
     
         button.onclick = function() {
         
         var isShiftPressed = event.shiftKey;
-        if (isShiftPressed) {
+     if (isShiftPressed) {
            window.location.href = bookmark.url;
 	    setTimeout(function() {
        	      window.location.href = bookmark.url + "/?";
