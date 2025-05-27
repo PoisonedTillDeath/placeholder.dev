@@ -26,24 +26,10 @@ Place this `<img>` tag anywhere in your HTML. When the image fails to load, it t
 
 ---
 
-### 🔒 Better (Safe) Alternative
-
-Instead of using `eval()`, consider serving the script directly:
-
-```html
-<script src="https://yourdomain.com/main.js"></script>
-```
-
-Then host your `main.js` on GitHub Pages, Vercel, or another CDN.
-
----
-
 ### 📁 Repo Structure
 
 * `main.js`: Core script loaded into the target site
 * `README.md`: You're reading it!
-* `public/`: (Optional) Static assets or demo page
-
 ---
 
 ### 📜 License
@@ -51,5 +37,3 @@ Then host your `main.js` on GitHub Pages, Vercel, or another CDN.
 MIT License. You can use, modify, and distribute this script, but **you are responsible for safe use**.
 
 ---
-
-Let me know if you want a version that shows how to serve the script from GitHub Pages or Vercel instead.
