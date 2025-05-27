@@ -2096,27 +2096,68 @@
                     break;
             }
         }
+function importFromFile() {
+    try {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json,.html,.csv';
+        
+        input.onchange = (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                showImportProgress();
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const fileContent = e.target.result;
+                        let importedBookmarks = [];
+                        
+                        if (file.name.endsWith('.json')) {
+                            // JSON: expect { bookmarks: [...] }
+                            const data = JSON.parse(fileContent);
+                            importedBookmarks = data.bookmarks || [];
+                        } else if (file.name.endsWith('.html')) {
+                            // HTML: parse links with <a>
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(fileContent, 'text/html');
+                            const links = doc.querySelectorAll('a');
+                            importedBookmarks = Array.from(links).map(link => ({
+                                title: link.textContent || link.href,
+                                url: link.href,
+                                category: 'Imported'
+                            }));
+                        } else if (file.name.endsWith('.csv')) {
+                            // CSV: expect title,url,category
+                            const lines = fileContent.split(/\r?\n/);
+                            importedBookmarks = lines
+                                .map(line => line.trim())
+                                .filter(line => !!line && !line.startsWith('title')) // skip empty & header
+                                .map(line => {
+                                    const [title, url, category = 'Imported'] = line.split(',');
+                                    return { title, url, category };
+                                });
+                        } else {
+                            throw new Error('Unsupported file format.');
+                        }
 
-        function importFromFile() {
-            try {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = '.json,.html,.csv';
-                
-                input.onchange = (event) => {
-                    const file = event.target.files[0];
-                    if (file) {
-                        showImportProgress();
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            try {
-                                const fileContent = e.target.result;
-                                let importedBookmarks = [];
-                                
-                                if (file.name.endsWith('.json')) {
-                                    const data = JSON.parse(fileContent);
-                                    importedBookmarks = data.bookmarks || [];
-                                } else if (file.name.endsWith('.html')) {
-                                    const parser = new DOMParser();
-                                    const doc = parser.parseFromString(fileContent, 'text/html');
-                                    const links = doc.querySelector
+                        // Save or merge bookmarks as needed
+                        if (importedBookmarks.length) {
+                            mergeAndSaveBookmarks(importedBookmarks);
+                            showSuccessToast('Bookmarks imported successfully!');
+                        } else {
+                            showErrorToast('No bookmarks found in file.');
+                        }
+                    } catch (err) {
+                        showErrorToast('Failed to import bookmarks: ' + err.message);
+                    } finally {
+                        hideImportProgress();
+                    }
+                };
+                reader.readAsText(file);
+            }
+        };
+        input.click();
+    } catch (err) {
+        showErrorToast('Could not open file: ' + err.message);
+    }
+}
