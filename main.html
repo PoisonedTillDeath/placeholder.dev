@@ -3,682 +3,521 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Placeholder.dev</title>
+    <title>Placeholder.dev - Advanced Search Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-        body {
-          background-color: #1e1e2f;
-          margin: 0;
-          font-family: 'Poppins', sans-serif;
-          color: #c3aed6;
+        * { font-family: 'Inter', sans-serif; }
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.25);
         }
-
-        .container {
-          position: relative;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          height: 100vh;
-          padding: 20px;
+        body { background: var(--primary-gradient); min-height: 100vh; position: relative; overflow-x: hidden; }
+        
+        /* Animated Background */
+        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+        .floating-orb {
+            position: absolute; border-radius: 50%;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(20px); animation: float-smooth 20s infinite ease-in-out;
         }
-
-        .logo {
-          width: 80px;
-          height: 80px;
-          border-radius: 50%;
-          background-color: #c3aed6;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-bottom: 20px;
+        .orb-1 { width: 120px; height: 120px; top: 15%; left: 10%; animation-delay: 0s; }
+        .orb-2 { width: 200px; height: 200px; top: 50%; right: 15%; animation-delay: -5s; }
+        .orb-3 { width: 90px; height: 90px; bottom: 25%; left: 25%; animation-delay: -10s; }
+        
+        @keyframes float-smooth {
+            0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.6; }
+            25% { transform: translate(30px, -30px) scale(1.1) rotate(90deg); opacity: 0.8; }
+            50% { transform: translate(-20px, 20px) scale(0.9) rotate(180deg); opacity: 0.4; }
+            75% { transform: translate(25px, 30px) scale(1.05) rotate(270deg); opacity: 0.7; }
         }
-
-        .logo img {
-          width: 60%;
-          height: 60%;
+        
+        /* Glass Effects */
+        .glass {
+            background: var(--glass-bg); backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
         }
-
-        .text {
-          font-size: 48px;
-          font-weight: 600;
-          margin-bottom: 20px;
+        
+        /* Buttons */
+        .btn-primary {
+            background: var(--primary-gradient); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; overflow: hidden; border: none;
         }
-
-        .description {
-          font-size: 24px;
-          margin-bottom: 40px;
-          text-align: center;
-          max-width: 600px;
+        .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 25px 50px rgba(102, 126, 234, 0.5); }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        input#url, button.redirect-button {
-          font-family: 'Poppins', sans-serif;
-          font-size: 24px;
-          border-radius: 10px;
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
+        
+        /* Search */
+        .search-input {
+            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.2); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        input#url {
-          width: 80%;
-          max-width: 600px;
-          height: 50px;
-          background-color: #38304c;
-          color: #c3aed6;
-          border: none;
-          padding: 10px;
-          margin-bottom: 20px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        .search-input:focus {
+            background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 0 6px rgba(102, 126, 234, 0.2); transform: translateY(-2px);
         }
-
-        input#url::placeholder {
-          color: #c3aed6;
+        
+        /* Dropdowns */
+        .dropdown {
+            background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4); animation: dropdown-appear 0.2s ease;
         }
-
-        button.redirect-button {
-          background-color: #b5838d;
-          border: none;
-          color: #1e1e2f;
-          padding: 10px;
-          width: 200px;
-          height: 50px;
-          margin-bottom: 20px;
-          cursor: pointer;
-          transition: background-color 0.3s ease, transform 0.3s ease;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        @keyframes dropdown-appear { 0% { opacity: 0; transform: translateY(-10px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        .dropdown-item {
+            padding: 14px 18px; cursor: pointer; transition: all 0.2s ease;
+            display: flex; align-items: center; gap: 14px; color: white; font-size: 14px;
         }
-
-        button.redirect-button:hover {
-          background-color: #6d6875;
-          transform: scale(1.05);
+        .dropdown-item:hover { background: rgba(255, 255, 255, 0.15); transform: translateX(4px); }
+        
+        /* Bookmarks */
+        .bookmark-item {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer; position: relative; overflow: hidden;
         }
-
-        .new-image {
-          margin-top: 20px;
-          margin-bottom: 20px;
-          width: 100px;
-          height: 100px;
-          border-radius: 50%;
-        }
-
-        .toggle-bar {
-          width: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background-color: #38304c;
-          padding: 10px 0;
-          box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
-          position: absolute;
-          bottom: 0;
-        }
-
-        .toggle-button {
-          background-color: #b5838d;
-          border: none;
-          color: #1e1e2f;
-          font-size: 16px;
-          padding: 10px;
-          border-radius: 5px;
-          cursor: pointer;
-          transition: background-color 0.3s ease;
-        }
-
-        .toggle-button:hover {
-          background-color: #6d6875;
-        }
-
-        .bookmarks-text {
-          font-size: 16px;
-          margin-left: 10px;
-        }
-
-        .rectangle {
-          position: fixed;
-          bottom: 60px;
-          width: 100%;
-          height: 150px;
-          background-color: #38304c;
-          display: none;
-          justify-content: space-between;
-          align-items: center;
-          padding: 20px;
-          box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
-        }
-
-        .add-bookmark-button {
-          font-size: 16px;
-          background-color: #b5838d;
-          border: none;
-          color: #1e1e2f;
-          padding: 10px 20px;
-          border-radius: 5px;
-          cursor: pointer;
-          transition: background-color 0.3s ease;
-        }
-
-        .add-bookmark-button:hover {
-          background-color: #6d6875;
-        }
-
-        .bookmark-container {
-          display: flex;
-          overflow-x: auto;
-          flex-wrap: nowrap;
-          justify-content: flex-start;
-          margin-bottom: 10px;
-          max-height: 150px;
-        }
-
-        .bookmark-button {
-          background-color: #b5838d;
-          border: none;
-          color: #1e1e2f;
-          font-size: 16px;
-          padding: 10px;
-          margin-right: 5px;
-          border-radius: 5px;
-          cursor: pointer;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          position: relative;
-          transition: background-color 0.3s ease;
-        }
-
-        .bookmark-button:hover {
-          background-color: #6d6875;
-        }
-
-        .delete-button {
-          position: absolute;
-          top: 5px;
-          right: 5px;
-          background-color: transparent;
-          border: none;
-          color: #CF6679;
-          font-size: 16px;
-          cursor: pointer;
-        }
-
-        .delete-button:hover {
-          color: darkred;
-        }
-
-        .bookmark-button img {
-          width: 32px;
-          height: 32px;
-          margin-bottom: 5px;
-        }
-
-        .bookmark-button span {
-          white-space: nowrap;
-        }
-
-        .overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.5);
-          display: none;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .prompt-box {
-          background-color: #38304c;
-          padding: 20px;
-          border-radius: 8px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          width: 300px;
-          text-align: center;
-          position: relative;
-        }
-
-        .prompt-message {
-          font-size: 18px;
-          margin-bottom: 15px;
-          color: #c3aed6;
-        }
-
-        .prompt-input {
-          width: 100%;
-          padding: 8px;
-          border: 1px solid #c3aed6;
-          border-radius: 4px;
-          margin-bottom: 15px;
-          background-color: #1e1e2f;
-          color: #c3aed6;
-        }
-
-        .prompt-button {
-          padding: 8px 20px;
-          background-color: #b5838d;
-          color: #1e1e2f;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          transition: background-color 0.3s;
-        }
-
-        .prompt-button:hover {
-          background-color: #6d6875;
-        }
-
-        .close-button {
-          position: absolute;
-          top: 5px;
-          right: 5px;
-          background-color: transparent;
-          border: none;
-          color: #c3aed6;
-          font-size: 16px;
-          cursor: pointer;
-        }
-
-        .close-button:hover {
-          color: #CF6679;
-        }
-
-        .edit-button {
-          position: absolute;
-          top: 20px;
-          right: 5px;
-          background-color: transparent;
-          border: none;
-          color: #FFD700;
-          font-size: 13px;
-          cursor: pointer;
-        }
-
-        .edit-button:hover {
-          color: #FFA500;
-        }
-
-        .footer {
-          position: absolute;
-          bottom: 0;
-          width: 100%;
-          background-color: #38304c;
-          color: #c3aed6;
-          padding: 10px 0;
-          text-align: center;
-          box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
-        }
-
-        .footer a {
-          color: #b5838d;
-          text-decoration: none;
-          margin: 0 10px;
-        }
-
-        .footer a:hover {
-          text-decoration: underline;
-        }
+        .bookmark-item:hover { transform: translateY(-8px) scale(1.05); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); }
+        .bookmark-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.5rem; padding: 1rem; }
+        
+        /* Animations */
+        .fade-in-up { animation: fade-in-up 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards; opacity: 0; transform: translateY(30px); }
+        @keyframes fade-in-up { to { opacity: 1; transform: translateY(0); } }
+        .delay-100 { animation-delay: 0.1s; } .delay-200 { animation-delay: 0.2s; }
+        
+        /* Toast */
+        .success-toast { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .error-toast { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+        .warning-toast { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        
+        /* Scrollbar */
+        .scrollable::-webkit-scrollbar { width: 8px; }
+        .scrollable::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+        .scrollable::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 4px; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="logo">
-            <img src="https://via.placeholder.com/50" alt="Placeholder Logo">
+<body class="text-white flex flex-col min-h-screen">
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="glass sticky top-0 z-40 p-6 fade-in-up">
+        <div class="flex justify-between items-center max-w-7xl mx-auto">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-full glass flex items-center justify-center">
+                    <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">Placeholder.dev</h1>
+                    <p class="text-sm text-white/60">Advanced Search Dashboard</p>
+                </div>
+            </div>
+            
+            <nav class="flex gap-3">
+                <button onclick="switchTab('dashboard')" class="btn-secondary active px-6 py-3 rounded-xl text-sm font-medium" id="tab-dashboard">Dashboard</button>
+                <button onclick="switchTab('analytics')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-analytics">Analytics</button>
+                <button onclick="switchTab('labs')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-labs">Labs</button>
+            </nav>
         </div>
-        <div class="text">Placeholder.dev</div>
-        <div class="description">
-          This site allows you to quickly search for URLs or perform Google searches directly from the input field below. 
-          You can also save your favorite links as bookmarks for easy access.
+    </header>
+
+    <!-- Main Content -->
+    <div class="flex-1 max-w-7xl mx-auto px-6 pb-6 w-full">
+        <!-- Dashboard Tab -->
+        <div id="dashboard-content" class="tab-content">
+            <!-- Search Section -->
+            <div class="flex flex-col justify-center items-center py-12 fade-in-up delay-100">
+                <div class="text-center mb-12">
+                    <h2 class="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">Search Anything</h2>
+                    <p class="text-xl text-white/80 max-w-2xl mx-auto">Your intelligent gateway to the web with real-time suggestions and bookmarks.</p>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="w-full max-w-4xl mb-8 relative">
+                    <input type="text" id="searchInput" placeholder="Enter URL or search the web..." 
+                           class="w-full h-20 px-8 pr-40 text-xl rounded-3xl search-input text-white placeholder-white/60 outline-none font-medium"
+                           onkeypress="if(event.key==='Enter') handleSearch()">
+                    <button onclick="handleSearch()" class="absolute right-3 top-3 h-14 px-10 btn-primary rounded-2xl text-white font-semibold flex items-center gap-3 text-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        Search
+                    </button>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="flex flex-wrap gap-4 mb-8">
+                    <button onclick="addBookmark()" class="btn-secondary px-8 py-4 rounded-2xl text-white font-medium flex items-center gap-3">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Add Bookmark
+                    </button>
+                    <button onclick="showRandomBookmark()" class="btn-secondary px-8 py-4 rounded-2xl text-white font-medium flex items-center gap-3">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        </svg>
+                        Random Site
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bookmarks Section -->
+            <div class="glass rounded-3xl p-8 fade-in-up delay-200">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-4">
+                        <h3 class="text-2xl font-semibold">Quick Access</h3>
+                        <span id="bookmarkCount" class="px-4 py-2 rounded-full bg-white/20 text-sm font-medium">0 bookmarks</span>
+                    </div>
+                    <button onclick="exportBookmarks()" class="btn-secondary px-6 py-3 rounded-xl text-sm">Export</button>
+                </div>
+                
+                <div id="bookmarkGrid" class="bookmark-grid scrollable max-h-96">
+                    <!-- Bookmarks will be rendered here -->
+                </div>
+                
+                <div id="emptyBookmarks" class="text-center py-16 text-white/60">
+                    <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-white/10 flex items-center justify-center">
+                        <svg class="w-12 h-12 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-2">No bookmarks yet</h3>
+                    <p class="text-lg">Add some to get started!</p>
+                </div>
+            </div>
         </div>
-        <input type="text" id="url" placeholder="Enter URL or Google Search">
-        <button class="redirect-button" onclick="redirect(event)">Launch</button>
-        <img src="https://lh3.googleusercontent.com/a/ACg8ocKlmLbwR14KND2gVGIzp_yF-REPA8xNxpimGRjH4ererw=s288-c-no" class="new-image" alt="User Image">
-        <div class="toggle-bar">
-            <div class="bookmarks-text">Bookmarks</div>
-            <div class="toggle-button" onclick="toggleBookmarkBar()">+</div>
+
+        <!-- Analytics Tab -->
+        <div id="analytics-content" class="tab-content hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 py-8">
+                <div class="glass rounded-3xl p-8">
+                    <h2 class="text-2xl font-semibold mb-6">Usage Analytics</h2>
+                    <div class="h-64"><canvas id="usageChart"></canvas></div>
+                </div>
+                <div class="glass rounded-3xl p-8">
+                    <h2 class="text-2xl font-semibold mb-6">Top Bookmarks</h2>
+                    <div id="topBookmarksList" class="space-y-4 scrollable max-h-64"></div>
+                </div>
+            </div>
         </div>
-        <div class="rectangle">
-            <div class="bookmark-container" id="bookmarkButtons"></div>
-            <button class="add-bookmark-button" onclick="addBookmark()">Save as Bookmark</button>
+
+        <!-- Labs Tab -->
+        <div id="labs-content" class="tab-content hidden">
+            <div class="glass rounded-3xl p-8">
+                <h2 class="text-2xl font-semibold mb-8">Export Bookmarks</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <button onclick="exportBookmarks('json')" class="btn-primary p-6 rounded-2xl text-left">
+                        <h3 class="text-lg font-semibold mb-2">Export as JSON</h3>
+                        <p class="text-white/70">Download your bookmarks as a JSON file</p>
+                    </button>
+                    <button onclick="exportBookmarks('html')" class="btn-primary p-6 rounded-2xl text-left">
+                        <h3 class="text-lg font-semibold mb-2">Export as HTML</h3>
+                        <p class="text-white/70">Download as browser-compatible HTML</p>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="footer">
-        <a href="#">Home</a> | <a href="#">About</a> | <a href="#">Services</a> | <a href="#">FAQ</a> | <a href="#">Contact</a>
-    </div>
+    <!-- Footer -->
+    <footer class="glass mt-auto p-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <p class="text-white/60">Placeholder.dev - Advanced Search Dashboard</p>
+            <div class="flex items-center gap-4 text-sm text-white/60">
+                <span id="footerBookmarkCount">0 bookmarks</span>
+                <span>•</span>
+                <span>Version 2.0</span>
+            </div>
+        </div>
+    </footer>
 
-    <div class="overlay" id="overlay">
-        <div class="prompt-box">
-            <button class="close-button" onclick="closePrompt()">X</button>
-            <p class="prompt-message" id="prompt-message"></p>
-            <input type="text" class="prompt-input" id="prompt-input">
-            <button class="prompt-button" onclick="submitPrompt()">OK</button>
+    <!-- Add Bookmark Modal -->
+    <div id="bookmarkModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="glass rounded-3xl p-10 w-full max-w-lg">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-2xl font-semibold text-white">Add Bookmark</h3>
+                <button onclick="closeModal()" class="text-white/60 hover:text-white">×</button>
+            </div>
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-white/80 mb-3 font-medium">Bookmark Name</label>
+                    <input type="text" id="bookmarkName" placeholder="Enter bookmark name..." 
+                           class="w-full h-14 px-6 rounded-2xl search-input text-white placeholder-white/60 outline-none">
+                </div>
+                <div>
+                    <label class="block text-white/80 mb-3 font-medium">URL</label>
+                    <input type="text" id="bookmarkUrl" placeholder="Enter URL..." 
+                           class="w-full h-14 px-6 rounded-2xl search-input text-white placeholder-white/60 outline-none">
+                </div>
+                <div class="flex gap-4 pt-6">
+                    <button onclick="saveBookmark()" class="flex-1 btn-primary h-14 rounded-2xl text-white font-semibold">Save</button>
+                    <button onclick="closeModal()" class="flex-1 btn-secondary h-14 rounded-2xl text-white font-medium">Cancel</button>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Error Container -->
+    <div id="errorContainer" class="fixed top-6 right-6 z-50 space-y-3"></div>
 
     <script>
-        var bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
-        renderBookmarkButtons();
+        // Global variables
+        let bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+        let analytics = JSON.parse(localStorage.getItem('analytics') || '{"clicks": {}, "daily": {}}');
+        let currentTab = 'dashboard';
 
-        function redirect(event) {
-            var input = document.getElementById('url').value;
-            var url;
+        // Error handler
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('errorContainer');
+            const toast = document.createElement('div');
+            toast.className = `glass rounded-2xl p-4 text-white max-w-sm ${type}-toast`;
+            toast.innerHTML = `<span class="font-medium">${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => container.removeChild(toast), 3000);
+        }
 
-            if (isValidURL(input)) {
-                if (!input.startsWith('http') && !input.startsWith('https')) {
-                    url = 'https://' + input;
+        // Search functionality with loading.html
+        function handleSearch() {
+            const input = document.getElementById('searchInput');
+            const query = input.value.trim();
+            if (!query) return showToast('Please enter a search term', 'warning');
+
+            let url = query.includes('.') && !query.includes(' ') ? 
+                (query.startsWith('http') ? query : 'https://' + query) :
+                'https://www.google.com/search?q=' + encodeURIComponent(query);
+
+            // Create loading iframe
+            const iframe = document.createElement('iframe');
+            iframe.src = 'loading.html';
+            iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;border:none;z-index:9999';
+            document.body.appendChild(iframe);
+
+            // Try popup, fallback to redirect
+            const popup = window.open('loading.html');
+            setTimeout(() => {
+                if (!popup || popup.closed) {
+                    window.location.href = url;
                 } else {
-                    url = input;
+                    popup.location.href = url;
+                    setTimeout(() => document.body.removeChild(iframe), 500);
                 }
-            } else {
-                url = 'https://www.google.com/search?q=' + encodeURIComponent(input);
-            }
+            }, 1000);
 
-            var isShiftPressed = event.shiftKey;
-            if (isShiftPressed) {
-                window.location.href = url;
-                setTimeout(function() {
-                    window.location.href = url + "/?";
-                }, 500);
+            input.value = '';
+            trackAnalytics('search');
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+            document.querySelectorAll('.btn-secondary').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName + '-content').classList.remove('hidden');
+            document.getElementById('tab-' + tabName).classList.add('active');
+            currentTab = tabName;
+            if (tabName === 'analytics') renderAnalytics();
+        }
+
+        // Bookmark management
+        function addBookmark() {
+            document.getElementById('bookmarkUrl').value = document.getElementById('searchInput').value;
+            document.getElementById('bookmarkModal').classList.remove('hidden');
+            document.getElementById('bookmarkName').focus();
+        }
+
+        function saveBookmark() {
+            const name = document.getElementById('bookmarkName').value.trim();
+            const url = document.getElementById('bookmarkUrl').value.trim();
+            if (!name || !url) return showToast('Please fill in both fields', 'warning');
+
+            const finalUrl = url.includes('.') && !url.includes(' ') ? 
+                (url.startsWith('http') ? url : 'https://' + url) : url;
+
+            const bookmark = {
+                id: Date.now(),
+                name: name,
+                url: finalUrl,
+                favicon: `https://www.google.com/s2/favicons?sz=64&domain=${new URL(finalUrl).hostname}`,
+                created: new Date().toISOString(),
+                clicks: 0
+            };
+
+            bookmarks.push(bookmark);
+            analytics.clicks[bookmark.id] = 0;
+            saveData();
+            renderBookmarks();
+            closeModal();
+            showToast('Bookmark added successfully!');
+        }
+
+        function closeModal() {
+            document.getElementById('bookmarkModal').classList.add('hidden');
+            document.getElementById('bookmarkName').value = '';
+            document.getElementById('bookmarkUrl').value = '';
+        }
+
+        function openBookmark(url, id) {
+            // Same loading logic as search
+            const iframe = document.createElement('iframe');
+            iframe.src = 'loading.html';
+            iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;border:none;z-index:9999';
+            document.body.appendChild(iframe);
+
+            const popup = window.open('loading.html');
+            setTimeout(() => {
+                if (!popup || popup.closed) {
+                    window.location.href = url;
+                } else {
+                    popup.location.href = url;
+                    setTimeout(() => document.body.removeChild(iframe), 500);
+                }
+            }, 1000);
+
+            // Update analytics
+            const bookmark = bookmarks.find(b => b.id === id);
+            if (bookmark) {
+                bookmark.clicks++;
+                analytics.clicks[id] = bookmark.clicks;
+                const today = new Date().toDateString();
+                analytics.daily[today] = (analytics.daily[today] || 0) + 1;
+                saveData();
+                renderBookmarks();
+            }
+        }
+
+        function showRandomBookmark() {
+            if (bookmarks.length === 0) return showToast('No bookmarks available', 'warning');
+            const random = bookmarks[Math.floor(Math.random() * bookmarks.length)];
+            openBookmark(random.url, random.id);
+        }
+
+        function renderBookmarks() {
+            const grid = document.getElementById('bookmarkGrid');
+            const empty = document.getElementById('emptyBookmarks');
+            
+            if (bookmarks.length === 0) {
+                grid.innerHTML = '';
+                empty.classList.remove('hidden');
                 return;
             }
 
-            var iframe = document.createElement('iframe');
-            iframe.src = 'loading.html';
-            iframe.style.position = 'fixed';
-            iframe.style.top = '0';
-            iframe.style.left = '0';
-            iframe.style.width = '100%';
-            iframe.style.height = '100%';
-            iframe.style.border = 'none';
-            document.body.appendChild(iframe);
+            empty.classList.add('hidden');
+            grid.innerHTML = bookmarks.map(bookmark => `
+                <div class="bookmark-item glass rounded-2xl p-6 text-center">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/10 flex items-center justify-center">
+                        <img src="${bookmark.favicon}" alt="Favicon" class="w-10 h-10 rounded-lg" 
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <svg class="w-8 h-8 text-white/60 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-white font-semibold text-base mb-2 truncate">${bookmark.name}</h3>
+                    <p class="text-white/50 text-sm mb-4">${bookmark.clicks} clicks</p>
+                    <button onclick="openBookmark('${bookmark.url}', ${bookmark.id})" 
+                            class="w-full btn-secondary py-3 rounded-xl text-sm text-white/80 hover:text-white font-medium">Open</button>
+                </div>
+            `).join('');
+            
+            updateBookmarkCount();
+        }
 
-            var blobbypass = window.open('loading.html');
-            setTimeout(function() {
-                var windowOpenValue = blobbypass || "Blocked";
-                if (windowOpenValue === "Blocked" || !blobbypass || blobbypass.closed || typeof blobbypass.closed === "undefined") {
-                    window.location.href = url;
-                } else {
-                    blobbypass.location.href = url;
-                    setTimeout(function() {
-                        document.body.removeChild(iframe);
-                    }, 500);
+        function updateBookmarkCount() {
+            const count = bookmarks.length;
+            document.getElementById('bookmarkCount').textContent = `${count} bookmark${count !== 1 ? 's' : ''}`;
+            document.getElementById('footerBookmarkCount').textContent = `${count} bookmark${count !== 1 ? 's' : ''}`;
+        }
+
+        // Export functionality
+        function exportBookmarks(format = 'json') {
+            if (bookmarks.length === 0) return showToast('No bookmarks to export', 'warning');
+
+            let content, filename, mimeType;
+            if (format === 'json') {
+                content = JSON.stringify({ bookmarks, exportDate: new Date().toISOString() }, null, 2);
+                filename = `bookmarks-${new Date().toISOString().split('T')[0]}.json`;
+                mimeType = 'application/json';
+            } else {
+                content = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Bookmarks</TITLE>
+<H1>Bookmarks</H1>
+<DL><p>
+${bookmarks.map(b => `    <DT><A HREF="${b.url}">${b.name}</A>`).join('\n')}
+</DL><p>`;
+                filename = `bookmarks-${new Date().toISOString().split('T')[0]}.html`;
+                mimeType = 'text/html';
+            }
+
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast(`Bookmarks exported as ${format.toUpperCase()}`);
+        }
+
+        // Analytics
+        function trackAnalytics(type) {
+            const today = new Date().toDateString();
+            analytics.daily[today] = (analytics.daily[today] || 0) + 1;
+            saveData();
+        }
+
+        function renderAnalytics() {
+            // Simple analytics display
+            const totalClicks = Object.values(analytics.clicks).reduce((sum, clicks) => sum + clicks, 0);
+            const weekClicks = Object.values(analytics.daily).slice(-7).reduce((sum, clicks) => sum + clicks, 0);
+            
+            document.getElementById('topBookmarksList').innerHTML = bookmarks
+                .sort((a, b) => (b.clicks || 0) - (a.clicks || 0))
+                .slice(0, 5)
+                .map((bookmark, index) => `
+                    <div class="flex items-center gap-4 p-4 rounded-xl bg-white/5">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm">
+                            ${index + 1}
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-white truncate">${bookmark.name}</h4>
+                            <p class="text-sm text-white/60">${bookmark.clicks} clicks</p>
+                        </div>
+                    </div>
+                `).join('') || '<div class="text-center text-white/60 py-8">No bookmark data yet</div>';
+        }
+
+        // Data persistence
+        function saveData() {
+            localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+            localStorage.setItem('analytics', JSON.stringify(analytics));
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderBookmarks();
+            document.getElementById('searchInput').focus();
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    document.getElementById('searchInput').focus();
                 }
-            }, 1000);
-        }
-
-        function isValidURL(str) {
-            const pattern = /^(https?:\/\/)?([\w\d-]+\.)+[\w]{2,}(\/.*)?$/;
-            return pattern.test(str);
-        }
-
-        async function customPrompt(message, defaultValue) {
-            document.getElementById("prompt-message").innerText = message;
-            document.getElementById("prompt-input").value = defaultValue || "";
-            document.getElementById("overlay").style.display = "flex";
-
-            return new Promise(resolve => {
-                submitPrompt = function() {
-                    var userInput = document.getElementById("prompt-input").value;
-                    document.getElementById("overlay").style.display = "none";
-                    resolve(userInput);
-                    submitPrompt = null;
+                if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+                    e.preventDefault();
+                    addBookmark();
                 }
             });
-        }
-
-        function addBookmark() {
-            var input = document.getElementById('url').value; 
-            customPrompt("Enter bookmark name:").then(function(bookmarkName) {
-                if (!bookmarkName) return;
-
-                if (!isValidURL(input)) {
-                    bookmarks.push({ name: bookmarkName, url: 'https://www.google.com/search?q=' + encodeURIComponent(input) });
-                    renderBookmarkButtons();
-                    saveBookmarks();
-                    return;
-                }
-
-                if (!input.startsWith('http') && !input.startsWith('https')) {
-                    input = 'https://' + input;
-                }
-
-                bookmarks.push({ name: bookmarkName, url: input });
-                renderBookmarkButtons();
-                saveBookmarks();
-            });
-        }
-
-        function renderBookmarkButtons() {
-            var container = document.getElementById('bookmarkButtons');
-            container.innerHTML = '';
-
-            bookmarks.forEach(function(bookmark) {
-                var button = document.createElement('button');
-                button.className = 'bookmark-button';
-                var faviconURL = getFaviconURL(bookmark.url);
-                if (faviconURL) {
-                    var faviconImg = document.createElement('img');
-                    faviconImg.src = faviconURL;
-                    faviconImg.alt = "Favicon";
-                    button.appendChild(faviconImg);
-                }
-                var urlSpan = document.createElement('span');
-                urlSpan.textContent = bookmark.name;
-                button.appendChild(urlSpan);
-
-                var deleteButton = document.createElement('button');
-                deleteButton.className = 'delete-button';
-                deleteButton.textContent = 'X';
-                deleteButton.onclick = function(event) {
-                    event.stopPropagation();
-                    deleteBookmark(bookmark);
-                };
-                button.appendChild(deleteButton);
-
-                var editButton = document.createElement('button');
-                editButton.className = 'edit-button';
-                editButton.textContent = '🖉';
-                editButton.onclick = function(event) {
-                    event.stopPropagation();
-                    editBookmark(bookmark);
-                };
-                button.appendChild(editButton);
-        
-                button.onclick = function(event) {
-                    var isShiftPressed = event.shiftKey;
-                    if (isShiftPressed) {
-                        window.location.href = bookmark.url;
-                        setTimeout(function() {
-                            window.location.href = bookmark.url + "/?";
-                        }, 500);
-                        return;
-                    }
-                    
-                    var iframe = document.createElement('iframe');
-                    iframe.src = 'loading.html';
-                    iframe.style.position = 'fixed';
-                    iframe.style.top = '0';
-                    iframe.style.left = '0';
-                    iframe.style.width = '100%';
-                    iframe.style.height = '100%';
-                    iframe.style.border = 'none';
-                    document.body.appendChild(iframe);
-                    var blobbypass = window.open('loading.html');
-                    setTimeout(function() {
-                        var windowOpenValue = blobbypass || "Blocked";
-                        if (windowOpenValue === "Blocked" || !blobbypass || blobbypass.closed || typeof blobbypass.closed === "undefined") {
-                            window.location.href = bookmark.url;
-                        } else {
-                            blobbypass.location.href = bookmark.url;
-                            setTimeout(function() {
-                                document.body.removeChild(iframe);
-                            }, 500);
-                        }
-                     }, 1000);
-                };
-                container.appendChild(button);
-            });
-        }
-
-        function deleteBookmark(bookmark) {
-            bookmarks = bookmarks.filter(function(item) {
-                return item !== bookmark;
-            });
-            renderBookmarkButtons();
-            saveBookmarks();
-        }
-        
-        function editBookmarkName(bookmark) {
-            customPrompt("Enter new name for bookmark:", bookmark.name)
-                .then(function (newName) {
-                    if (!newName) return;
-
-                    bookmark.name = newName;
-                    renderBookmarkButtons();
-                    saveBookmarks();
-                });
-        }
-
-        function editBookmarkUrl(bookmark) {
-            customPrompt("Enter new URL for bookmark:", bookmark.url)
-                .then(function (newUrl) {
-                    if (!newUrl) return;
-
-                    if (!isValidURL(newUrl)) {
-                        bookmark.url = 'https://www.google.com/search?q=' + encodeURIComponent(newUrl);
-                        renderBookmarkButtons();
-                        saveBookmarks();
-                        return;
-                    }
-
-                    if (!newUrl.startsWith("http") && !newUrl.startsWith("https")) {
-                        newUrl = "https://" + newUrl;
-                    }
-
-                    bookmark.url = newUrl;
-                    renderBookmarkButtons();
-                    saveBookmarks();
-                });
-        }
-        
-        function editBookmark(bookmark) {
-            var overlay = document.createElement('div');
-            overlay.classList.add('edit-overlay');
-            var editOptions = document.createElement('div');
-            editOptions.classList.add('edit-options');
-            editOptions.style.position = 'relative';
-
-            var editNameButton = document.createElement('button');
-            editNameButton.textContent = "Edit Name";
-            editNameButton.onclick = function() {
-                editBookmarkName(bookmark);
-                document.body.removeChild(overlay);
-            };
-            editOptions.appendChild(editNameButton);
-
-            var editUrlButton = document.createElement('button');
-            editUrlButton.textContent = "Edit URL";
-            editUrlButton.onclick = function() {
-                editBookmarkUrl(bookmark);
-                document.body.removeChild(overlay);
-            };
-            editOptions.appendChild(editUrlButton);
-
-            var closeButton = document.createElement('button');
-            closeButton.textContent = "X";
-            closeButton.classList.add('close-button');
-            closeButton.style.top = 'calc(50% - 36px)';
-            closeButton.style.right = 'calc(50% - 116px)';closeButton.onclick = function() {
-
-    document.body.removeChild(overlay);
-
-  };
-
-  overlay.appendChild(closeButton);
-
-
-
-  document.body.appendChild(editOptions);
-
-  
-
-  overlay.appendChild(editOptions);
-
-
-
-  document.body.appendChild(overlay);
-
-}
-
-
-
-    function getFaviconURL(url) {
-
-      return 'https://www.google.com/s2/favicons?sz=64&domain=' + encodeURIComponent(url);
-
-    }
-
-
-
-    function toggleBookmarkBar() {
-
-      var bar = document.querySelector('.rectangle');
-
-      var toggleButton = document.querySelector('.toggle-button');
-
-      var toggleBar = document.querySelector('.toggle-bar');
-
-
-
-      if (bar.style.display === 'none' || bar.style.display === '') {
-
-        bar.style.display = 'flex';
-
-        toggleButton.textContent = '-';
-
-        toggleBar.style.top = 'calc(100% - 194px)';
-
-      } else {
-
-        bar.style.display = 'none';
-
-        toggleButton.textContent = '+';
-
-        toggleBar.style.top = 'calc(100% - 44px)';
-
-      }
-
-    }
-
-
-
-    function saveBookmarks() {
-
-      localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-
-    }
-
-    
-
-    function closePrompt() {
-
-   	  document.getElementById("overlay").style.display = "none";
-
-	}
-
-
-
-    document.getElementById('url').addEventListener('keydown', function(event) {
-
-      if (event.key === 'Enter') {
-
-        redirect(event);
-
-	document.getElementById('url').blur();
-
-      }
-    });
-  </script>
+        });
+    </script>
 </body>
 </html>
