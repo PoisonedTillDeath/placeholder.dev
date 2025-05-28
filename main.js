@@ -1,1 +1,1 @@
-window.location.href="https://ikonik24.github.io/placeholder.dev/main.html"
+window.location.href="https://devpookie.github.io/placeholder.dev/main.html"
