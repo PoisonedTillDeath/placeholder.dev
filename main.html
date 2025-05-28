@@ -98,6 +98,22 @@
         .scrollable::-webkit-scrollbar { width: 8px; }
         .scrollable::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
         .scrollable::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 4px; }
+
+        /* Light mode styles */
+        body.light {
+            --primary-gradient: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            background: #f0f0f5;
+        }
+        body.light .glass {
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 0, 0, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        body.light .text-white { color: #333 !important; }
+        body.light [class*="text-white/60"] { color: #666 !important; }
+        body.light [class*="text-white/70"] { color: #777 !important; }
+        body.light .bg-white\/10 { background-color: rgba(255, 255, 255, 0.1) !important; }
+        body.light .bg-white\/20 { background-color: rgba(255, 255, 255, 0.2) !important; }
+        body.light .bg-gradient-to-r { background: linear-gradient(135deg, #c2e9fb 0%, #a1c4fd 100%) !important; }
     </style>
 </head>
 <body class="text-white flex flex-col min-h-screen">
@@ -127,6 +143,7 @@
                 <button onclick="switchTab('dashboard')" class="btn-secondary active px-6 py-3 rounded-xl text-sm font-medium" id="tab-dashboard">Dashboard</button>
                 <button onclick="switchTab('analytics')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-analytics">Analytics</button>
                 <button onclick="switchTab('labs')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-labs">Labs</button>
+                <button id="themeToggle" class="btn-secondary px-4 py-2 rounded-xl text-sm ml-4">🌙</button>
             </nav>
         </div>
     </header>
@@ -180,6 +197,22 @@
                         <span id="bookmarkCount" class="px-4 py-2 rounded-full bg-white/20 text-sm font-medium">0 bookmarks</span>
                     </div>
                     <button onclick="exportBookmarks()" class="btn-secondary px-6 py-3 rounded-xl text-sm">Export</button>
+                </div>
+                
+                <!-- Add search/filter, sort, and folder/tag filter above bookmarks grid -->
+                <div class="flex flex-wrap gap-4 mb-6 items-center">
+                    <input id="bookmarkSearch" type="text" placeholder="Search bookmarks..." class="search-input px-4 py-2 rounded-xl text-black" oninput="renderBookmarks()">
+                    <select id="bookmarkSort" class="search-input px-4 py-2 rounded-xl text-black" onchange="renderBookmarks()">
+                        <option value="date">Sort by Date</option>
+                        <option value="name">Sort by Name</option>
+                        <option value="clicks">Sort by Clicks</option>
+                    </select>
+                    <select id="bookmarkFolder" class="search-input px-4 py-2 rounded-xl text-black" onchange="renderBookmarks()">
+                        <option value="">All Folders</option>
+                        <!-- Folders will be populated dynamically -->
+                    </select>
+                    <button onclick="triggerImport()" class="btn-secondary px-4 py-2 rounded-xl text-sm">Import</button>
+                    <input id="importInput" type="file" accept=".json" class="hidden" onchange="importBookmarks(event)">
                 </div>
                 
                 <div id="bookmarkGrid" class="bookmark-grid scrollable max-h-96">
@@ -259,6 +292,12 @@
                     <label class="block text-white/80 mb-3 font-medium">URL</label>
                     <input type="text" id="bookmarkUrl" placeholder="Enter URL..." 
                            class="w-full h-14 px-6 rounded-2xl search-input text-white placeholder-white/60 outline-none">
+                </div>
+                <!-- In the Add/Edit Bookmark Modal, add fields for tags/folder/note -->
+                <div class="space-y-4">
+                    <input id="bookmarkTags" type="text" placeholder="Tags (comma separated)" class="search-input w-full px-4 py-2 rounded-xl text-black">
+                    <input id="bookmarkFolderInput" type="text" placeholder="Folder" class="search-input w-full px-4 py-2 rounded-xl text-black">
+                    <textarea id="bookmarkNote" placeholder="Note" class="search-input w-full px-4 py-2 rounded-xl text-black"></textarea>
                 </div>
                 <div class="flex gap-4 pt-6">
                     <button onclick="saveBookmark()" class="flex-1 btn-primary h-14 rounded-2xl text-white font-semibold">Save</button>
@@ -343,10 +382,17 @@
             const finalUrl = url.includes('.') && !url.includes(' ') ? 
                 (url.startsWith('http') ? url : 'https://' + url) : url;
 
+            const tags = document.getElementById('bookmarkTags').value.split(',').map(tag => tag.trim()).filter(tag => tag);
+            const folder = document.getElementById('bookmarkFolderInput').value.trim();
+            const note = document.getElementById('bookmarkNote').value.trim();
+
             const bookmark = {
                 id: Date.now(),
                 name: name,
                 url: finalUrl,
+                tags: tags,
+                folder: folder,
+                note: note,
                 favicon: `https://www.google.com/s2/favicons?sz=64&domain=${new URL(finalUrl).hostname}`,
                 created: new Date().toISOString(),
                 clicks: 0
@@ -364,6 +410,9 @@
             document.getElementById('bookmarkModal').classList.add('hidden');
             document.getElementById('bookmarkName').value = '';
             document.getElementById('bookmarkUrl').value = '';
+            document.getElementById('bookmarkTags').value = '';
+            document.getElementById('bookmarkFolderInput').value = '';
+            document.getElementById('bookmarkNote').value = '';
         }
 
         function openBookmark(url, id) {
@@ -404,27 +453,41 @@
         function renderBookmarks() {
             const grid = document.getElementById('bookmarkGrid');
             const empty = document.getElementById('emptyBookmarks');
-            
-            if (bookmarks.length === 0) {
+            const search = document.getElementById('bookmarkSearch').value.toLowerCase();
+            const sort = document.getElementById('bookmarkSort').value;
+            const folder = document.getElementById('bookmarkFolder').value;
+
+            let filtered = bookmarks.filter(b =>
+                (!search || b.name.toLowerCase().includes(search) || b.url.toLowerCase().includes(search) || (b.tags && b.tags.join(',').toLowerCase().includes(search))) &&
+                (!folder || b.folder === folder)
+            );
+            if (sort === 'name') filtered.sort((a, b) => a.name.localeCompare(b.name));
+            else if (sort === 'clicks') filtered.sort((a, b) => b.clicks - a.clicks);
+            else filtered.sort((a, b) => new Date(b.created) - new Date(a.created));
+
+            if (filtered.length === 0) {
                 grid.innerHTML = '';
                 empty.classList.remove('hidden');
                 return;
             }
 
             empty.classList.add('hidden');
-            grid.innerHTML = bookmarks.map(bookmark => `
-                <div class="bookmark-item glass rounded-2xl p-6 text-center">
-                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/10 flex items-center justify-center">
-                        <img src="${bookmark.favicon}" alt="Favicon" class="w-10 h-10 rounded-lg" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <svg class="w-8 h-8 text-white/60 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-                        </svg>
+            grid.innerHTML = filtered.map(bookmark => `
+                <div class="bookmark-item glass rounded-2xl p-4 flex flex-col gap-2">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-lg">${bookmark.name}</span>
+                        <div class="flex gap-2">
+                            <button onclick="editBookmark(${bookmark.id})" class="btn-secondary px-2 py-1 rounded">Edit</button>
+                            <button onclick="deleteBookmark(${bookmark.id})" class="btn-secondary px-2 py-1 rounded">Delete</button>
+                            <button onclick="shareBookmark(${bookmark.id})" class="btn-secondary px-2 py-1 rounded">Share</button>
+                        </div>
                     </div>
-                    <h3 class="text-white font-semibold text-base mb-2 truncate">${bookmark.name}</h3>
-                    <p class="text-white/50 text-sm mb-4">${bookmark.clicks} clicks</p>
-                    <button onclick="openBookmark('${bookmark.url}', ${bookmark.id})" 
-                            class="w-full btn-secondary py-3 rounded-xl text-sm text-white/80 hover:text-white font-medium">Open</button>
+                    <a href="${bookmark.url}" target="_blank" class="text-blue-200 underline break-all">${bookmark.url}</a>
+                    <div class="flex flex-wrap gap-1">
+                        ${bookmark.tags.map(tag => `<span class="bg-white/20 px-2 py-1 rounded text-xs">${tag}</span>`).join('')}
+                    </div>
+                    <div class="text-white/70 text-sm">${bookmark.note}</div>
+                    <div class="text-xs text-white/40">Clicks: ${bookmark.clicks} | Added: ${new Date(bookmark.created).toLocaleString()}</div>
                 </div>
             `).join('');
             
@@ -519,6 +582,92 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}">${b.name}</A>`).join('\n')}
                 }
             });
         });
+
+        // --- Theme Toggle ---
+        document.getElementById('themeToggle').onclick = function() {
+            document.body.classList.toggle('light');
+            // Optionally, update CSS variables for light mode
+        };
+
+        // --- Add/Edit/Delete Bookmarks ---
+        function editBookmark(id) {
+            const bookmark = bookmarks.find(b => b.id === id);
+            if (!bookmark) return;
+
+            document.getElementById('bookmarkName').value = bookmark.name;
+            document.getElementById('bookmarkUrl').value = bookmark.url;
+            document.getElementById('bookmarkTags').value = bookmark.tags.join(', ');
+            document.getElementById('bookmarkFolderInput').value = bookmark.folder;
+            document.getElementById('bookmarkNote').value = bookmark.note;
+
+            document.getElementById('bookmarkModal').classList.remove('hidden');
+            document.getElementById('bookmarkName').focus();
+        }
+
+        function deleteBookmark(id) {
+            bookmarks = bookmarks.filter(b => b.id !== id);
+            delete analytics.clicks[id];
+            saveData();
+            renderBookmarks();
+            showToast('Bookmark deleted');
+        }
+
+        // --- Import/Export ---
+        function triggerImport() {
+            document.getElementById('importInput').click();
+        }
+        function importBookmarks(event) {
+            let file = event.target.files[0];
+            if (!file) return;
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let imported = JSON.parse(e.target.result);
+                    bookmarks = bookmarks.concat(imported);
+                    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+                    renderBookmarks();
+                    showToast('Bookmarks imported successfully!');
+                } catch (err) {
+                    alert('Invalid file');
+                }
+            };
+            reader.readAsText(file);
+        }
+        function exportBookmarks() {
+            let blob = new Blob([JSON.stringify(bookmarks, null, 2)], {type: 'application/json'});
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = 'bookmarks.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // --- Sharing ---
+        function shareBookmark(id) {
+            let bookmark = bookmarks.find(b => b.id === id);
+            if (!bookmark) return;
+            let shareUrl = `${location.origin}?bookmark=${encodeURIComponent(bookmark.id)}`;
+            if (navigator.share) {
+                navigator.share({title: bookmark.name, url: shareUrl});
+            } else {
+                prompt('Copy this link to share:', shareUrl);
+            }
+            // Optionally, generate QR code here
+        }
+
+        // --- Tag/Folder Population ---
+        function updateFolderDropdown() {
+            let folders = [...new Set(bookmarks.map(b => b.folder).filter(Boolean))];
+            let folderSelect = document.getElementById('bookmarkFolder');
+            folderSelect.innerHTML = '<option value="">All Folders</option>' + folders.map(f => `<option value="${f}">${f}</option>`).join('');
+        }
+
+        // --- On Load ---
+        renderBookmarks();
+        updateFolderDropdown();
+        updateAnalytics();
+
     </script>
 </body>
 </html>
