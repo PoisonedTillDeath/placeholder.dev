@@ -266,11 +266,15 @@
     <!-- Footer -->
     <footer class="glass mt-auto p-6">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <p class="text-white/60">Placeholder.dev - Advanced Search Dashboard</p>
+            <p class="text-white/60">
+                Placeholder.dev - Advanced Search Dashboard
+                <a href="https://github.com/devpookie/placeholder.dev" target="_blank" class="underline ml-2">GitHub</a>
+                <span class="ml-2 text-xs bg-white/10 px-2 py-1 rounded">commit <a href="https://github.com/devpookie/placeholder.dev/commit/d103301" target="_blank" class="underline">d103301</a></span>
+            </p>
             <div class="flex items-center gap-4 text-sm text-white/60">
                 <span id="footerBookmarkCount">0 bookmarks</span>
                 <span>•</span>
-                <span>Version 2.0</span>
+                <span id="footerTimeAgo"></span>
             </div>
         </div>
     </footer>
@@ -668,6 +672,25 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}">${b.name}</A>`).join('\n')}
         updateFolderDropdown();
         updateAnalytics();
 
+        // --- Time Ago in Footer ---
+        function timeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            if (seconds < 60) return `${seconds} sec${seconds !== 1 ? 's' : ''} ago`;
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return `${minutes} min${minutes !== 1 ? 's' : ''} ago`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+            const days = Math.floor(hours / 24);
+            return `${days} day${days !== 1 ? 's' : ''} ago`;
+        }
+
+        // Set the footer time ago (using page load time)
+        const pageLoadTime = new Date();
+        function updateFooterTimeAgo() {
+            document.getElementById('footerTimeAgo').textContent = timeAgo(pageLoadTime);
+        }
+        setInterval(updateFooterTimeAgo, 1000);
+        updateFooterTimeAgo();
     </script>
 </body>
 </html>
