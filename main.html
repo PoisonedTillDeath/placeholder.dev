@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus Search - Advanced Dashboard</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <style>
         * { 
             font-family: 'Inter', sans-serif; 
@@ -449,7 +451,7 @@
 
     <!-- Login Page Overlay -->
     <div id="loginPage" class="fixed inset-0 flex items-center justify-center modal-backdrop z-50" style="display: none;">
-        <form id="loginForm" class="glass rounded-3xl p-12 w-full max-w-md space-y-8 text-center fade-in-up" onsubmit="return false;">
+        <form id="loginForm" class="glass rounded-3xl p-12 w-full max-w-md space-y-8 text-center fade-in-up">
             <div class="mb-8">
                 <div class="w-20 h-20 rounded-full glass mx-auto mb-6 flex items-center justify-center">
                     <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -950,14 +952,7 @@
         // Supabase configuration
         const SUPABASE_URL = 'https://cyurtweqjalpacchnhir.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5dXJ0d2VxamFscGFjY2huaGlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwODcxNDIsImV4cCI6MjA2MzY2MzE0Mn0.upymKIr61NMTBGwW0OcyUzI7yJ8TRBVQQYLHVDbRGXo';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-            auth: {
-                storageKey: 'supabase.auth.token',
-                autoRefreshToken: true,
-                persistSession: true,
-                detectSessionInUrl: false
-            }
-        });
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         const SUPABASE_TABLE = 'bookmarks';
 
         // Global variables (legacy support)
@@ -965,9 +960,6 @@
         let analytics = appState.analytics;
         let currentTab = 'dashboard';
         let editingBookmarkId = null;
-
-        // Add lock management
-        let isAuthenticating = false;
 
         // Enhanced loading management
         function setLoading(isLoading, element = null) {
@@ -1066,101 +1058,35 @@
         // Enhanced tab switching with better state management
         function switchTab(tabName) {
             if (appState.isLoading) return;
-
-            // Hide all tabs
-            const tabs = ['dashboard', 'analytics', 'labs'];
-            tabs.forEach(tab => {
-                const content = document.getElementById(tab + '-content');
-                if (content) {
-                    content.classList.add('hidden');
-                    content.style.opacity = '0';
-                }
-            });
-
-            // Remove active state from all buttons
-            tabs.forEach(tab => {
-                const btn = document.getElementById('tab-' + tab);
-                if (btn) {
-                    btn.classList.remove('active');
-                }
-            });
-
-            // Show selected tab
-            const targetContent = document.getElementById(tabName + '-content');
-            const targetBtn = document.getElementById('tab-' + tabName);
             
-            if (targetContent && targetBtn) {
-                targetContent.classList.remove('hidden');
-                setTimeout(() => targetContent.style.opacity = '1', 50);
-                targetBtn.classList.add('active');
-                
-                // Update state
-                appState.currentTab = tabName;
-                currentTab = tabName;
-
-                // Load tab-specific data
-                if (tabName === 'analytics') {
-                    renderAnalytics();
-                }
+            // Hide all tabs with animation
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+                content.style.opacity = '0';
+            });
+            
+            // Update button states
+            document.querySelectorAll('.btn-secondary').forEach(btn => btn.classList.remove('active'));
+            
+            // Show target tab
+            const targetContent = document.getElementById(tabName + '-content');
+            targetContent.classList.remove('hidden');
+            setTimeout(() => targetContent.style.opacity = '1', 50);
+            
+            document.getElementById('tab-' + tabName).classList.add('active');
+            appState.currentTab = tabName;
+            currentTab = tabName;
+            
+            // Load tab-specific data
+            if (tabName === 'analytics') {
+                renderAnalytics();
+            }
+            
+            // Update URL without refresh
+            if (history.pushState) {
+                history.pushState(null, null, `#${tabName}`);
             }
         }
-
-        // Initialize the application
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                // Load theme
-                loadTheme();
-                
-                // Setup theme toggle
-                document.getElementById('themeToggle').onclick = toggleTheme;
-                
-                // Start with dashboard tab
-                switchTab('dashboard');
-                
-                // Setup keyboard shortcuts
-                document.addEventListener('keydown', (e) => {
-                    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                        e.preventDefault();
-                        document.getElementById('searchInput').focus();
-                    }
-                    if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
-                        e.preventDefault();
-                        addBookmark();
-                    }
-                    if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
-                        e.preventDefault();
-                        showRandomBookmark();
-                    }
-                    if (e.key === 'Escape') {
-                        closeModal();
-                    }
-                });
-                
-                // Initialize auto backup button
-                const autoBackupBtn = document.getElementById('autoBackupBtn');
-                if (autoBackupBtn) {
-                    autoBackupBtn.textContent = appState.autoBackup ? 'Disable Auto Backup' : 'Enable Auto Backup';
-                    autoBackupBtn.className = appState.autoBackup ? 'btn-primary px-4 py-2 rounded-xl text-sm' : 'btn-secondary px-4 py-2 rounded-xl text-sm';
-                }
-                
-                // Check authentication
-                await checkAuth();
-                
-                // Fetch latest commit
-                await fetchLatestCommit();
-                
-                // Start footer timer
-                setInterval(updateFooterTimeAgo, 1000);
-                updateFooterTimeAgo();
-                
-                // Focus search input
-                document.getElementById('searchInput').focus();
-                
-            } catch (error) {
-                console.error('Initialization error:', error);
-                showToast('Failed to initialize application', 'error');
-            }
-        });
 
         // Enhanced bookmark management with better validation
         function addBookmark() {
@@ -1734,19 +1660,8 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}" ADD_DATE="${Math.floor(new Date
 
         // Enhanced Authentication
         async function checkAuth() {
-            if (isAuthenticating) {
-                console.log('Authentication already in progress');
-                return;
-            }
-
             try {
-                isAuthenticating = true;
-                const { data: { user }, error } = await supabase.auth.getUser();
-                
-                if (error) {
-                    throw error;
-                }
-
+                const { data: { user } } = await supabase.auth.getUser();
                 if (!user) {
                     showLogin();
                 } else {
@@ -1759,51 +1674,28 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}" ADD_DATE="${Math.floor(new Date
             } catch (error) {
                 console.error('Auth check error:', error);
                 showLogin();
-            } finally {
-                isAuthenticating = false;
             }
         }
 
         // Enhanced login form handling
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
-            
-            if (isAuthenticating) {
-                console.log('Authentication already in progress');
-                return;
-            }
-
             const button = document.getElementById('loginButton');
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             
-            if (!email || !password) {
-                document.getElementById('loginError').textContent = 'Please enter both email and password';
-                return;
-            }
-
             setLoading(true, button);
             
             try {
-                isAuthenticating = true;
-                const { error } = await supabase.auth.signInWithPassword({ 
-                    email, 
-                    password,
-                    options: {
-                        shouldThrowOnError: true
-                    }
-                });
-                
+                const { error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) throw error;
                 
                 document.getElementById('loginError').textContent = '';
                 await checkAuth();
                 
             } catch (error) {
-                console.error('Login error:', error);
-                document.getElementById('loginError').textContent = error.message || 'Failed to login';
+                document.getElementById('loginError').textContent = error.message;
             } finally {
-                isAuthenticating = false;
                 setLoading(false, button);
             }
         };
@@ -1831,13 +1723,7 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}" ADD_DATE="${Math.floor(new Date
         };
 
         async function logout() {
-            if (isAuthenticating) {
-                console.log('Authentication operation in progress');
-                return;
-            }
-
             try {
-                isAuthenticating = true;
                 await supabase.auth.signOut();
                 appState.user = null;
                 bookmarks = [];
@@ -1847,13 +1733,10 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}" ADD_DATE="${Math.floor(new Date
                 
                 // Clear sensitive data
                 localStorage.removeItem('bookmarks_cache');
-                localStorage.removeItem('supabase.auth.token');
                 
             } catch (error) {
                 console.error('Logout error:', error);
                 showToast('Logout failed', 'error');
-            } finally {
-                isAuthenticating = false;
             }
         }
 
@@ -1989,12 +1872,79 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}" ADD_DATE="${Math.floor(new Date
             showToast(`Opened: ${randomBookmark.name}`);
         }
 
-        // Add session cleanup on page unload
-        window.addEventListener('beforeunload', () => {
+        // Enhanced initialization
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Show loading overlay
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+            
             try {
-                localStorage.removeItem('supabase.auth.token');
+                // Load theme
+                loadTheme();
+                
+                // Setup theme toggle
+                document.getElementById('themeToggle').onclick = toggleTheme;
+                
+                // Check URL hash for tab
+                const hash = window.location.hash.substring(1);
+                if (['dashboard', 'analytics', 'labs'].includes(hash)) {
+                    switchTab(hash);
+                }
+                
+                // Enhanced keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                        e.preventDefault();
+                        document.getElementById('searchInput').focus();
+                    }
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+                        e.preventDefault();
+                        addBookmark();
+                    }
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+                        e.preventDefault();
+                        showRandomBookmark();
+                    }
+                    if (e.key === 'Escape') {
+                        closeModal();
+                    }
+                });
+                
+                // Initialize auto backup button
+                const autoBackupBtn = document.getElementById('autoBackupBtn');
+                if (autoBackupBtn) {
+                    autoBackupBtn.textContent = appState.autoBackup ? 'Disable Auto Backup' : 'Enable Auto Backup';
+                    autoBackupBtn.className = appState.autoBackup ? 'btn-primary px-4 py-2 rounded-xl text-sm' : 'btn-secondary px-4 py-2 rounded-xl text-sm';
+                }
+                
+                // Check authentication
+                await checkAuth();
+                
+                // Fetch latest commit
+                await fetchLatestCommit();
+                
+                // Start footer timer
+                setInterval(updateFooterTimeAgo, 1000);
+                updateFooterTimeAgo();
+                
+                // Focus search input
+                document.getElementById('searchInput').focus();
+                
             } catch (error) {
-                console.error('Failed to cleanup auth token:', error);
+                console.error('Initialization error:', error);
+                showToast('Failed to initialize application', 'error');
+            } finally {
+                // Hide loading overlay
+                setTimeout(() => {
+                    document.getElementById('loadingOverlay').classList.add('hidden');
+                }, 1000);
+            }
+        });
+
+        // Handle browser back/forward
+        window.addEventListener('popstate', (e) => {
+            const hash = window.location.hash.substring(1);
+            if (['dashboard', 'analytics', 'labs'].includes(hash)) {
+                switchTab(hash);
             }
         });
     </script>
