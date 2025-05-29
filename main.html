@@ -1056,33 +1056,37 @@
         // Enhanced tab switching with better state management
         function switchTab(tabName) {
             if (appState.isLoading) return;
-            
+
             // Hide all tabs with animation
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.add('hidden');
                 content.style.opacity = '0';
             });
-            
+
             // Update button states
             document.querySelectorAll('.btn-secondary').forEach(btn => btn.classList.remove('active'));
-            
+
             // Show target tab
             const targetContent = document.getElementById(tabName + '-content');
             targetContent.classList.remove('hidden');
             setTimeout(() => targetContent.style.opacity = '1', 50);
-            
+
             document.getElementById('tab-' + tabName).classList.add('active');
             appState.currentTab = tabName;
             currentTab = tabName;
-            
+
             // Load tab-specific data
             if (tabName === 'analytics') {
                 renderAnalytics();
             }
-            
-            // Update URL without refresh
-            if (history.pushState) {
-                history.pushState(null, null, `#${tabName}`);
+
+            // Only update hash if needed, and use replaceState to avoid stacking history
+            if (window.location.hash !== `#${tabName}`) {
+                if (history.replaceState) {
+                    history.replaceState(null, null, `#${tabName}`);
+                } else {
+                    window.location.hash = `#${tabName}`;
+                }
             }
         }
 
