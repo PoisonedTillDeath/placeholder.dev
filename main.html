@@ -449,7 +449,7 @@
 
     <!-- Login Page Overlay -->
     <div id="loginPage" class="fixed inset-0 flex items-center justify-center modal-backdrop z-50" style="display: none;">
-        <form id="loginForm" class="glass rounded-3xl p-12 w-full max-w-md space-y-8 text-center fade-in-up">
+        <form id="loginForm" class="glass rounded-3xl p-12 w-full max-w-md space-y-8 text-center fade-in-up" onsubmit="return false;">
             <div class="mb-8">
                 <div class="w-20 h-20 rounded-full glass mx-auto mb-6 flex items-center justify-center">
                     <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -1080,13 +1080,9 @@
                 renderAnalytics();
             }
 
-            // Only update hash if needed, and use replaceState to avoid stacking history
-            if (window.location.hash !== `#${tabName}`) {
-                if (history.replaceState) {
-                    history.replaceState(null, null, `#${tabName}`);
-                } else {
-                    window.location.hash = `#${tabName}`;
-                }
+            // Update URL without refreshing
+            if (history.pushState) {
+                history.pushState(null, null, '#' + tabName);
             }
         }
 
@@ -1936,11 +1932,21 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}" ADD_DATE="${Math.floor(new Date
 
         // Handle browser back/forward
         window.addEventListener('popstate', (e) => {
+            e.preventDefault();
             const hash = window.location.hash.substring(1);
             if (['dashboard', 'analytics', 'labs'].includes(hash)) {
                 switchTab(hash);
             }
         });
+
+        // Prevent hash changes from refreshing
+        window.addEventListener('hashchange', (e) => {
+            e.preventDefault();
+            const hash = window.location.hash.substring(1);
+            if (['dashboard', 'analytics', 'labs'].includes(hash)) {
+                switchTab(hash);
+            }
+        }, false);
     </script>
 </body>
 </html>
