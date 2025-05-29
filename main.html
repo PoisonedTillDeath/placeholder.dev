@@ -1057,34 +1057,100 @@
         function switchTab(tabName) {
             if (appState.isLoading) return;
 
-            // Hide all tabs with animation
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.add('hidden');
-                content.style.opacity = '0';
+            // Hide all tabs
+            const tabs = ['dashboard', 'analytics', 'labs'];
+            tabs.forEach(tab => {
+                const content = document.getElementById(tab + '-content');
+                if (content) {
+                    content.classList.add('hidden');
+                    content.style.opacity = '0';
+                }
             });
 
-            // Update button states
-            document.querySelectorAll('.btn-secondary').forEach(btn => btn.classList.remove('active'));
+            // Remove active state from all buttons
+            tabs.forEach(tab => {
+                const btn = document.getElementById('tab-' + tab);
+                if (btn) {
+                    btn.classList.remove('active');
+                }
+            });
 
-            // Show target tab
+            // Show selected tab
             const targetContent = document.getElementById(tabName + '-content');
-            targetContent.classList.remove('hidden');
-            setTimeout(() => targetContent.style.opacity = '1', 50);
+            const targetBtn = document.getElementById('tab-' + tabName);
+            
+            if (targetContent && targetBtn) {
+                targetContent.classList.remove('hidden');
+                setTimeout(() => targetContent.style.opacity = '1', 50);
+                targetBtn.classList.add('active');
+                
+                // Update state
+                appState.currentTab = tabName;
+                currentTab = tabName;
 
-            document.getElementById('tab-' + tabName).classList.add('active');
-            appState.currentTab = tabName;
-            currentTab = tabName;
-
-            // Load tab-specific data
-            if (tabName === 'analytics') {
-                renderAnalytics();
-            }
-
-            // Update URL without refreshing
-            if (history.pushState) {
-                history.pushState(null, null, '#' + tabName);
+                // Load tab-specific data
+                if (tabName === 'analytics') {
+                    renderAnalytics();
+                }
             }
         }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Load theme
+                loadTheme();
+                
+                // Setup theme toggle
+                document.getElementById('themeToggle').onclick = toggleTheme;
+                
+                // Start with dashboard tab
+                switchTab('dashboard');
+                
+                // Setup keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                        e.preventDefault();
+                        document.getElementById('searchInput').focus();
+                    }
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+                        e.preventDefault();
+                        addBookmark();
+                    }
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+                        e.preventDefault();
+                        showRandomBookmark();
+                    }
+                    if (e.key === 'Escape') {
+                        closeModal();
+                    }
+                });
+                
+                // Initialize auto backup button
+                const autoBackupBtn = document.getElementById('autoBackupBtn');
+                if (autoBackupBtn) {
+                    autoBackupBtn.textContent = appState.autoBackup ? 'Disable Auto Backup' : 'Enable Auto Backup';
+                    autoBackupBtn.className = appState.autoBackup ? 'btn-primary px-4 py-2 rounded-xl text-sm' : 'btn-secondary px-4 py-2 rounded-xl text-sm';
+                }
+                
+                // Check authentication
+                await checkAuth();
+                
+                // Fetch latest commit
+                await fetchLatestCommit();
+                
+                // Start footer timer
+                setInterval(updateFooterTimeAgo, 1000);
+                updateFooterTimeAgo();
+                
+                // Focus search input
+                document.getElementById('searchInput').focus();
+                
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showToast('Failed to initialize application', 'error');
+            }
+        });
 
         // Enhanced bookmark management with better validation
         function addBookmark() {
@@ -1869,84 +1935,6 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}" ADD_DATE="${Math.floor(new Date
             incrementClicks(randomBookmark.id);
             showToast(`Opened: ${randomBookmark.name}`);
         }
-
-        // Enhanced initialization
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                // Load theme
-                loadTheme();
-                
-                // Setup theme toggle
-                document.getElementById('themeToggle').onclick = toggleTheme;
-                
-                // Check URL hash for tab
-                const hash = window.location.hash.substring(1);
-                if (['dashboard', 'analytics', 'labs'].includes(hash)) {
-                    switchTab(hash);
-                }
-                
-                // Enhanced keyboard shortcuts
-                document.addEventListener('keydown', (e) => {
-                    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                        e.preventDefault();
-                        document.getElementById('searchInput').focus();
-                    }
-                    if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
-                        e.preventDefault();
-                        addBookmark();
-                    }
-                    if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
-                        e.preventDefault();
-                        showRandomBookmark();
-                    }
-                    if (e.key === 'Escape') {
-                        closeModal();
-                    }
-                });
-                
-                // Initialize auto backup button
-                const autoBackupBtn = document.getElementById('autoBackupBtn');
-                if (autoBackupBtn) {
-                    autoBackupBtn.textContent = appState.autoBackup ? 'Disable Auto Backup' : 'Enable Auto Backup';
-                    autoBackupBtn.className = appState.autoBackup ? 'btn-primary px-4 py-2 rounded-xl text-sm' : 'btn-secondary px-4 py-2 rounded-xl text-sm';
-                }
-                
-                // Check authentication
-                await checkAuth();
-                
-                // Fetch latest commit
-                await fetchLatestCommit();
-                
-                // Start footer timer
-                setInterval(updateFooterTimeAgo, 1000);
-                updateFooterTimeAgo();
-                
-                // Focus search input
-                document.getElementById('searchInput').focus();
-                
-            } catch (error) {
-                console.error('Initialization error:', error);
-                showToast('Failed to initialize application', 'error');
-            }
-        });
-
-        // Handle browser back/forward
-        window.addEventListener('popstate', (e) => {
-            e.preventDefault();
-            const hash = window.location.hash.substring(1);
-            if (['dashboard', 'analytics', 'labs'].includes(hash)) {
-                switchTab(hash);
-            }
-        });
-
-        // Prevent hash changes from refreshing
-        window.addEventListener('hashchange', (e) => {
-            e.preventDefault();
-            const hash = window.location.hash.substring(1);
-            if (['dashboard', 'analytics', 'labs'].includes(hash)) {
-                switchTab(hash);
-            }
-        }, false);
     </script>
 </body>
 </html>
