@@ -950,7 +950,14 @@
         // Supabase configuration
         const SUPABASE_URL = 'https://cyurtweqjalpacchnhir.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5dXJ0d2VxamFscGFjY2huaGlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwODcxNDIsImV4cCI6MjA2MzY2MzE0Mn0.upymKIr61NMTBGwW0OcyUzI7yJ8TRBVQQYLHVDbRGXo';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: {
+                storageKey: 'supabase.auth.token',
+                autoRefreshToken: true,
+                persistSession: true,
+                detectSessionInUrl: false
+            }
+        });
         const SUPABASE_TABLE = 'bookmarks';
 
         // Global variables (legacy support)
@@ -958,6 +965,9 @@
         let analytics = appState.analytics;
         let currentTab = 'dashboard';
         let editingBookmarkId = null;
+
+        // Add lock management
+        let isAuthenticating = false;
 
         // Enhanced loading management
         function setLoading(isLoading, element = null) {
@@ -1724,8 +1734,19 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}" ADD_DATE="${Math.floor(new Date
 
         // Enhanced Authentication
         async function checkAuth() {
+            if (isAuthenticating) {
+                console.log('Authentication already in progress');
+                return;
+            }
+
             try {
-                const { data: { user } } = await supabase.auth.getUser();
+                isAuthenticating = true;
+                const { data: { user }, error } = await supabase.auth.getUser();
+                
+                if (error) {
+                    throw error;
+                }
+
                 if (!user) {
                     showLogin();
                 } else {
@@ -1738,28 +1759,51 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}" ADD_DATE="${Math.floor(new Date
             } catch (error) {
                 console.error('Auth check error:', error);
                 showLogin();
+            } finally {
+                isAuthenticating = false;
             }
         }
 
         // Enhanced login form handling
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
+            
+            if (isAuthenticating) {
+                console.log('Authentication already in progress');
+                return;
+            }
+
             const button = document.getElementById('loginButton');
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             
+            if (!email || !password) {
+                document.getElementById('loginError').textContent = 'Please enter both email and password';
+                return;
+            }
+
             setLoading(true, button);
             
             try {
-                const { error } = await supabase.auth.signInWithPassword({ email, password });
+                isAuthenticating = true;
+                const { error } = await supabase.auth.signInWithPassword({ 
+                    email, 
+                    password,
+                    options: {
+                        shouldThrowOnError: true
+                    }
+                });
+                
                 if (error) throw error;
                 
                 document.getElementById('loginError').textContent = '';
                 await checkAuth();
                 
             } catch (error) {
-                document.getElementById('loginError').textContent = error.message;
+                console.error('Login error:', error);
+                document.getElementById('loginError').textContent = error.message || 'Failed to login';
             } finally {
+                isAuthenticating = false;
                 setLoading(false, button);
             }
         };
@@ -1787,7 +1831,13 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}" ADD_DATE="${Math.floor(new Date
         };
 
         async function logout() {
+            if (isAuthenticating) {
+                console.log('Authentication operation in progress');
+                return;
+            }
+
             try {
+                isAuthenticating = true;
                 await supabase.auth.signOut();
                 appState.user = null;
                 bookmarks = [];
@@ -1797,10 +1847,13 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}" ADD_DATE="${Math.floor(new Date
                 
                 // Clear sensitive data
                 localStorage.removeItem('bookmarks_cache');
+                localStorage.removeItem('supabase.auth.token');
                 
             } catch (error) {
                 console.error('Logout error:', error);
                 showToast('Logout failed', 'error');
+            } finally {
+                isAuthenticating = false;
             }
         }
 
@@ -1935,6 +1988,15 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}" ADD_DATE="${Math.floor(new Date
             incrementClicks(randomBookmark.id);
             showToast(`Opened: ${randomBookmark.name}`);
         }
+
+        // Add session cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            try {
+                localStorage.removeItem('supabase.auth.token');
+            } catch (error) {
+                console.error('Failed to cleanup auth token:', error);
+            }
+        });
     </script>
 </body>
 </html>
