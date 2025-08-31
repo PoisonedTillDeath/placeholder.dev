@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Search - Loading</title>
+    <title>Placeholder.dev - Loading</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { 
@@ -13,8 +13,16 @@
             font-family: 'Inter', sans-serif;
         }
         
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --accent-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+        
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background: var(--primary-gradient);
             background-attachment: fixed;
             height: 100vh;
             display: flex;
@@ -23,9 +31,10 @@
             color: white;
             overflow: hidden;
             position: relative;
+            perspective: 1000px;
         }
         
-        /* Animated Background */
+        /* Enhanced Animated Background */
         .bg-animation {
             position: fixed;
             top: 0;
@@ -34,10 +43,94 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
+            overflow: hidden;
         }
         
-        .floating-orb {
+        /* Starfield Animation */
+        .stars {
             position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--twinkle-duration) infinite ease-in-out;
+        }
+        
+        .star::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border-radius: inherit;
+            transform: translate(-50%, -50%);
+            filter: blur(1px);
+        }
+        
+        .star.small {
+            width: 2px;
+            height: 2px;
+            --twinkle-duration: 3s;
+        }
+        
+        .star.medium {
+            width: 3px;
+            height: 3px;
+            --twinkle-duration: 4s;
+        }
+        
+        .star.large {
+            width: 4px;
+            height: 4px;
+            --twinkle-duration: 5s;
+        }
+        
+        .star.shooting {
+            width: 2px;
+            height: 2px;
+            background: linear-gradient(90deg, #fff, transparent);
+            animation: shooting-star 8s linear infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { 
+                opacity: 0.3; 
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.2);
+            }
+        }
+        
+        @keyframes shooting-star {
+            0% {
+                transform: translateX(-100px) translateY(0) rotate(45deg);
+                opacity: 1;
+            }
+            10% {
+                opacity: 1;
+            }
+            20% {
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(calc(100vw + 100px)) translateY(calc(100vh + 100px)) rotate(45deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Floating Orbs with Enhanced Effects */
+        .floating-orb {
+            position: absolute; 
             border-radius: 50%;
             background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
             backdrop-filter: blur(40px);
@@ -45,29 +138,29 @@
             box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
         }
         
-        .orb-1 {
-            width: 120px;
-            height: 120px;
-            top: 15%;
-            left: 10%;
+        .orb-1 { 
+            width: 120px; 
+            height: 120px; 
+            top: 15%; 
+            left: 10%; 
             animation-delay: 0s;
             background: linear-gradient(45deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.1));
         }
         
-        .orb-2 {
-            width: 200px;
-            height: 200px;
-            top: 60%;
-            right: 15%;
+        .orb-2 { 
+            width: 200px; 
+            height: 200px; 
+            top: 60%; 
+            right: 15%; 
             animation-delay: -8s;
             background: linear-gradient(45deg, rgba(250, 112, 154, 0.3), rgba(254, 225, 64, 0.1));
         }
         
-        .orb-3 {
-            width: 90px;
-            height: 90px;
-            bottom: 25%;
-            left: 25%;
+        .orb-3 { 
+            width: 90px; 
+            height: 90px; 
+            bottom: 25%; 
+            left: 25%; 
             animation-delay: -15s;
             background: linear-gradient(45deg, rgba(79, 172, 254, 0.3), rgba(0, 242, 254, 0.1));
         }
@@ -91,38 +184,85 @@
             }
         }
         
-        /* Loading Container */
+        /* Cosmic Dust Effect */
+        .cosmic-dust {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+        }
+        
+        .dust-particle {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float-dust 20s infinite linear;
+        }
+        
+        @keyframes float-dust {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+        
+        /* Enhanced Loading Container */
         .loading-container {
             text-align: center;
             z-index: 10;
             position: relative;
             animation: fadeInUp 1s ease-out;
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
         
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(30px) rotateX(20deg);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) rotateX(0deg);
             }
         }
         
-        /* Logo */
+        /* 3D Logo with Hover Effects */
         .logo {
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             margin: 0 auto 30px;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
-            border-radius: 20px;
+            border-radius: 25px;
             display: flex;
             align-items: center;
             justify-content: center;
             border: 1px solid rgba(255, 255, 255, 0.2);
             animation: logoGlow 2s infinite alternate;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        
+        .logo:hover {
+            transform: rotateY(15deg) rotateX(10deg) translateZ(30px);
+            box-shadow: 0 20px 60px rgba(79, 172, 254, 0.4);
         }
         
         @keyframes logoGlow {
@@ -135,26 +275,35 @@
         }
         
         .logo svg {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             color: white;
+            transition: all 0.3s ease;
         }
         
-        /* Enhanced Spinner */
+        .logo:hover svg {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+        }
+        
+        /* Enhanced 3D Spinner */
         .spinner-container {
             position: relative;
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             margin: 0 auto 40px;
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
         
         .spinner {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border: 3px solid rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             position: relative;
             animation: rotate 2s linear infinite;
+            transform-style: preserve-3d;
         }
         
         .spinner::before {
@@ -162,8 +311,8 @@
             position: absolute;
             top: -3px;
             left: -3px;
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border: 3px solid transparent;
             border-top: 3px solid #4facfe;
             border-right: 3px solid #00f2fe;
@@ -176,8 +325,8 @@
             position: absolute;
             top: 6px;
             left: 6px;
-            width: 82px;
-            height: 82px;
+            width: 102px;
+            height: 102px;
             border: 2px solid transparent;
             border-top: 2px solid #fa709a;
             border-right: 2px solid #fee140;
@@ -190,20 +339,28 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Pulse Dots */
+        /* Enhanced Pulse Dots with 3D */
         .pulse-dots {
             display: flex;
             justify-content: center;
-            gap: 8px;
-            margin: 20px 0;
+            gap: 12px;
+            margin: 25px 0;
+            transform-style: preserve-3d;
         }
         
         .dot {
-            width: 12px;
-            height: 12px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
             background: linear-gradient(45deg, #4facfe, #00f2fe);
             animation: pulse-dot 1.5s infinite;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .dot:hover {
+            transform: scale(1.5) translateZ(20px);
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
         }
         
         .dot:nth-child(1) { animation-delay: 0s; }
@@ -221,57 +378,80 @@
             }
         }
         
-        /* Typography */
+        /* Enhanced Typography with 3D */
         .loading-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 16px;
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 20px;
             background: linear-gradient(135deg, #ffffff 0%, #a1c4fd 50%, #c2e9fb 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: textShimmer 3s infinite;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            transform-style: preserve-3d;
         }
         
         @keyframes textShimmer {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
+            0%, 100% { 
+                opacity: 1; 
+                transform: translateZ(0);
+            }
+            50% { 
+                opacity: 0.8; 
+                transform: translateZ(10px);
+            }
         }
         
         .loading-subtitle {
-            font-size: 1.2rem;
-            opacity: 0.8;
-            margin-bottom: 8px;
-            font-weight: 500;
+            font-size: 1.4rem;
+            opacity: 0.9;
+            margin-bottom: 12px;
+            font-weight: 600;
+            animation: subtitleFloat 4s ease-in-out infinite;
+        }
+        
+        @keyframes subtitleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
         
         .loading-description {
-            font-size: 1rem;
-            opacity: 0.6;
+            font-size: 1.1rem;
+            opacity: 0.7;
             font-weight: 400;
-            max-width: 400px;
+            max-width: 450px;
             margin: 0 auto;
-            line-height: 1.5;
+            line-height: 1.6;
+            animation: descriptionFade 5s ease-in-out infinite;
         }
         
-        /* Progress Bar */
+        @keyframes descriptionFade {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        /* Enhanced Progress Bar with 3D */
         .progress-container {
-            width: 300px;
-            height: 4px;
+            width: 350px;
+            height: 6px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            margin: 30px auto 20px;
+            border-radius: 3px;
+            margin: 35px auto 25px;
             overflow: hidden;
             position: relative;
+            transform-style: preserve-3d;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
         }
         
         .progress-bar {
             height: 100%;
             background: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #fa709a 100%);
-            border-radius: 2px;
+            border-radius: 3px;
             animation: progressMove 2s infinite;
             width: 100%;
             transform: translateX(-100%);
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.5);
         }
         
         @keyframes progressMove {
@@ -280,20 +460,28 @@
             100% { transform: translateX(100%); }
         }
         
-        /* Status Messages */
+        /* Enhanced Status Messages with 3D */
         .status-messages {
-            margin-top: 30px;
-            height: 30px;
+            margin-top: 35px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transform-style: preserve-3d;
         }
         
         .status-message {
-            font-size: 0.9rem;
-            opacity: 0.7;
+            font-size: 1rem;
+            opacity: 0.8;
             animation: fadeInOut 3s infinite;
             position: absolute;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .status-message:hover {
+            transform: scale(1.1) translateZ(20px);
+            opacity: 1;
         }
         
         .status-message:nth-child(1) { animation-delay: 0s; }
@@ -301,174 +489,380 @@
         .status-message:nth-child(3) { animation-delay: 6s; }
         
         @keyframes fadeInOut {
-            0%, 66.67%, 100% { opacity: 0; transform: translateY(10px); }
-            16.67%, 50% { opacity: 0.7; transform: translateY(0); }
+            0%, 66.67%, 100% { 
+                opacity: 0; 
+                transform: translateY(10px) translateZ(0);
+            }
+            16.67%, 50% { 
+                opacity: 0.8; 
+                transform: translateY(0) translateZ(10px);
+            }
+        }
+        
+        /* Interactive Elements */
+        .interactive-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            opacity: 0.6;
+            animation: hintPulse 2s ease-in-out infinite;
+            cursor: pointer;
+        }
+        
+        @keyframes hintPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        /* Particle Effects */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            border-radius: 50%;
+            animation: particle-float 3s ease-out forwards;
+            z-index: 1000;
+        }
+        
+        @keyframes particle-float {
+            0% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) translateY(-100px);
+            }
         }
         
         /* Responsive Design */
         @media (max-width: 768px) {
             .loading-title {
-                font-size: 2rem;
+                font-size: 2.5rem;
             }
             
             .loading-subtitle {
-                font-size: 1rem;
+                font-size: 1.2rem;
             }
             
             .progress-container {
-                width: 250px;
+                width: 280px;
             }
             
             .logo {
-                width: 60px;
-                height: 60px;
-                margin-bottom: 20px;
+                width: 80px;
+                height: 80px;
+                margin-bottom: 25px;
             }
             
             .logo svg {
-                width: 30px;
-                height: 30px;
+                width: 40px;
+                height: 40px;
             }
             
             .spinner-container {
-                width: 80px;
-                height: 80px;
-                margin-bottom: 30px;
+                width: 100px;
+                height: 100px;
+                margin-bottom: 35px;
             }
             
             .spinner {
-                width: 80px;
-                height: 80px;
+                width: 100px;
+                height: 100px;
             }
             
             .spinner::before {
-                width: 80px;
-                height: 80px;
+                width: 100px;
+                height: 100px;
             }
             
             .spinner::after {
-                width: 66px;
-                height: 66px;
-                top: 4px;
-                left: 4px;
+                width: 84px;
+                height: 84px;
+                top: 5px;
+                left: 5px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Animated Background -->
+    <!-- Enhanced Animated Background -->
     <div class="bg-animation">
+        <!-- Starfield -->
+        <div class="stars" id="stars"></div>
+        
+        <!-- Cosmic Dust -->
+        <div class="cosmic-dust" id="cosmicDust"></div>
+        
+        <!-- Floating Orbs -->
         <div class="floating-orb orb-1"></div>
         <div class="floating-orb orb-2"></div>
         <div class="floating-orb orb-3"></div>
     </div>
 
-    <!-- Loading Container -->
+    <!-- Enhanced Loading Container -->
     <div class="loading-container">
-        <!-- Logo -->
-        <div class="logo">
+        <!-- 3D Logo with Hover Effects -->
+        <div class="logo" id="logo">
             <svg fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
             </svg>
         </div>
 
-        <!-- Enhanced Spinner -->
+        <!-- Enhanced 3D Spinner -->
         <div class="spinner-container">
             <div class="spinner"></div>
         </div>
 
-        <!-- Pulse Dots -->
+        <!-- Enhanced Pulse Dots with 3D -->
         <div class="pulse-dots">
             <div class="dot"></div>
             <div class="dot"></div>
             <div class="dot"></div>
         </div>
 
-        <!-- Typography -->
-        <h1 class="loading-title">Nexus Search</h1>
-        <h2 class="loading-subtitle">Preparing your experience</h2>
+        <!-- Enhanced Typography with 3D -->
+        <h1 class="loading-title">Placeholder.dev</h1>
+        <h2 class="loading-subtitle">Preparing your cosmic experience</h2>
         <p class="loading-description">
-            We're setting up your personalized search dashboard with all your bookmarks and preferences.
+            We're setting up your personalized search dashboard with AI-powered suggestions, smart categories, and stunning 3D effects.
         </p>
 
-        <!-- Progress Bar -->
+        <!-- Enhanced Progress Bar with 3D -->
         <div class="progress-container">
             <div class="progress-bar"></div>
         </div>
 
-        <!-- Status Messages -->
+        <!-- Enhanced Status Messages with 3D -->
         <div class="status-messages">
-            <div class="status-message">Initializing search engine...</div>
-            <div class="status-message" style="display:none;">Loading your bookmarks...</div>
-            <div class="status-message" style="display:none;">Almost ready to go!</div>
+            <div class="status-message">Initializing cosmic search engine...</div>
+            <div class="status-message" style="display:none;">Loading your smart bookmarks...</div>
+            <div class="status-message" style="display:none;">Almost ready to explore the universe!</div>
+        </div>
+        
+        <!-- Interactive Hint -->
+        <div class="interactive-hint" onclick="showInteractiveHint()">
+            💡 Click anywhere for particle effects
         </div>
     </div>
 
     <script>
-        // Add some dynamic behavior
-        document.addEventListener('DOMContentLoaded', function() {
-            // Simulate loading progress
+        // Enhanced Star Generation
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const cosmicDustContainer = document.getElementById('cosmicDust');
+            const starCount = 200; // More stars for cosmic feel
+            const dustCount = 80; // More cosmic dust
+            
+            // Create stars
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                const size = Math.random() < 0.6 ? 'small' : Math.random() < 0.9 ? 'medium' : 'large';
+                const isShooting = Math.random() < 0.03; // 3% chance of shooting star
+                
+                star.className = `star ${isShooting ? 'shooting' : size}`;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 5 + 's';
+                
+                if (isShooting) {
+                    star.style.animationDelay = Math.random() * 8 + 's';
+                }
+                
+                // Add interactive hover effect
+                star.addEventListener('mouseenter', () => {
+                    star.style.transform = 'scale(2)';
+                    star.style.filter = 'brightness(2)';
+                    createParticle(star.offsetLeft, star.offsetTop);
+                });
+                
+                star.addEventListener('mouseleave', () => {
+                    star.style.transform = 'scale(1)';
+                    star.style.filter = 'brightness(1)';
+                });
+                
+                starsContainer.appendChild(star);
+            }
+            
+            // Create cosmic dust
+            for (let i = 0; i < dustCount; i++) {
+                const dust = document.createElement('div');
+                dust.className = 'dust-particle';
+                dust.style.left = Math.random() * 100 + '%';
+                dust.style.animationDelay = Math.random() * 20 + 's';
+                dust.style.animationDuration = (15 + Math.random() * 15) + 's';
+                cosmicDustContainer.appendChild(dust);
+            }
+        }
+        
+        // Particle Creation
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            particle.style.background = `hsl(${Math.random() * 360}, 70%, 70%)`;
+            particle.style.width = Math.random() * 4 + 2 + 'px';
+            particle.style.height = particle.style.width;
+            
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            }, 3000);
+        }
+        
+        // Interactive Logo
+        function setupInteractiveLogo() {
+            const logo = document.getElementById('logo');
+            let clickCount = 0;
+            
+            logo.addEventListener('click', function() {
+                clickCount++;
+                this.style.transform = 'rotateY(180deg) scale(1.2)';
+                
+                // Create particle explosion
+                const rect = this.getBoundingClientRect();
+                for (let i = 0; i < 20; i++) {
+                    setTimeout(() => {
+                        createParticle(
+                            rect.left + rect.width / 2 + (Math.random() - 0.5) * 100,
+                            rect.top + rect.height / 2 + (Math.random() - 0.5) * 100
+                        );
+                    }, i * 50);
+                }
+                
+                setTimeout(() => {
+                    this.style.transform = 'rotateY(0deg) scale(1)';
+                }, 600);
+                
+                // Special effects for multiple clicks
+                if (clickCount >= 5) {
+                    this.style.animation = 'logoGlow 0.5s ease-in-out infinite';
+                    setTimeout(() => {
+                        this.style.animation = 'logoGlow 2s infinite alternate';
+                        clickCount = 0;
+                    }, 2000);
+                }
+            });
+        }
+        
+        // Interactive Hint
+        function showInteractiveHint() {
+            const hints = [
+                "🌟 Click on stars to create particles",
+                "🎯 Try clicking the logo multiple times",
+                "🌌 Move your mouse around for parallax effects",
+                "🚀 Press any key to skip loading"
+            ];
+            
+            const hint = document.querySelector('.interactive-hint');
+            const randomHint = hints[Math.floor(Math.random() * hints.length)];
+            hint.textContent = randomHint;
+            hint.style.opacity = '1';
+            
+            setTimeout(() => {
+                hint.style.opacity = '0.6';
+            }, 2000);
+        }
+        
+        // Enhanced Progress Simulation
+        function simulateProgress() {
             let progress = 0;
             const progressBar = document.querySelector('.progress-bar');
+            const statusMessages = document.querySelectorAll('.status-message');
+            let currentMsg = 0;
             
             const updateProgress = () => {
-                progress += Math.random() * 15;
+                progress += Math.random() * 12;
                 if (progress > 100) progress = 100;
                 
                 progressBar.style.width = progress + '%';
                 progressBar.style.transform = 'translateX(0)';
                 
                 if (progress < 100) {
-                    setTimeout(updateProgress, 200 + Math.random() * 300);
+                    setTimeout(updateProgress, 200 + Math.random() * 400);
+                } else {
+                    // Auto-redirect after completion
+                    setTimeout(() => {
+                        window.location.href = 'main.html';
+                    }, 1500);
                 }
             };
             
             // Start progress after a short delay
-            setTimeout(updateProgress, 500);
-
+            setTimeout(updateProgress, 800);
+            
             // Status message cycling
-            const messages = document.querySelectorAll('.status-message');
-            let currentMsg = 0;
             setInterval(() => {
-                messages.forEach((msg, idx) => {
+                statusMessages.forEach((msg, idx) => {
                     msg.style.display = idx === currentMsg ? 'block' : 'none';
                 });
-                currentMsg = (currentMsg + 1) % messages.length;
+                currentMsg = (currentMsg + 1) % statusMessages.length;
             }, 3000);
-
-            // Add some interactive elements
-            const logo = document.querySelector('.logo');
-            logo.addEventListener('click', function() {
-                this.style.transform = 'scale(1.1)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 200);
-            });
-            
-            // Keyboard interaction
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    document.body.style.animation = 'fadeOut 0.5s ease-out forwards';
-                }
-            });
-            
-            // Auto-hide after 5 seconds (fallback)
-            setTimeout(() => {
-                document.body.style.opacity = '0.8';
-            }, 5000);
-        });
+        }
         
-        // Add CSS for fadeOut animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fadeOut {
-                to {
-                    opacity: 0;
-                    transform: scale(0.95);
+        // Parallax Effect
+        function setupParallax() {
+            document.addEventListener('mousemove', (e) => {
+                const stars = document.querySelectorAll('.star:not(.shooting)');
+                const dust = document.querySelectorAll('.dust-particle');
+                const mouseX = e.clientX / window.innerWidth;
+                const mouseY = e.clientY / window.innerHeight;
+                
+                stars.forEach((star, index) => {
+                    const speed = (index % 3 + 1) * 0.8;
+                    const x = (mouseX - 0.5) * speed;
+                    const y = (mouseY - 0.5) * speed;
+                    star.style.transform = `translate(${x}px, ${y}px)`;
+                });
+                
+                dust.forEach((particle, index) => {
+                    const speed = (index % 2 + 1) * 0.5;
+                    const x = (mouseX - 0.5) * speed;
+                    const y = (mouseY - 0.5) * speed;
+                    particle.style.transform = `translate(${x}px, ${y}px)`;
+                });
+            });
+        }
+        
+        // Keyboard Shortcuts
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') {
+                    // Create particle explosion
+                    createParticle(window.innerWidth / 2, window.innerHeight / 2);
+                    
+                    // Skip loading
+                    setTimeout(() => {
+                        window.location.href = 'main.html';
+                    }, 500);
                 }
-            }
-        `;
-        document.head.appendChild(style);
+            });
+        }
+        
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            createStars();
+            setupInteractiveLogo();
+            setupParallax();
+            setupKeyboardShortcuts();
+            simulateProgress();
+            
+            // Add click effects to document
+            document.addEventListener('click', function(e) {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+                createParticle(e.clientX, e.clientY);
+            });
+            
+            // Auto-hide after 10 seconds (fallback)
+            setTimeout(() => {
+                document.body.style.opacity = '0.9';
+            }, 10000);
+        });
     </script>
 </body>
 </html>

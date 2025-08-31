@@ -65,7 +65,7 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Enhanced Animated Background */
+        /* Enhanced Animated Background with Stars */
         .bg-animation { 
             position: fixed; 
             top: 0; 
@@ -74,8 +74,92 @@
             height: 100%; 
             pointer-events: none; 
             z-index: -1; 
+            overflow: hidden;
         }
         
+        /* Starfield Animation */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--twinkle-duration) infinite ease-in-out;
+        }
+        
+        .star::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border-radius: inherit;
+            transform: translate(-50%, -50%);
+            filter: blur(1px);
+        }
+        
+        .star.small {
+            width: 2px;
+            height: 2px;
+            --twinkle-duration: 3s;
+        }
+        
+        .star.medium {
+            width: 3px;
+            height: 3px;
+            --twinkle-duration: 4s;
+        }
+        
+        .star.large {
+            width: 4px;
+            height: 4px;
+            --twinkle-duration: 5s;
+        }
+        
+        .star.shooting {
+            width: 2px;
+            height: 2px;
+            background: linear-gradient(90deg, #fff, transparent);
+            animation: shooting-star 8s linear infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { 
+                opacity: 0.3; 
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.2);
+            }
+        }
+        
+        @keyframes shooting-star {
+            0% {
+                transform: translateX(-100px) translateY(0) rotate(45deg);
+                opacity: 1;
+            }
+            10% {
+                opacity: 1;
+            }
+            20% {
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(calc(100vw + 100px)) translateY(calc(100vh + 100px)) rotate(45deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Floating Orbs with Enhanced Effects */
         .floating-orb {
             position: absolute; 
             border-radius: 50%;
@@ -137,13 +221,82 @@
             }
         }
         
-        /* Enhanced Glass Effects */
+        /* Enhanced Glass Effects with 3D */
         .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            background: var(--glass-bg) !important;
+            backdrop-filter: blur(30px) !important;
+            border: 1px solid var(--glass-border) !important;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
             position: relative;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .glass:hover {
+            transform: translateY(-2px) rotateX(5deg) rotateY(5deg);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        /* 3D Card Effects */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            perspective: 1000px;
+        }
+        
+        .card-3d:hover {
+            transform: rotateY(10deg) rotateX(5deg) translateZ(20px);
+        }
+        
+        .card-3d .card-front,
+        .card-3d .card-back {
+            backface-visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .card-3d .card-back {
+            transform: rotateY(180deg);
+        }
+        
+        .card-3d.flipped .card-front {
+            transform: rotateY(180deg);
+        }
+        
+        .card-3d.flipped .card-back {
+            transform: rotateY(0deg);
+        }
+        
+        /* Floating Elements with Shadows */
+        .floating {
+            animation: float 6s ease-in-out infinite;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+        
+        /* Depth Layers */
+        .depth-1 { transform: translateZ(10px); }
+        .depth-2 { transform: translateZ(20px); }
+        .depth-3 { transform: translateZ(30px); }
+        .depth-4 { transform: translateZ(40px); }
+        
+        /* Perspective Scrolling */
+        .perspective-container {
+            perspective: 1000px;
+            perspective-origin: center center;
+        }
+        
+        .perspective-scroll {
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
         }
         
         .glass::before {
@@ -164,12 +317,28 @@
         
         /* Enhanced Buttons */
         .btn-primary {
-            background: var(--secondary-gradient);
+            background: var(--secondary-gradient) !important;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
             border: none;
-            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3);
+            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3) !important;
+        }
+        
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+        
+        .btn-primary:hover::after {
+            transform: translateX(100%);
         }
         
         .btn-primary::before {
@@ -311,6 +480,124 @@
         .delay-300 { animation-delay: 0.3s; }
         .delay-400 { animation-delay: 0.4s; }
         
+        /* Page Transitions */
+        .tab-content {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center center;
+        }
+        
+        .tab-content.hidden {
+            opacity: 0;
+            transform: scale(0.95) translateY(20px);
+            pointer-events: none;
+        }
+        
+        .tab-content:not(.hidden) {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            animation: tabSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes tabSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        /* Loading Skeletons */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 4px;
+        }
+        
+        .skeleton-text {
+            height: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .skeleton-text.short {
+            width: 60%;
+        }
+        
+        .skeleton-text.medium {
+            width: 80%;
+        }
+        
+        .skeleton-text.long {
+            width: 100%;
+        }
+        
+        .skeleton-avatar {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+        }
+        
+        .skeleton-card {
+            padding: 1rem;
+            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+        }
+        
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* Hover Micro-interactions */
+        .micro-hover {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .micro-hover:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+        
+        .micro-hover:active {
+            transform: scale(0.98);
+        }
+        
+        /* Bookmark Card Flip Animation */
+        .bookmark-card-3d {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: pointer;
+        }
+        
+        .bookmark-card-3d:hover {
+            transform: rotateY(15deg) rotateX(5deg) translateZ(30px);
+        }
+        
+        .bookmark-card-3d.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .bookmark-card-front,
+        .bookmark-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+            padding: 1rem;
+        }
+        
+        .bookmark-card-back {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.2), rgba(0, 242, 254, 0.2));
+            backdrop-filter: blur(20px);
+        }
+        
         /* Enhanced Toast */
         .success-toast { 
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
@@ -340,6 +627,573 @@
         .scrollable::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2));
             background-clip: content-box;
+        }
+        
+        /* Cosmic Dust Effect */
+        .cosmic-dust {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+        }
+        
+        .dust-particle {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float-dust 20s infinite linear;
+        }
+        
+        @keyframes float-dust {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+        
+        /* Enhanced Search Input Glow */
+        .search-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(79, 172, 254, 0.6);
+            box-shadow: 0 0 0 8px rgba(79, 172, 254, 0.1), inset 0 2px 10px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+            animation: searchGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes searchGlow {
+            0% {
+                box-shadow: 0 0 0 8px rgba(79, 172, 254, 0.1), inset 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+            100% {
+                box-shadow: 0 0 0 12px rgba(79, 172, 254, 0.15), inset 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+        }
+        
+        /* Particle Explosion System */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            animation: particle-explosion 1s ease-out forwards;
+            z-index: 10000;
+        }
+        
+        @keyframes particle-explosion {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) translate(var(--dx), var(--dy));
+            }
+        }
+        
+        /* Theme System */
+        .theme-cosmic {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --accent-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        
+        .theme-ocean {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --accent-gradient: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
+        }
+        
+        .theme-sunset {
+            --primary-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --secondary-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            --accent-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+        
+        .theme-forest {
+            --primary-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            --secondary-gradient: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);
+            --accent-gradient: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+        }
+        
+        .theme-neon {
+            --primary-gradient: linear-gradient(135deg, #ff006e 0%, #8338ec 100%);
+            --secondary-gradient: linear-gradient(135deg, #3a86ff 0%, #06ffa5 100%);
+            --accent-gradient: linear-gradient(135deg, #ffbe0b 0%, #fb5607 100%);
+        }
+        
+        /* Layout Options */
+        .layout-compact .bookmark-grid {
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+        
+        .layout-spacious .bookmark-grid {
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2.5rem;
+        }
+        
+        .layout-minimal .bookmark-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.8rem;
+        }
+        
+        /* History Section */
+        .history-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .history-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .history-time {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 0.5rem;
+        }
+        
+        /* AI Suggestions */
+        .ai-suggestions {
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.1), rgba(0, 242, 254, 0.1));
+            border: 1px solid rgba(79, 172, 254, 0.3);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            backdrop-filter: blur(20px);
+        }
+        
+        .ai-suggestion-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.8rem;
+            padding: 1rem;
+            margin: 0.8rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid #4facfe;
+        }
+        
+        .ai-suggestion-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .ai-badge {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+        
+        /* Smart Categories */
+        .category-badge {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+        }
+        
+        .category-badge:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .category-badge.active {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+        }
+        
+        .category-folder {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+        }
+        
+        .category-folder:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(5px);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .category-folder.expanded {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #4facfe;
+        }
+        
+        /* Smart Notifications */
+        .notification-center {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            max-width: 400px;
+        }
+        
+        .notification {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: white;
+            transform: translateX(100%);
+            animation: slideInRight 0.5s ease forwards;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .notification.reminder {
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .notification.digest {
+            border-left: 4px solid #10b981;
+        }
+        
+        .notification.suggestion {
+            border-left: 4px solid #3b82f6;
+        }
+        
+        @keyframes slideInRight {
+            to {
+                transform: translateX(0);
+            }
+        }
+        
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .notification-time {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        .notification-content {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        
+        .notification-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+        }
+        
+        .notification-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .notification-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        /* Weather Widget */
+        .weather-widget {
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.2), rgba(0, 242, 254, 0.2));
+            border: 1px solid rgba(79, 172, 254, 0.3);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .weather-widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+        
+        .weather-widget:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .weather-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: weatherFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes weatherFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .weather-temp {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #ffffff, #a1c4fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .weather-desc {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+        
+        .weather-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .weather-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Dynamic Background Themes */
+        .theme-rain {
+            --primary-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #5d6d7e 100%);
+            --secondary-gradient: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            --accent-gradient: linear-gradient(135deg, #85c1e9 0%, #5dade2 100%);
+        }
+        
+        .theme-snow {
+            --primary-gradient: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 50%, #95a5a6 100%);
+            --secondary-gradient: linear-gradient(135deg, #e8f4fd 0%, #d6eaf8 100%);
+            --accent-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        
+        .theme-cloudy {
+            --primary-gradient: linear-gradient(135deg, #7f8c8d 0%, #95a5a6 50%, #bdc3c7 100%);
+            --secondary-gradient: linear-gradient(135deg, #bdc3c7 0%, #95a5a6 100%);
+            --accent-gradient: linear-gradient(135deg, #ecf0f1 0%, #d5dbdb 100%);
+        }
+        
+        .theme-sunny {
+            --primary-gradient: linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #d35400 100%);
+            --secondary-gradient: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+            --accent-gradient: linear-gradient(135deg, #f7dc6f 0%, #f4d03f 100%);
+        }
+        
+        .theme-clear-night {
+            --primary-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            --secondary-gradient: linear-gradient(135deg, #533483 0%, #4a4e69 100%);
+            --accent-gradient: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        }
+        
+        /* Time-based Themes */
+        .theme-dawn {
+            --primary-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            --secondary-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            --accent-gradient: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+        }
+        
+        .theme-day {
+            --primary-gradient: linear-gradient(135deg, #74b9ff 0%, #0984e3 50%, #6c5ce7 100%);
+            --secondary-gradient: linear-gradient(135deg, #00cec9 0%, #00b894 100%);
+            --accent-gradient: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+        }
+        
+        .theme-dusk {
+            --primary-gradient: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 50%, #e17055 100%);
+            --secondary-gradient: linear-gradient(135deg, #e84393 0%, #fd79a8 100%);
+            --accent-gradient: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+        }
+        
+        .theme-night {
+            --primary-gradient: linear-gradient(135deg, #2d3436 0%, #636e72 50%, #74b9ff 100%);
+            --secondary-gradient: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            --accent-gradient: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
+        }
+        
+        /* Holiday Themes */
+        .theme-christmas {
+            --primary-gradient: linear-gradient(135deg, #e74c3c 0%, #c0392b 50%, #8e44ad 100%);
+            --secondary-gradient: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            --accent-gradient: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+        }
+        
+        .theme-halloween {
+            --primary-gradient: linear-gradient(135deg, #8b4513 0%, #a0522d 50%, #cd853f 100%);
+            --secondary-gradient: linear-gradient(135deg, #ff4500 0%, #ff6347 100%);
+            --accent-gradient: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
+        }
+        
+        /* Animated Gradient Backgrounds */
+        .animated-gradient {
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Weather Effects */
+        .rain-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .rain-drop {
+            position: absolute;
+            width: 2px;
+            height: 20px;
+            background: linear-gradient(transparent, rgba(255, 255, 255, 0.8));
+            animation: rainFall linear infinite;
+            border-radius: 1px;
+        }
+        
+        @keyframes rainFall {
+            to { transform: translateY(100vh); }
+        }
+        
+        .snow-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .snowflake {
+            position: absolute;
+            color: white;
+            font-size: 1rem;
+            animation: snowFall linear infinite;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+        
+        @keyframes snowFall {
+            to { transform: translateY(100vh) rotate(360deg); }
+        }
+        
+        /* Enhanced Weather Widget Responsive */
+        @media (max-width: 768px) {
+            .weather-widget {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+            
+            .weather-icon {
+                font-size: 2.5rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .weather-temp {
+                font-size: 2rem;
+                margin-bottom: 0.4rem;
+            }
+            
+            .weather-desc {
+                font-size: 1rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .weather-details {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+        }
+        
+        /* Fix for Tailwind CSS conflicts */
+        .glass {
+            background: var(--glass-bg) !important;
+            backdrop-filter: blur(30px) !important;
+            border: 1px solid var(--glass-border) !important;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        }
+        
+        /* Ensure proper z-index stacking */
+        .bg-animation {
+            z-index: -2 !important;
+        }
+        
+        .weather-widget {
+            z-index: 1 !important;
+        }
+        
+        /* Fix for button styles */
+        .btn-primary, .btn-secondary {
+            position: relative !important;
+            z-index: 1 !important;
+        }
+        
+        /* Ensure weather effects don't interfere with interactions */
+        .rain-effect, .snow-effect {
+            z-index: -1 !important;
+            pointer-events: none !important;
         }
 
         /* Light mode enhancements */
@@ -438,26 +1292,84 @@
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
+        
+        /* Final CSS Fixes and Overrides */
+        /* Ensure proper text colors */
+        .text-white {
+            color: #ffffff !important;
+        }
+        
+        /* Fix for search input */
+        .search-input {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(25px) !important;
+            border: 2px solid rgba(255, 255, 255, 0.2) !important;
+            color: #ffffff !important;
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.6) !important;
+        }
+        
+        /* Fix for AI suggestions */
+        .ai-suggestions {
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.1), rgba(0, 242, 254, 0.1)) !important;
+            border: 1px solid rgba(79, 172, 254, 0.3) !important;
+            backdrop-filter: blur(20px) !important;
+        }
+        
+        /* Fix for category badges */
+        .category-badge {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1)) !important;
+            backdrop-filter: blur(20px) !important;
+        }
+        
+        /* Ensure proper spacing */
+        .fade-in-up {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+        
+        /* Fix for mobile responsiveness */
+        @media (max-width: 640px) {
+            .glass {
+                padding: 1rem !important;
+                margin: 0.5rem !important;
+            }
+            
+            .weather-widget {
+                margin-bottom: 1rem !important;
+            }
+            
+            .ai-suggestions {
+                margin-bottom: 1rem !important;
+            }
+        }
     </style>
 
 </head>
 <body class="text-white flex flex-col min-h-screen">
     <!-- Animated Background -->
     <div class="bg-animation">
+        <!-- Starfield -->
+        <div class="stars" id="stars"></div>
+        
+        <!-- Cosmic Dust -->
+        <div class="cosmic-dust" id="cosmicDust"></div>
+        
+        <!-- Floating Orbs -->
         <div class="floating-orb orb-1"></div>
         <div class="floating-orb orb-2"></div>
         <div class="floating-orb orb-3"></div>
     </div>
+    
+    <!-- Weather Effects -->
+    <div id="weatherEffects"></div>
 
     <!-- Header -->
     <header class="glass sticky top-0 z-40 p-6 fade-in-up">
         <nav class="flex justify-between items-center max-w-7xl mx-auto" aria-label="Main Navigation">
             <div class="flex items-center gap-4">
-                <div class="w-14 h-14 rounded-full glass flex items-center justify-center">
-                    <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                    </svg>
-                </div>
                 <div>
                     <h1 class="text-3xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">Placeholder.dev</h1>
                     <p class="text-sm text-white/60">Advanced Search Dashboard</p>
@@ -466,8 +1378,10 @@
             
             <nav class="flex gap-3">
                 <button onclick="switchTab('dashboard')" class="btn-secondary active px-6 py-3 rounded-xl text-sm font-medium" id="tab-dashboard">Dashboard</button>
+                <button onclick="switchTab('history')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-history">History</button>
                 <button onclick="switchTab('analytics')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-analytics">Analytics</button>
                 <button onclick="switchTab('labs')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-labs">Labs</button>
+                <button onclick="switchTab('settings')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-settings">Settings</button>
                 <button id="themeToggle" class="btn-secondary px-4 py-2 rounded-xl text-sm ml-4">🌙</button>
             </nav>
         </div>
@@ -511,6 +1425,60 @@
                         </svg>
                         Random Site
                     </button>
+                </div>
+            </div>
+
+            <!-- AI Suggestions Section -->
+            <div class="ai-suggestions fade-in-up delay-150">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="ai-badge">🤖 AI</div>
+                    <h3 class="text-xl font-semibold">Smart Suggestions</h3>
+                </div>
+                <div id="aiSuggestions" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- AI suggestions will be populated here -->
+                </div>
+            </div>
+            
+            <!-- Weather Widget Section -->
+            <div class="weather-widget fade-in-up delay-175 mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-semibold">Local Weather</h3>
+                    <button onclick="refreshWeather()" class="btn-secondary px-3 py-1 rounded-lg text-sm">🔄</button>
+                </div>
+                <div id="weatherContent" class="text-center">
+                    <div class="weather-icon">🌤️</div>
+                    <div class="weather-temp">--°C</div>
+                    <div class="weather-desc">Loading weather...</div>
+                    <div class="weather-details">
+                        <div class="weather-detail">
+                            <span>💨</span>
+                            <span>-- km/h</span>
+                        </div>
+                        <div class="weather-detail">
+                            <span>💧</span>
+                            <span>--%</span>
+                        </div>
+                        <div class="weather-detail">
+                            <span>👁️</span>
+                            <span>-- km</span>
+                        </div>
+                        <div class="weather-detail">
+                            <span>🌡️</span>
+                            <span>--°C</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Smart Categories Section -->
+            <div class="glass rounded-3xl p-8 fade-in-up delay-175">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="ai-badge">📁</div>
+                    <h3 class="text-xl font-semibold">Smart Categories</h3>
+                    <button onclick="refreshCategories()" class="btn-secondary px-3 py-1 rounded-lg text-sm ml-auto">🔄</button>
+                </div>
+                <div id="smartCategories" class="space-y-4">
+                    <!-- Smart categories will be populated here -->
                 </div>
             </div>
 
@@ -570,6 +1538,31 @@
             </div>
         </div>
 
+        <!-- History Tab -->
+        <div id="history-content" class="tab-content hidden">
+            <div class="glass rounded-3xl p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold">Search & Visit History</h2>
+                    <button onclick="clearHistory()" class="btn-secondary px-4 py-2 rounded-xl text-sm">Clear History</button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Recent Searches</h3>
+                        <div id="searchHistory" class="space-y-3 max-h-96 overflow-y-auto">
+                            <!-- Search history will be populated here -->
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Recent Visits</h3>
+                        <div id="visitHistory" class="space-y-3 max-h-96 overflow-y-auto">
+                            <!-- Visit history will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Labs Tab -->
         <div id="labs-content" class="tab-content hidden">
             <div class="glass rounded-3xl p-8">
@@ -583,6 +1576,113 @@
                         <h3 class="text-lg font-semibold mb-2">Export as HTML</h3>
                         <p class="text-white/70">Download as browser-compatible HTML</p>
                     </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings-content" class="tab-content hidden">
+            <div class="glass rounded-3xl p-8">
+                <h2 class="text-2xl font-semibold mb-8">Settings & Customization</h2>
+                
+                <!-- Theme Selection -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-4">Choose Theme</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                        <button onclick="setTheme('cosmic')" class="theme-option p-4 rounded-xl border-2 border-transparent hover:border-white/30 transition-all" data-theme="cosmic">
+                            <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 mb-2"></div>
+                            <span class="text-sm font-medium">Cosmic</span>
+                        </button>
+                        <button onclick="setTheme('ocean')" class="theme-option p-4 rounded-xl border-2 border-transparent hover:border-white/30 transition-all" data-theme="ocean">
+                            <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 mb-2"></div>
+                            <span class="text-sm font-medium">Ocean</span>
+                        </button>
+                        <button onclick="setTheme('sunset')" class="theme-option p-4 rounded-xl border-2 border-transparent hover:border-white/30 transition-all" data-theme="sunset">
+                            <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-pink-500 to-yellow-500 mb-2"></div>
+                            <span class="text-sm font-medium">Sunset</span>
+                        </button>
+                        <button onclick="setTheme('forest')" class="theme-option p-4 rounded-xl border-2 border-transparent hover:border-white/30 transition-all" data-theme="forest">
+                            <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-green-400 to-blue-500 mb-2"></div>
+                            <span class="text-sm font-medium">Forest</span>
+                        </button>
+                        <button onclick="setTheme('neon')" class="theme-option p-4 rounded-xl border-2 border-transparent hover:border-white/30 transition-all" data-theme="neon">
+                            <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-pink-600 to-purple-600 mb-2"></div>
+                            <span class="text-sm font-medium">Neon</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Layout Options -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-4">Layout Style</h3>
+                    <div class="grid grid-cols-3 gap-4">
+                        <button onclick="setLayout('compact')" class="layout-option p-4 rounded-xl border-2 border-transparent hover:border-white/30 transition-all" data-layout="compact">
+                            <div class="w-16 h-16 rounded-lg bg-white/10 flex items-center justify-center mb-2">
+                                <div class="grid grid-cols-3 gap-1 w-10 h-10">
+                                    <div class="bg-white/60 rounded"></div>
+                                    <div class="bg-white/60 rounded"></div>
+                                    <div class="bg-white/60 rounded"></div>
+                                    <div class="bg-white/60 rounded"></div>
+                                    <div class="bg-white/60 rounded"></div>
+                                    <div class="bg-white/60 rounded"></div>
+                                </div>
+                            </div>
+                            <span class="text-sm font-medium">Compact</span>
+                        </button>
+                        <button onclick="setLayout('spacious')" class="layout-option p-4 rounded-xl border-2 border-transparent hover:border-white/30 transition-all" data-layout="spacious">
+                            <div class="w-16 h-16 rounded-lg bg-white/10 flex items-center justify-center mb-2">
+                                <div class="grid grid-cols-2 gap-2 w-10 h-10">
+                                    <div class="bg-white/60 rounded"></div>
+                                    <div class="bg-white/60 rounded"></div>
+                                    <div class="bg-white/60 rounded"></div>
+                                    <div class="bg-white/60 rounded"></div>
+                                </div>
+                            </div>
+                            <span class="text-sm font-medium">Spacious</span>
+                        </button>
+                        <button onclick="setLayout('minimal')" class="layout-option p-4 rounded-xl border-2 border-transparent hover:border-white/30 transition-all" data-layout="minimal">
+                            <div class="w-16 h-16 rounded-lg bg-white/10 flex items-center justify-center mb-2">
+                                <div class="grid grid-cols-4 gap-0.5 w-10 h-10">
+                                    <div class="bg-white/60 rounded"></div>
+                                    <div class="bg-white/60 rounded"></div>
+                                    <div class="bg-white/60 rounded"></div>
+                                    <div class="bg-white/60 rounded"></div>
+                                    <div class="bg-white/60 rounded"></div>
+                                    <div class="bg-white/60 rounded"></div>
+                                    <div class="bg-white/60 rounded"></div>
+                                    <div class="bg-white/60 rounded"></div>
+                                </div>
+                            </div>
+                            <span class="text-sm font-medium">Minimal</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Other Settings -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-white/80 mb-3 font-medium">Default Search Engine</label>
+                        <select id="defaultSearchEngine" class="search-input w-full px-4 py-3 rounded-xl text-black">
+                            <option value="google">Google</option>
+                            <option value="bing">Bing</option>
+                            <option value="duckduckgo">DuckDuckGo</option>
+                            <option value="brave">Brave Search</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-white/80 mb-3 font-medium">Particle Effects</label>
+                        <select id="particleLevel" class="search-input w-full px-4 py-3 rounded-xl text-black">
+                            <option value="high">High (Lots of particles)</option>
+                            <option value="medium">Medium (Balanced)</option>
+                            <option value="low">Low (Minimal)</option>
+                            <option value="off">Off (No particles)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="mt-8 pt-6 border-t border-white/20">
+                    <button onclick="saveSettings()" class="btn-primary px-8 py-3 rounded-xl text-white font-semibold">Save Settings</button>
+                    <button onclick="resetSettings()" class="btn-secondary px-6 py-3 rounded-xl text-white font-medium ml-4">Reset to Default</button>
                 </div>
             </div>
         </div>
@@ -632,6 +1732,9 @@
         </div>
     </div>
 
+    <!-- Notification Center -->
+    <div id="notificationCenter" class="notification-center"></div>
+    
     <!-- Error Container -->
     <div id="errorContainer" class="fixed top-6 right-6 z-50 space-y-3"></div>
 
@@ -639,7 +1742,13 @@
         // Global variables
         let bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
         let analytics = JSON.parse(localStorage.getItem('analytics') || '{"clicks": {}, "daily": {}}');
+        let searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+        let visitHistory = JSON.parse(localStorage.getItem('visitHistory') || '[]');
         let currentTab = 'dashboard';
+        let currentTheme = localStorage.getItem('theme') || 'cosmic';
+        let currentLayout = localStorage.getItem('layout') || 'spacious';
+        let particleLevel = localStorage.getItem('particleLevel') || 'medium';
+        let defaultSearchEngine = localStorage.getItem('defaultSearchEngine') || 'google';
 
         // Error handler
         function showToast(message, type = 'success') {
@@ -657,9 +1766,15 @@
             const query = input.value.trim();
             if (!query) return showToast('Please enter a search term', 'warning');
 
+            // Add to search history
+            addToSearchHistory(query);
+
             let url = query.includes('.') && !query.includes(' ') ? 
                 (query.startsWith('http') ? query : 'https://' + query) :
-                'https://www.google.com/search?q=' + encodeURIComponent(query);
+                getSearchEngineUrl(query);
+
+            // Create particle explosion effect
+            createParticleExplosion(input.offsetLeft + input.offsetWidth / 2, input.offsetTop + input.offsetHeight / 2, '#4facfe', 20);
 
             // Create loading iframe
             const iframe = document.createElement('iframe');
@@ -681,6 +1796,42 @@
             input.value = '';
             trackAnalytics('search');
         }
+        
+        // Get search engine URL based on user preference
+        function getSearchEngineUrl(query) {
+            const searchQuery = encodeURIComponent(query);
+            switch(defaultSearchEngine) {
+                case 'bing':
+                    return `https://www.bing.com/search?q=${searchQuery}`;
+                case 'duckduckgo':
+                    return `https://duckduckgo.com/?q=${searchQuery}`;
+                case 'brave':
+                    return `https://search.brave.com/search?q=${searchQuery}`;
+                default:
+                    return `https://www.google.com/search?q=${searchQuery}`;
+            }
+        }
+        
+        // Load settings into form
+        function loadSettings() {
+            document.getElementById('defaultSearchEngine').value = defaultSearchEngine;
+            document.getElementById('particleLevel').value = particleLevel;
+            
+            // Update theme and layout button states
+            document.querySelectorAll('.theme-option').forEach(btn => {
+                btn.classList.remove('border-white/60');
+                if (btn.dataset.theme === currentTheme) {
+                    btn.classList.add('border-white/60');
+                }
+            });
+            
+            document.querySelectorAll('.layout-option').forEach(btn => {
+                btn.classList.remove('border-white/60');
+                if (btn.dataset.layout === currentLayout) {
+                    btn.classList.add('border-white/60');
+                }
+            });
+        }
 
         // Tab switching
         function switchTab(tabName) {
@@ -689,7 +1840,24 @@
             document.getElementById(tabName + '-content').classList.remove('hidden');
             document.getElementById('tab-' + tabName).classList.add('active');
             currentTab = tabName;
-            if (tabName === 'analytics') renderAnalytics();
+            
+            // Create particle effect for tab switch
+            const button = document.getElementById('tab-' + tabName);
+            const rect = button.getBoundingClientRect();
+            createParticleExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2, '#f093fb', 15);
+            
+            // Render appropriate content
+            switch(tabName) {
+                case 'analytics':
+                    renderAnalytics();
+                    break;
+                case 'history':
+                    renderHistory();
+                    break;
+                case 'settings':
+                    loadSettings();
+                    break;
+            }
         }
 
         // Bookmark management
@@ -741,6 +1909,12 @@
         }
 
         function openBookmark(url, id) {
+            // Add to visit history
+            const bookmark = bookmarks.find(b => b.id === id);
+            if (bookmark) {
+                addToVisitHistory(url, bookmark.name);
+            }
+            
             // Same loading logic as search
             const iframe = document.createElement('iframe');
             iframe.src = 'loading.html';
@@ -758,7 +1932,6 @@
             }, 1000);
 
             // Update analytics
-            const bookmark = bookmarks.find(b => b.id === id);
             if (bookmark) {
                 bookmark.clicks++;
                 analytics.clicks[id] = bookmark.clicks;
@@ -782,41 +1955,96 @@
             const sort = document.getElementById('bookmarkSort').value;
             const folder = document.getElementById('bookmarkFolder').value;
 
-            let filtered = bookmarks.filter(b =>
-                (!search || b.name.toLowerCase().includes(search) || b.url.toLowerCase().includes(search) || (b.tags && b.tags.join(',').toLowerCase().includes(search))) &&
-                (!folder || b.folder === folder)
-            );
-            if (sort === 'name') filtered.sort((a, b) => a.name.localeCompare(b.name));
-            else if (sort === 'clicks') filtered.sort((a, b) => b.clicks - a.clicks);
-            else filtered.sort((a, b) => new Date(b.created) - new Date(a.created));
+            // Show loading skeleton first
+            grid.innerHTML = `
+                <div class="skeleton-card">
+                    <div class="skeleton-text long"></div>
+                    <div class="skeleton-text medium"></div>
+                    <div class="skeleton-text short"></div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-text long"></div>
+                    <div class="skeleton-text medium"></div>
+                    <div class="skeleton-text short"></div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-text long"></div>
+                    <div class="skeleton-text medium"></div>
+                    <div class="skeleton-text short"></div>
+                </div>
+            `;
 
-            if (filtered.length === 0) {
-                grid.innerHTML = '';
-                empty.classList.remove('hidden');
-                return;
-            }
+            // Simulate loading delay for better UX
+            setTimeout(() => {
+                let filtered = bookmarks.filter(b =>
+                    (!search || b.name.toLowerCase().includes(search) || b.url.toLowerCase().includes(search) || (b.tags && b.tags.join(',').toLowerCase().includes(search))) &&
+                    (!folder || b.folder === folder)
+                );
+                if (sort === 'name') filtered.sort((a, b) => a.name.localeCompare(b.name));
+                else if (sort === 'clicks') filtered.sort((a, b) => b.clicks - a.clicks);
+                else filtered.sort((a, b) => new Date(b.created) - new Date(a.created));
 
-            empty.classList.add('hidden');
-            grid.innerHTML = filtered.map(bookmark => `
-                <div class="bookmark-item glass rounded-2xl p-4 flex flex-col gap-2">
-                    <div class="flex justify-between items-center">
-                        <span class="font-bold text-lg">${bookmark.name}</span>
-                        <div class="flex gap-2">
-                            <button onclick="editBookmark(${bookmark.id})" class="btn-secondary px-2 py-1 rounded">Edit</button>
-                            <button onclick="deleteBookmark(${bookmark.id})" class="btn-secondary px-2 py-1 rounded">Delete</button>
-                            <button onclick="shareBookmark(${bookmark.id})" class="btn-secondary px-2 py-1 rounded">Share</button>
+                if (filtered.length === 0) {
+                    grid.innerHTML = '';
+                    empty.classList.remove('hidden');
+                    return;
+                }
+
+                empty.classList.add('hidden');
+                grid.innerHTML = filtered.map((bookmark, index) => `
+                    <div class="bookmark-card-3d glass rounded-2xl p-4 flex flex-col gap-2 micro-hover depth-${(index % 4) + 1}" 
+                         data-bookmark-id="${bookmark.id}" 
+                         style="animation-delay: ${index * 0.1}s">
+                        <div class="bookmark-card-front">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-lg">${bookmark.name}</span>
+                                <div class="flex gap-2">
+                                    <button onclick="editBookmark(${bookmark.id})" class="btn-secondary px-2 py-1 rounded micro-hover">Edit</button>
+                                    <button onclick="deleteBookmark(${bookmark.id})" class="btn-secondary px-2 py-1 rounded micro-hover">Delete</button>
+                                    <button onclick="shareBookmark(${bookmark.id})" class="btn-secondary px-2 py-1 rounded micro-hover">Share</button>
+                                    <button onclick="flipBookmarkCard(this)" class="btn-secondary px-2 py-1 rounded micro-hover">🔄</button>
+                                </div>
+                            </div>
+                            <a href="${bookmark.url}" target="_blank" class="text-blue-200 underline break-all">${bookmark.url}</a>
+                            <div class="flex flex-wrap gap-1">
+                                ${(bookmark.tags || []).map(tag => `<span class="bg-white/20 px-2 py-1 rounded text-xs">${tag}</span>`).join('')}
+                            </div>
+                            <div class="text-white/70 text-sm">${bookmark.note || ''}</div>
+                            <div class="text-xs text-white/40">Clicks: ${bookmark.clicks || 0} | Added: ${new Date(bookmark.created).toLocaleString()}</div>
+                        </div>
+                        <div class="bookmark-card-back">
+                            <div class="text-center">
+                                <div class="text-2xl mb-2">📊</div>
+                                <div class="text-sm text-white/80 mb-2">Bookmark Analytics</div>
+                                <div class="text-xs text-white/60">Created: ${new Date(bookmark.created).toLocaleDateString()}</div>
+                                <div class="text-xs text-white/60">Last visited: ${bookmark.clicks > 0 ? 'Recently' : 'Never'}</div>
+                                <div class="text-xs text-white/60">Category: ${getBookmarkCategory(bookmark.url)}</div>
+                                <button onclick="showReminder(${bookmark.id})" class="btn-secondary px-3 py-1 rounded text-xs mt-2">Set Reminder</button>
+                            </div>
                         </div>
                     </div>
-                    <a href="${bookmark.url}" target="_blank" class="text-blue-200 underline break-all">${bookmark.url}</a>
-                    <div class="flex flex-wrap gap-1">
-                        ${bookmark.tags.map(tag => `<span class="bg-white/20 px-2 py-1 rounded text-xs">${tag}</span>`).join('')}
-                    </div>
-                    <div class="text-white/70 text-sm">${bookmark.note}</div>
-                    <div class="text-xs text-white/40">Clicks: ${bookmark.clicks} | Added: ${new Date(bookmark.created).toLocaleString()}</div>
-                </div>
-            `).join('');
+                `).join('');
+                
+                updateBookmarkCount();
+            }, 300);
+        }
+        
+        function getBookmarkCategory(url) {
+            const domain = new URL(url).hostname.replace('www.', '');
+            if (domain.includes('google') || domain.includes('bing')) return 'Search';
+            if (domain.includes('youtube') || domain.includes('netflix')) return 'Entertainment';
+            if (domain.includes('github') || domain.includes('stackoverflow')) return 'Development';
+            if (domain.includes('news') || domain.includes('bbc')) return 'News';
+            return 'Other';
+        }
+        
+        function flipBookmarkCard(button) {
+            const card = button.closest('.bookmark-card-3d');
+            card.classList.toggle('flipped');
             
-            updateBookmarkCount();
+            // Create particle effect
+            const rect = card.getBoundingClientRect();
+            createParticleExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2, '#f093fb', 15);
         }
 
         function updateBookmarkCount() {
@@ -890,28 +2118,894 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}">${b.name}</A>`).join('\n')}
             localStorage.setItem('analytics', JSON.stringify(analytics));
         }
 
+        // Star Generation and Animation
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const cosmicDustContainer = document.getElementById('cosmicDust');
+            const starCount = 150; // Number of stars
+            const dustCount = 50; // Number of cosmic dust particles
+            
+            // Create stars
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                const size = Math.random() < 0.6 ? 'small' : Math.random() < 0.9 ? 'medium' : 'large';
+                const isShooting = Math.random() < 0.02; // 2% chance of shooting star
+                
+                star.className = `star ${isShooting ? 'shooting' : size}`;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 5 + 's';
+                
+                if (isShooting) {
+                    star.style.animationDelay = Math.random() * 8 + 's';
+                }
+                
+                // Add interactive hover effect
+                star.addEventListener('mouseenter', () => {
+                    star.style.transform = 'scale(1.5)';
+                    star.style.filter = 'brightness(1.5)';
+                });
+                
+                star.addEventListener('mouseleave', () => {
+                    star.style.transform = 'scale(1)';
+                    star.style.filter = 'brightness(1)';
+                });
+                
+                starsContainer.appendChild(star);
+            }
+            
+            // Create cosmic dust
+            for (let i = 0; i < dustCount; i++) {
+                const dust = document.createElement('div');
+                dust.className = 'dust-particle';
+                dust.style.left = Math.random() * 100 + '%';
+                dust.style.animationDelay = Math.random() * 20 + 's';
+                dust.style.animationDuration = (15 + Math.random() * 10) + 's';
+                cosmicDustContainer.appendChild(dust);
+            }
+        }
+        
+        // Particle Explosion System
+        function createParticleExplosion(x, y, color = '#4facfe', count = 15) {
+            if (particleLevel === 'off') return;
+            
+            const actualCount = particleLevel === 'high' ? count * 2 : 
+                               particleLevel === 'medium' ? count : 
+                               Math.floor(count / 2);
+            
+            for (let i = 0; i < actualCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.background = color;
+                particle.style.width = Math.random() * 4 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                
+                // Random direction and distance
+                const angle = (Math.PI * 2 * i) / actualCount;
+                const velocity = 50 + Math.random() * 100;
+                const dx = Math.cos(angle) * velocity;
+                const dy = Math.sin(angle) * velocity;
+                
+                particle.style.setProperty('--dx', dx + 'px');
+                particle.style.setProperty('--dy', dy + 'px');
+                
+                document.body.appendChild(particle);
+                
+                // Remove particle after animation
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 1000);
+            }
+        }
+        
+        // AI-Powered Features
+        function generateAISuggestions() {
+            const suggestions = [];
+            const container = document.getElementById('aiSuggestions');
+            
+            // Analyze user behavior and generate suggestions
+            if (bookmarks.length > 0) {
+                // Most used bookmarks
+                const mostUsed = bookmarks.sort((a, b) => (b.clicks || 0) - (a.clicks || 0)).slice(0, 3);
+                suggestions.push({
+                    type: 'frequent',
+                    title: 'Frequently Used',
+                    items: mostUsed,
+                    icon: '⭐'
+                });
+                
+                // Recent additions
+                const recent = bookmarks.sort((a, b) => new Date(b.created) - new Date(a.created)).slice(0, 2);
+                suggestions.push({
+                    type: 'recent',
+                    title: 'Recently Added',
+                    items: recent,
+                    icon: '🆕'
+                });
+            }
+            
+            // Search suggestions based on time
+            const hour = new Date().getHours();
+            if (hour >= 6 && hour < 12) {
+                suggestions.push({
+                    type: 'morning',
+                    title: 'Morning Routine',
+                    items: [
+                        { name: 'Weather', url: 'https://weather.com', icon: '🌅' },
+                        { name: 'News', url: 'https://news.google.com', icon: '📰' }
+                    ],
+                    icon: '🌅'
+                });
+            } else if (hour >= 12 && hour < 18) {
+                suggestions.push({
+                    type: 'afternoon',
+                    title: 'Afternoon Boost',
+                    items: [
+                        { name: 'Productivity Tools', url: 'https://notion.so', icon: '⚡' },
+                        { name: 'Learning', url: 'https://coursera.org', icon: '📚' }
+                    ],
+                    icon: '☀️'
+                });
+            } else {
+                suggestions.push({
+                    type: 'evening',
+                    title: 'Evening Wind Down',
+                    items: [
+                        { name: 'Entertainment', url: 'https://netflix.com', icon: '🎬' },
+                        { name: 'Music', url: 'https://spotify.com', icon: '🎵' }
+                    ],
+                    icon: '🌙'
+                });
+            }
+            
+            // Render suggestions
+            container.innerHTML = suggestions.map(suggestion => `
+                <div class="ai-suggestion-item micro-hover" onclick="handleAISuggestion('${suggestion.type}')">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">${suggestion.icon}</span>
+                        <div>
+                            <h4 class="font-semibold text-white">${suggestion.title}</h4>
+                            <p class="text-sm text-white/70">${suggestion.items.length} suggestions</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Smart Categories System
+        function generateSmartCategories() {
+            const container = document.getElementById('smartCategories');
+            const categories = analyzeBookmarkCategories();
+            
+            container.innerHTML = categories.map(category => `
+                <div class="category-folder micro-hover" onclick="toggleCategory('${category.id}')">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">${category.icon}</span>
+                            <div>
+                                <h4 class="font-semibold text-white">${category.name}</h4>
+                                <p class="text-sm text-white/70">${category.count} bookmarks</p>
+                            </div>
+                        </div>
+                        <span class="text-white/60">${category.expanded ? '▼' : '▶'}</span>
+                    </div>
+                    <div class="category-bookmarks ${category.expanded ? '' : 'hidden'}" id="category-${category.id}">
+                        ${category.bookmarks.map(bookmark => `
+                            <div class="ml-8 mt-2 p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer"
+                                 onclick="openBookmark('${bookmark.url}', ${bookmark.id})">
+                                <div class="text-sm text-white">${bookmark.name}</div>
+                                <div class="text-xs text-white/60">${bookmark.url}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function analyzeBookmarkCategories() {
+            const categories = {};
+            
+            bookmarks.forEach(bookmark => {
+                const domain = new URL(bookmark.url).hostname.replace('www.', '');
+                let category = 'Other';
+                let icon = '🌐';
+                
+                // Smart categorization based on domain
+                if (domain.includes('google') || domain.includes('bing') || domain.includes('duckduckgo')) {
+                    category = 'Search Engines';
+                    icon = '🔍';
+                } else if (domain.includes('youtube') || domain.includes('netflix') || domain.includes('spotify')) {
+                    category = 'Entertainment';
+                    icon = '🎬';
+                } else if (domain.includes('github') || domain.includes('stackoverflow') || domain.includes('dev.to')) {
+                    category = 'Development';
+                    icon = '💻';
+                } else if (domain.includes('news') || domain.includes('bbc') || domain.includes('cnn')) {
+                    category = 'News';
+                    icon = '📰';
+                } else if (domain.includes('shop') || domain.includes('amazon') || domain.includes('ebay')) {
+                    category = 'Shopping';
+                    icon = '🛒';
+                } else if (domain.includes('bank') || domain.includes('paypal') || domain.includes('stripe')) {
+                    category = 'Finance';
+                    icon = '💰';
+                } else if (domain.includes('weather') || domain.includes('accuweather')) {
+                    category = 'Weather';
+                    icon = '🌤️';
+                } else if (domain.includes('mail') || domain.includes('gmail') || domain.includes('outlook')) {
+                    category = 'Email';
+                    icon = '📧';
+                }
+                
+                if (!categories[category]) {
+                    categories[category] = {
+                        id: category.toLowerCase().replace(/\s+/g, '-'),
+                        name: category,
+                        icon: icon,
+                        count: 0,
+                        bookmarks: [],
+                        expanded: false
+                    };
+                }
+                
+                categories[category].count++;
+                categories[category].bookmarks.push(bookmark);
+            });
+            
+            return Object.values(categories).sort((a, b) => b.count - a.count);
+        }
+        
+        function toggleCategory(categoryId) {
+            const category = document.querySelector(`#category-${categoryId}`);
+            const folder = category.parentElement;
+            
+            if (category.classList.contains('hidden')) {
+                category.classList.remove('hidden');
+                folder.classList.add('expanded');
+                folder.querySelector('span:last-child').textContent = '▼';
+            } else {
+                category.classList.add('hidden');
+                folder.classList.remove('expanded');
+                folder.querySelector('span:last-child').textContent = '▶';
+            }
+        }
+        
+        function refreshCategories() {
+            generateSmartCategories();
+            showToast('Categories refreshed!', 'success');
+        }
+        
+        // Smart Notification System
+        function showNotification(type, title, content, actions = []) {
+            const notificationCenter = document.getElementById('notificationCenter');
+            const notification = document.createElement('div');
+            const id = Date.now();
+            
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="notification-header">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-time">${new Date().toLocaleTimeString()}</div>
+                </div>
+                <div class="notification-content">${content}</div>
+                ${actions.length > 0 ? `
+                    <div class="notification-actions">
+                        ${actions.map(action => `
+                            <button class="notification-btn" onclick="${action.onclick}">${action.text}</button>
+                        `).join('')}
+                    </div>
+                ` : ''}
+            `;
+            
+            notificationCenter.appendChild(notification);
+            
+            // Auto-remove after 8 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.transform = 'translateX(100%)';
+                    setTimeout(() => notification.remove(), 500);
+                }
+            }, 8000);
+            
+            return id;
+        }
+        
+        function showReminder(bookmarkId) {
+            const bookmark = bookmarks.find(b => b.id === bookmarkId);
+            if (!bookmark) return;
+            
+            showNotification('reminder', 'Bookmark Reminder', 
+                `Don't forget to check: ${bookmark.name}`, [
+                    { text: 'Open Now', onclick: `openBookmark('${bookmark.url}', ${bookmark.id})` },
+                    { text: 'Dismiss', onclick: 'this.parentElement.parentElement.remove()' }
+                ]
+            );
+        }
+        
+        function showDailyDigest() {
+            const today = new Date().toDateString();
+            const recentBookmarks = bookmarks.filter(b => 
+                new Date(b.created).toDateString() === today
+            );
+            
+            if (recentBookmarks.length > 0) {
+                showNotification('digest', 'Daily Digest', 
+                    `You added ${recentBookmarks.length} new bookmarks today!`, [
+                        { text: 'View All', onclick: 'switchTab("dashboard")' },
+                        { text: 'Dismiss', onclick: 'this.parentElement.parentElement.remove()' }
+                ]);
+            }
+        }
+        
+        function showSmartSuggestion() {
+            const unusedBookmarks = bookmarks.filter(b => (b.clicks || 0) === 0);
+            if (unusedBookmarks.length > 0) {
+                const randomBookmark = unusedBookmarks[Math.floor(Math.random() * unusedBookmarks.length)];
+                showNotification('suggestion', 'Smart Suggestion', 
+                    `Try visiting: ${randomBookmark.name}`, [
+                        { text: 'Visit Now', onclick: `openBookmark('${randomBookmark.url}', ${randomBookmark.id})` },
+                        { text: 'Maybe Later', onclick: 'this.parentElement.parentElement.remove()' }
+                ]);
+            }
+        }
+        
+        // Schedule notifications
+        function scheduleNotifications() {
+            // Daily digest at 9 AM
+            const now = new Date();
+            const digestTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);
+            if (now < digestTime) {
+                setTimeout(showDailyDigest, digestTime.getTime() - now.getTime());
+            } else {
+                setTimeout(showDailyDigest, 24 * 60 * 60 * 1000 - (now.getTime() - digestTime.getTime()));
+            }
+            
+            // Smart suggestions every 4 hours
+            setInterval(showSmartSuggestion, 4 * 60 * 60 * 1000);
+        }
+        
+        // Weather System
+        const WEATHER_API_KEY = 'f07d134adcc345a3afa142417252808';
+        let currentWeather = null;
+        let userLocation = null;
+        
+        async function getWeatherData() {
+            try {
+                if (!userLocation) {
+                    await getUserLocation();
+                }
+                
+                if (!userLocation) {
+                    throw new Error('Unable to get location');
+                }
+                
+                const response = await fetch(`https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${userLocation.lat},${userLocation.lon}&aqi=no`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error.message);
+                }
+                
+                currentWeather = data;
+                updateWeatherDisplay();
+                updateDynamicTheme();
+                createWeatherEffects();
+                
+                return data;
+            } catch (error) {
+                console.error('Weather fetch error:', error);
+                showToast('Weather data unavailable', 'warning');
+                return null;
+            }
+        }
+        
+        async function getUserLocation() {
+            try {
+                // Try to get location from IP first
+                const ipResponse = await fetch('https://ipapi.co/json/');
+                const ipData = await ipResponse.json();
+                
+                if (ipData.latitude && ipData.longitude) {
+                    userLocation = {
+                        lat: ipData.latitude,
+                        lon: ipData.longitude,
+                        city: ipData.city || 'Unknown',
+                        country: ipData.country_name || 'Unknown'
+                    };
+                    return userLocation;
+                }
+                
+                // Fallback to browser geolocation
+                return new Promise((resolve, reject) => {
+                    if (!navigator.geolocation) {
+                        reject(new Error('Geolocation not supported'));
+                        return;
+                    }
+                    
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            userLocation = {
+                                lat: position.coords.latitude,
+                                lon: position.coords.longitude,
+                                city: 'Your Location',
+                                country: 'Unknown'
+                            };
+                            resolve(userLocation);
+                        },
+                        (error) => {
+                            reject(error);
+                        },
+                        { timeout: 10000, enableHighAccuracy: false }
+                    );
+                });
+            } catch (error) {
+                console.error('Location error:', error);
+                return null;
+            }
+        }
+        
+        function updateWeatherDisplay() {
+            if (!currentWeather) return;
+            
+            const weather = currentWeather.current;
+            const location = currentWeather.location;
+            
+            const weatherIcon = getWeatherIcon(weather.condition.code, weather.is_day);
+            const temp = Math.round(weather.temp_c);
+            const desc = weather.condition.text;
+            const wind = Math.round(weather.wind_kph);
+            const humidity = weather.humidity;
+            const visibility = Math.round(weather.vis_km);
+            const feelsLike = Math.round(weather.feelslike_c);
+            
+            document.getElementById('weatherContent').innerHTML = `
+                <div class="weather-icon">${weatherIcon}</div>
+                <div class="weather-temp">${temp}°C</div>
+                <div class="weather-desc">${desc}</div>
+                <div class="weather-details">
+                    <div class="weather-detail">
+                        <span>💨</span>
+                        <span>${wind} km/h</span>
+                    </div>
+                    <div class="weather-detail">
+                        <span>💧</span>
+                        <span>${humidity}%</span>
+                    </div>
+                    <div class="weather-detail">
+                        <span>👁️</span>
+                        <span>${visibility} km</span>
+                    </div>
+                    <div class="weather-detail">
+                        <span>🌡️</span>
+                        <span>${feelsLike}°C</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function getWeatherIcon(code, isDay) {
+            // Weather condition codes from WeatherAPI
+            const icons = {
+                1000: isDay ? '☀️' : '🌙', // Clear
+                1003: isDay ? '⛅' : '☁️', // Partly cloudy
+                1006: '☁️', // Cloudy
+                1009: '☁️', // Overcast
+                1030: '🌫️', // Mist
+                1063: '🌦️', // Patchy rain
+                1066: '🌨️', // Patchy snow
+                1069: '🌨️', // Patchy sleet
+                1087: '⛈️', // Thundery outbreaks
+                1114: '🌨️', // Blowing snow
+                1117: '❄️', // Blizzard
+                1135: '🌫️', // Fog
+                1147: '🌫️', // Freezing fog
+                1150: '🌦️', // Patchy light drizzle
+                1153: '🌦️', // Light drizzle
+                1168: '🌧️', // Freezing drizzle
+                1171: '🌧️', // Heavy freezing drizzle
+                1180: '🌦️', // Slight rain showers
+                1183: '🌧️', // Light rain showers
+                1186: '🌧️', // Moderate rain showers
+                1189: '🌧️', // Heavy rain showers
+                1192: '🌧️', // Torrential rain showers
+                1195: '🌧️', // Freezing rain
+                1204: '🌨️', // Light sleet
+                1207: '🌨️', // Moderate sleet
+                1210: '🌨️', // Patchy light snow
+                1213: '🌨️', // Light snow
+                1216: '🌨️', // Patchy moderate snow
+                1219: '🌨️', // Moderate snow
+                1222: '🌨️', // Patchy heavy snow
+                1225: '❄️', // Heavy snow
+                1237: '🧊', // Ice pellets
+                1240: '🌦️', // Light rain shower
+                1243: '🌧️', // Moderate rain shower
+                1246: '🌧️', // Heavy rain shower
+                1249: '🌨️', // Light sleet showers
+                1252: '🌨️', // Moderate sleet showers
+                1255: '🌨️', // Light snow showers
+                1258: '🌨️', // Moderate snow showers
+                1261: '🧊', // Light showers of ice pellets
+                1264: '🧊', // Moderate showers of ice pellets
+                1273: '🌩️', // Patchy light rain with thunder
+                1276: '⛈️', // Patchy moderate rain with thunder
+                1279: '🌨️', // Patchy light snow with thunder
+                1282: '🌨️', // Patchy moderate snow with thunder
+            };
+            
+            return icons[code] || (isDay ? '🌤️' : '🌙');
+        }
+        
+        function updateDynamicTheme() {
+            if (!currentWeather) return;
+            
+            const weather = currentWeather.current;
+            const hour = new Date().getHours();
+            
+            // Remove existing weather themes
+            document.body.classList.remove('theme-rain', 'theme-snow', 'theme-cloudy', 'theme-sunny', 'theme-clear-night');
+            
+            // Apply weather-based theme
+            if (weather.condition.text.toLowerCase().includes('rain') || weather.condition.text.toLowerCase().includes('drizzle')) {
+                document.body.classList.add('theme-rain');
+                createRainEffect();
+            } else if (weather.condition.text.toLowerCase().includes('snow') || weather.condition.text.toLowerCase().includes('sleet')) {
+                document.body.classList.add('theme-snow');
+                createSnowEffect();
+            } else if (weather.condition.text.toLowerCase().includes('cloud') || weather.condition.text.toLowerCase().includes('overcast')) {
+                document.body.classList.add('theme-cloudy');
+            } else if (weather.condition.text.toLowerCase().includes('clear') && weather.is_day) {
+                document.body.classList.add('theme-sunny');
+            } else if (weather.condition.text.toLowerCase().includes('clear') && !weather.is_day) {
+                document.body.classList.add('theme-clear-night');
+            }
+            
+            // Apply time-based theme
+            if (hour >= 5 && hour < 8) {
+                document.body.classList.add('theme-dawn');
+            } else if (hour >= 8 && hour < 17) {
+                document.body.classList.add('theme-day');
+            } else if (hour >= 17 && hour < 20) {
+                document.body.classList.add('theme-dusk');
+            } else {
+                document.body.classList.add('theme-night');
+            }
+            
+            // Check for holidays
+            checkHolidayTheme();
+        }
+        
+        function checkHolidayTheme() {
+            const today = new Date();
+            const month = today.getMonth() + 1;
+            const day = today.getDate();
+            
+            // Christmas (December 25)
+            if (month === 12 && day === 25) {
+                document.body.classList.add('theme-christmas');
+            }
+            // Halloween (October 31)
+            else if (month === 10 && day === 31) {
+                document.body.classList.add('theme-halloween');
+            }
+        }
+        
+        function createWeatherEffects() {
+            const effectsContainer = document.getElementById('weatherEffects');
+            effectsContainer.innerHTML = '';
+            
+            if (!currentWeather) return;
+            
+            const weather = currentWeather.current;
+            const condition = weather.condition.text.toLowerCase();
+            
+            if (condition.includes('rain') || condition.includes('drizzle')) {
+                createRainEffect();
+            } else if (condition.includes('snow') || condition.includes('sleet')) {
+                createSnowEffect();
+            }
+        }
+        
+        function createRainEffect() {
+            const effectsContainer = document.getElementById('weatherEffects');
+            const rainContainer = document.createElement('div');
+            rainContainer.className = 'rain-effect';
+            
+            for (let i = 0; i < 100; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'rain-drop';
+                drop.style.left = Math.random() * 100 + '%';
+                drop.style.animationDelay = Math.random() * 2 + 's';
+                drop.style.animationDuration = (0.5 + Math.random() * 0.5) + 's';
+                rainContainer.appendChild(drop);
+            }
+            
+            effectsContainer.appendChild(rainContainer);
+        }
+        
+        function createSnowEffect() {
+            const effectsContainer = document.getElementById('weatherEffects');
+            const snowContainer = document.createElement('div');
+            snowContainer.className = 'snow-effect';
+            
+            const snowflakes = ['❄️', '❅', '❆', '✻', '✼', '❄'];
+            
+            for (let i = 0; i < 50; i++) {
+                const flake = document.createElement('div');
+                flake.className = 'snowflake';
+                flake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+                flake.style.left = Math.random() * 100 + '%';
+                flake.style.animationDelay = Math.random() * 3 + 's';
+                flake.style.animationDuration = (3 + Math.random() * 4) + 's';
+                snowContainer.appendChild(flake);
+            }
+            
+            effectsContainer.appendChild(snowContainer);
+        }
+        
+        function refreshWeather() {
+            showToast('Refreshing weather...', 'info');
+            getWeatherData();
+        }
+        
+        function handleAISuggestion(type) {
+            // Handle different AI suggestion types
+            switch(type) {
+                case 'frequent':
+                    showToast('Opening your most used bookmarks', 'info');
+                    // Highlight most used bookmarks
+                    const frequentBookmarks = bookmarks.sort((a, b) => (b.clicks || 0) - (a.clicks || 0)).slice(0, 3);
+                    frequentBookmarks.forEach(bm => {
+                        const element = document.querySelector(`[data-bookmark-id="${bm.id}"]`);
+                        if (element) {
+                            element.style.animation = 'pulse-glow 2s ease-in-out';
+                            setTimeout(() => element.style.animation = '', 2000);
+                        }
+                    });
+                    break;
+                case 'recent':
+                    showToast('Showing recently added bookmarks', 'info');
+                    break;
+                case 'morning':
+                    showToast('Starting your morning routine', 'info');
+                    window.open('https://weather.com', '_blank');
+                    break;
+                case 'afternoon':
+                    showToast('Boosting your afternoon productivity', 'info');
+                    window.open('https://notion.so', '_blank');
+                    break;
+                case 'evening':
+                    showToast('Time to wind down', 'info');
+                    window.open('https://spotify.com', '_blank');
+                    break;
+            }
+            
+            // Create particle explosion effect
+            createParticleExplosion(window.innerWidth / 2, window.innerHeight / 2, '#4facfe', 25);
+        }
+        
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
+            createStars(); // Create the starfield
+            generateAISuggestions(); // Generate AI suggestions
+            generateSmartCategories(); // Generate smart categories
             renderBookmarks();
             document.getElementById('searchInput').focus();
             
-            // Keyboard shortcuts
-            document.addEventListener('keydown', (e) => {
-                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                    e.preventDefault();
-                    document.getElementById('searchInput').focus();
-                }
-                if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
-                    e.preventDefault();
-                    addBookmark();
-                }
+            // Apply saved theme and layout
+            setTheme(currentTheme);
+            setLayout(currentLayout);
+            
+            // Schedule smart notifications
+            scheduleNotifications();
+            
+            // Initialize weather system
+            getWeatherData();
+            
+            // Add parallax effect to stars
+            document.addEventListener('mousemove', (e) => {
+                const stars = document.querySelectorAll('.star:not(.shooting)');
+                const dust = document.querySelectorAll('.dust-particle');
+                const mouseX = e.clientX / window.innerWidth;
+                const mouseY = e.clientY / window.innerHeight;
+                
+                stars.forEach((star, index) => {
+                    const speed = (index % 3 + 1) * 0.5;
+                    const x = (mouseX - 0.5) * speed;
+                    const y = (mouseY - 0.5) * speed;
+                    star.style.transform = `translate(${x}px, ${y}px)`;
+                });
+                
+                dust.forEach((particle, index) => {
+                    const speed = (index % 2 + 1) * 0.3;
+                    const x = (mouseX - 0.5) * speed;
+                    const y = (mouseY - 0.5) * speed;
+                    particle.style.transform = `translate(${x}px, ${y}px)`;
+                });
             });
+            
+            // Add click effects to document
+            document.addEventListener('click', (e) => {
+                // Don't create particles for form inputs or specific elements
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+                if (e.target.closest('.particle')) return;
+                
+                // Create subtle particle effect for clicks
+                createParticleExplosion(e.clientX, e.clientY, '#ffffff', 8);
+            });
+            
+            // Add perspective scrolling effect
+            document.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const parallax = document.querySelectorAll('.perspective-scroll');
+                parallax.forEach((element, index) => {
+                    const speed = (index % 3 + 1) * 0.5;
+                    element.style.transform = `translateZ(${scrolled * speed}px)`;
+                });
+            });
+            
+
+            
+            // Show welcome notification
+            setTimeout(() => {
+                showNotification('suggestion', 'Welcome! 🎉', 
+                    'Your dashboard is ready with smart categories, AI suggestions, 3D effects, and dynamic weather themes!', [
+                        { text: 'Explore', onclick: 'switchTab("dashboard")' },
+                        { text: 'Got it', onclick: 'this.parentElement.parentElement.remove()' }
+                ]);
+            }, 2000);
         });
 
-        // --- Theme Toggle ---
+        // Theme and Layout Management
+        function setTheme(themeName) {
+            currentTheme = themeName;
+            document.body.className = `text-white flex flex-col min-h-screen theme-${themeName}`;
+            localStorage.setItem('theme', themeName);
+            
+            // Update theme option buttons
+            document.querySelectorAll('.theme-option').forEach(btn => {
+                btn.classList.remove('border-white/60');
+                if (btn.dataset.theme === themeName) {
+                    btn.classList.add('border-white/60');
+                }
+            });
+            
+            // Create particle explosion effect
+            createParticleExplosion(window.innerWidth / 2, 100, '#f093fb', 20);
+        }
+        
+        function setLayout(layoutName) {
+            currentLayout = layoutName;
+            document.body.className = `text-white flex flex-col min-h-screen theme-${currentTheme} layout-${layoutName}`;
+            localStorage.setItem('layout', layoutName);
+            
+            // Update layout option buttons
+            document.querySelectorAll('.layout-option').forEach(btn => {
+                btn.classList.remove('border-white/60');
+                if (btn.dataset.layout === layoutName) {
+                    btn.classList.add('border-white/60');
+                }
+            });
+            
+            // Re-render bookmarks with new layout
+            renderBookmarks();
+        }
+        
+        // Settings Management
+        function saveSettings() {
+            const searchEngine = document.getElementById('defaultSearchEngine').value;
+            const particleLevel = document.getElementById('particleLevel').value;
+            
+            defaultSearchEngine = searchEngine;
+            this.particleLevel = particleLevel;
+            
+            localStorage.setItem('defaultSearchEngine', searchEngine);
+            localStorage.setItem('particleLevel', particleLevel);
+            
+            showToast('Settings saved successfully!', 'success');
+            createParticleExplosion(window.innerWidth / 2, window.innerHeight / 2, '#10b981', 25);
+        }
+        
+        function resetSettings() {
+            if (confirm('Are you sure you want to reset all settings to default?')) {
+                setTheme('cosmic');
+                setLayout('spacious');
+                defaultSearchEngine = 'google';
+                particleLevel = 'medium';
+                
+                localStorage.setItem('defaultSearchEngine', 'google');
+                localStorage.setItem('particleLevel', 'medium');
+                
+                document.getElementById('defaultSearchEngine').value = 'google';
+                document.getElementById('particleLevel').value = 'medium';
+                
+                showToast('Settings reset to default!', 'info');
+            }
+        }
+        
+        // History Management
+        function addToSearchHistory(query) {
+            const historyItem = {
+                id: Date.now(),
+                query: query,
+                timestamp: new Date().toISOString(),
+                type: 'search'
+            };
+            
+            searchHistory.unshift(historyItem);
+            searchHistory = searchHistory.slice(0, 50); // Keep last 50
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+        }
+        
+        function addToVisitHistory(url, title) {
+            const historyItem = {
+                id: Date.now(),
+                url: url,
+                title: title || url,
+                timestamp: new Date().toISOString(),
+                type: 'visit'
+            };
+            
+            visitHistory.unshift(historyItem);
+            visitHistory = visitHistory.slice(0, 50); // Keep last 50
+            localStorage.setItem('visitHistory', JSON.stringify(visitHistory));
+        }
+        
+        function renderHistory() {
+            const searchContainer = document.getElementById('searchHistory');
+            const visitContainer = document.getElementById('visitHistory');
+            
+            if (searchContainer) {
+                searchContainer.innerHTML = searchHistory.map(item => `
+                    <div class="history-item" onclick="search('${item.query}')">
+                        <div class="flex items-center gap-3">
+                            <span class="text-xl">🔍</span>
+                            <div class="flex-1">
+                                <div class="font-medium text-white">${item.query}</div>
+                                <div class="history-time">${new Date(item.timestamp).toLocaleString()}</div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('') || '<div class="text-white/60 text-center py-4">No search history yet</div>';
+            }
+            
+            if (visitContainer) {
+                visitContainer.innerHTML = visitHistory.map(item => `
+                    <div class="history-item" onclick="window.open('${item.url}', '_blank')">
+                        <div class="flex items-center gap-3">
+                            <span class="text-xl">🌐</span>
+                            <div class="flex-1">
+                                <div class="font-medium text-white">${item.title}</div>
+                                <div class="text-sm text-white/70">${item.url}</div>
+                                <div class="history-time">${new Date(item.timestamp).toLocaleString()}</div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('') || '<div class="text-white/60 text-center py-4">No visit history yet</div>';
+            }
+        }
+        
+        function clearHistory() {
+            if (confirm('Are you sure you want to clear all history?')) {
+                searchHistory = [];
+                visitHistory = [];
+                localStorage.setItem('searchHistory', '[]');
+                localStorage.setItem('visitHistory', '[]');
+                renderHistory();
+                showToast('History cleared!', 'success');
+            }
+        }
+        
+        // Enhanced Theme Toggle (Legacy support)
         document.getElementById('themeToggle').onclick = function() {
-            document.body.classList.toggle('light');
-            // Optionally, update CSS variables for light mode
+            const themes = ['cosmic', 'ocean', 'sunset', 'forest', 'neon'];
+            const currentIndex = themes.indexOf(currentTheme);
+            const nextIndex = (currentIndex + 1) % themes.length;
+            setTheme(themes[nextIndex]);
         };
 
         // --- Add/Edit/Delete Bookmarks ---
