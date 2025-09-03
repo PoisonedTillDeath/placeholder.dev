@@ -1380,6 +1380,7 @@
                 <button onclick="switchTab('dashboard')" class="btn-secondary active px-6 py-3 rounded-xl text-sm font-medium" id="tab-dashboard">Dashboard</button>
                 <button onclick="switchTab('history')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-history">History</button>
                 <button onclick="switchTab('analytics')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-analytics">Analytics</button>
+                <button onclick="switchTab('games')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-games">Games</button>
                 <button onclick="switchTab('labs')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-labs">Labs</button>
                 <button onclick="switchTab('settings')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-settings">Settings</button>
                 <button id="themeToggle" class="btn-secondary px-4 py-2 rounded-xl text-sm ml-4">🌙</button>
@@ -1560,6 +1561,70 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Games Tab -->
+        <div id="games-content" class="tab-content hidden fade-in-up delay-300">
+            <div class="text-center mb-8">
+                <h2 class="text-4xl font-bold text-white mb-4">🎮 Games Center</h2>
+                <p class="text-xl text-white/70">Take a break and enjoy some fun games!</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Mini Games Section -->
+                <div class="glass rounded-3xl p-8">
+                    <h3 class="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
+                        🕹️ Mini Games
+                    </h3>
+                    <div class="space-y-4">
+                        <button onclick="playSnakeGame()" class="w-full btn-primary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3">
+                            🐍 Snake Game
+                        </button>
+                        <button onclick="playTicTacToe()" class="w-full btn-primary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3">
+                            ⭕ Tic Tac Toe
+                        </button>
+                        <button onclick="playMemoryGame()" class="w-full btn-primary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3">
+                            🧠 Memory Game
+                        </button>
+                        <button onclick="playGuessNumber()" class="w-full btn-primary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3">
+                            🔢 Number Guessing
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Popular Game Sites -->
+                <div class="glass rounded-3xl p-8">
+                    <h3 class="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
+                        🌐 Game Websites
+                    </h3>
+                    <div class="space-y-4">
+                        <a href="https://itch.io" target="_blank" class="w-full btn-secondary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3 hover:scale-105 transition-all">
+                            🎮 itch.io - Indie Games
+                        </a>
+                        <a href="https://poki.com" target="_blank" class="w-full btn-secondary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3 hover:scale-105 transition-all">
+                            🕹️ Poki - Browser Games
+                        </a>
+                        <a href="https://armorgames.com" target="_blank" class="w-full btn-secondary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3 hover:scale-105 transition-all">
+                            ⚔️ Armor Games
+                        </a>
+                        <a href="https://kongregate.com" target="_blank" class="w-full btn-secondary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3 hover:scale-105 transition-all">
+                            👑 Kongregate
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Canvas Area -->
+            <div id="gameArea" class="glass rounded-3xl p-8 hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 id="gameTitle" class="text-2xl font-semibold text-white"></h3>
+                    <button onclick="closeGame()" class="btn-secondary px-4 py-2 rounded-xl">Close Game</button>
+                </div>
+                <div id="gameCanvas" class="flex justify-center items-center min-h-96">
+                    <!-- Game content will be inserted here -->
+                </div>
+                <div id="gameScore" class="text-center text-white mt-4"></div>
             </div>
         </div>
 
@@ -1853,6 +1918,9 @@
                     break;
                 case 'history':
                     renderHistory();
+                    break;
+                case 'games':
+                    renderGames();
                     break;
                 case 'settings':
                     loadSettings();
@@ -3085,7 +3153,398 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}">${b.name}</A>`).join('\n')}
         // --- On Load ---
         renderBookmarks();
         updateFolderDropdown();
-        updateAnalytics();
+
+        // --- Games Section Functions ---
+        
+        function renderGames() {
+            // Games tab is static HTML, so just show it's ready
+            showToast('Games loaded! Choose a game to play.', 'success');
+        }
+
+        // Snake Game
+        let snakeGame = null;
+        function playSnakeGame() {
+            showGame('Snake Game', createSnakeGame());
+        }
+
+        function createSnakeGame() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 400;
+            canvas.height = 400;
+            canvas.style.border = '2px solid #4facfe';
+            canvas.style.backgroundColor = '#1a1a2e';
+            const ctx = canvas.getContext('2d');
+
+            let snake = [{x: 200, y: 200}];
+            let direction = 'right';
+            let food = {x: 100, y: 100};
+            let score = 0;
+            let gameRunning = true;
+
+            function drawSnake() {
+                ctx.fillStyle = '#4facfe';
+                snake.forEach(segment => {
+                    ctx.fillRect(segment.x, segment.y, 20, 20);
+                });
+            }
+
+            function drawFood() {
+                ctx.fillStyle = '#fa709a';
+                ctx.fillRect(food.x, food.y, 20, 20);
+            }
+
+            function moveSnake() {
+                if (!gameRunning) return;
+                
+                const head = {...snake[0]};
+                switch(direction) {
+                    case 'up': head.y -= 20; break;
+                    case 'down': head.y += 20; break;
+                    case 'left': head.x -= 20; break;
+                    case 'right': head.x += 20; break;
+                }
+
+                // Check collision with walls
+                if (head.x < 0 || head.x >= 400 || head.y < 0 || head.y >= 400) {
+                    gameRunning = false;
+                    document.getElementById('gameScore').innerHTML = `<span class="text-red-400">Game Over! Final Score: ${score}</span>`;
+                    return;
+                }
+
+                // Check collision with self
+                if (snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+                    gameRunning = false;
+                    document.getElementById('gameScore').innerHTML = `<span class="text-red-400">Game Over! Final Score: ${score}</span>`;
+                    return;
+                }
+
+                snake.unshift(head);
+
+                // Check if food eaten
+                if (head.x === food.x && head.y === food.y) {
+                    score += 10;
+                    food = {
+                        x: Math.floor(Math.random() * 20) * 20,
+                        y: Math.floor(Math.random() * 20) * 20
+                    };
+                    document.getElementById('gameScore').innerHTML = `Score: ${score}`;
+                } else {
+                    snake.pop();
+                }
+            }
+
+            function gameLoop() {
+                ctx.clearRect(0, 0, 400, 400);
+                moveSnake();
+                drawSnake();
+                drawFood();
+                if (gameRunning) {
+                    setTimeout(gameLoop, 150);
+                }
+            }
+
+            // Controls
+            document.addEventListener('keydown', (e) => {
+                if (!gameRunning) return;
+                switch(e.key) {
+                    case 'ArrowUp': if (direction !== 'down') direction = 'up'; break;
+                    case 'ArrowDown': if (direction !== 'up') direction = 'down'; break;
+                    case 'ArrowLeft': if (direction !== 'right') direction = 'left'; break;
+                    case 'ArrowRight': if (direction !== 'left') direction = 'right'; break;
+                }
+            });
+
+            gameLoop();
+            document.getElementById('gameScore').innerHTML = `Score: ${score}`;
+            
+            const container = document.createElement('div');
+            container.appendChild(canvas);
+            const instructions = document.createElement('div');
+            instructions.className = 'text-white text-center mt-4';
+            instructions.innerHTML = 'Use arrow keys to control the snake';
+            container.appendChild(instructions);
+            
+            return container;
+        }
+
+        // Tic Tac Toe Game
+        function playTicTacToe() {
+            showGame('Tic Tac Toe', createTicTacToe());
+        }
+
+        function createTicTacToe() {
+            const container = document.createElement('div');
+            container.className = 'text-center';
+            
+            let board = Array(9).fill('');
+            let currentPlayer = 'X';
+            let gameActive = true;
+
+            const boardElement = document.createElement('div');
+            boardElement.className = 'grid grid-cols-3 gap-2 w-64 h-64 mx-auto mb-4';
+
+            function checkWinner() {
+                const winPatterns = [
+                    [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+                    [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+                    [0, 4, 8], [2, 4, 6] // diagonals
+                ];
+
+                for (let pattern of winPatterns) {
+                    const [a, b, c] = pattern;
+                    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                        return board[a];
+                    }
+                }
+                return board.includes('') ? null : 'tie';
+            }
+
+            function makeMove(index) {
+                if (board[index] || !gameActive) return;
+                
+                board[index] = currentPlayer;
+                updateBoard();
+                
+                const winner = checkWinner();
+                if (winner) {
+                    gameActive = false;
+                    if (winner === 'tie') {
+                        document.getElementById('gameScore').innerHTML = '<span class="text-yellow-400">It\'s a tie!</span>';
+                    } else {
+                        document.getElementById('gameScore').innerHTML = `<span class="text-green-400">Player ${winner} wins!</span>`;
+                    }
+                    return;
+                }
+                
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                document.getElementById('gameScore').innerHTML = `Current player: ${currentPlayer}`;
+            }
+
+            function updateBoard() {
+                boardElement.innerHTML = '';
+                board.forEach((cell, index) => {
+                    const button = document.createElement('button');
+                    button.className = 'w-20 h-20 bg-white/10 border-2 border-white/20 rounded-lg text-2xl font-bold text-white hover:bg-white/20 transition-all';
+                    button.textContent = cell;
+                    button.onclick = () => makeMove(index);
+                    boardElement.appendChild(button);
+                });
+            }
+
+            updateBoard();
+            document.getElementById('gameScore').innerHTML = `Current player: ${currentPlayer}`;
+
+            const resetButton = document.createElement('button');
+            resetButton.className = 'btn-secondary px-4 py-2 rounded-xl mt-4';
+            resetButton.textContent = 'Reset Game';
+            resetButton.onclick = () => {
+                board = Array(9).fill('');
+                currentPlayer = 'X';
+                gameActive = true;
+                updateBoard();
+                document.getElementById('gameScore').innerHTML = `Current player: ${currentPlayer}`;
+            };
+
+            container.appendChild(boardElement);
+            container.appendChild(resetButton);
+            
+            return container;
+        }
+
+        // Memory Game
+        function playMemoryGame() {
+            showGame('Memory Game', createMemoryGame());
+        }
+
+        function createMemoryGame() {
+            const container = document.createElement('div');
+            container.className = 'text-center';
+            
+            const colors = ['#4facfe', '#fa709a', '#fee140', '#10b981', '#8b5cf6', '#f59e0b', '#ef4444', '#06b6d4'];
+            let cards = [...colors, ...colors].sort(() => Math.random() - 0.5);
+            let flippedCards = [];
+            let matchedPairs = 0;
+            let moves = 0;
+
+            const boardElement = document.createElement('div');
+            boardElement.className = 'grid grid-cols-4 gap-2 w-80 mx-auto mb-4';
+
+            function createCard(colorIndex, index) {
+                const card = document.createElement('div');
+                card.className = 'w-16 h-16 bg-white/10 border-2 border-white/20 rounded-lg cursor-pointer flex items-center justify-center transition-all transform hover:scale-105';
+                card.dataset.color = cards[index];
+                card.dataset.index = index;
+                
+                card.onclick = () => flipCard(card, index);
+                return card;
+            }
+
+            function flipCard(card, index) {
+                if (flippedCards.length === 2 || card.classList.contains('flipped')) return;
+                
+                card.style.backgroundColor = cards[index];
+                card.classList.add('flipped');
+                flippedCards.push({ card, index });
+
+                if (flippedCards.length === 2) {
+                    moves++;
+                    document.getElementById('gameScore').innerHTML = `Moves: ${moves} | Matched: ${matchedPairs}/8`;
+                    
+                    setTimeout(() => {
+                        if (flippedCards[0].card.dataset.color === flippedCards[1].card.dataset.color) {
+                            matchedPairs++;
+                            flippedCards[0].card.style.opacity = '0.5';
+                            flippedCards[1].card.style.opacity = '0.5';
+                            
+                            if (matchedPairs === 8) {
+                                document.getElementById('gameScore').innerHTML = `<span class="text-green-400">You won in ${moves} moves!</span>`;
+                            }
+                        } else {
+                            flippedCards[0].card.style.backgroundColor = '';
+                            flippedCards[1].card.style.backgroundColor = '';
+                            flippedCards[0].card.classList.remove('flipped');
+                            flippedCards[1].card.classList.remove('flipped');
+                        }
+                        flippedCards = [];
+                    }, 1000);
+                }
+            }
+
+            for (let i = 0; i < 16; i++) {
+                boardElement.appendChild(createCard(cards[i], i));
+            }
+
+            document.getElementById('gameScore').innerHTML = `Moves: ${moves} | Matched: ${matchedPairs}/8`;
+
+            const resetButton = document.createElement('button');
+            resetButton.className = 'btn-secondary px-4 py-2 rounded-xl mt-4';
+            resetButton.textContent = 'New Game';
+            resetButton.onclick = () => {
+                cards = [...colors, ...colors].sort(() => Math.random() - 0.5);
+                flippedCards = [];
+                matchedPairs = 0;
+                moves = 0;
+                boardElement.innerHTML = '';
+                for (let i = 0; i < 16; i++) {
+                    boardElement.appendChild(createCard(cards[i], i));
+                }
+                document.getElementById('gameScore').innerHTML = `Moves: ${moves} | Matched: ${matchedPairs}/8`;
+            };
+
+            container.appendChild(boardElement);
+            container.appendChild(resetButton);
+            
+            return container;
+        }
+
+        // Number Guessing Game
+        function playGuessNumber() {
+            showGame('Number Guessing Game', createGuessNumberGame());
+        }
+
+        function createGuessNumberGame() {
+            const container = document.createElement('div');
+            container.className = 'text-center max-w-md mx-auto';
+            
+            let targetNumber = Math.floor(Math.random() * 100) + 1;
+            let attempts = 0;
+            let gameWon = false;
+
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.min = '1';
+            input.max = '100';
+            input.placeholder = 'Enter a number between 1-100';
+            input.className = 'w-full px-4 py-3 rounded-xl bg-white/10 border-2 border-white/20 text-white text-center mb-4 focus:border-blue-400 outline-none';
+
+            const guessButton = document.createElement('button');
+            guessButton.className = 'btn-primary px-6 py-3 rounded-xl mb-4 mr-4';
+            guessButton.textContent = 'Guess!';
+
+            const newGameButton = document.createElement('button');
+            newGameButton.className = 'btn-secondary px-6 py-3 rounded-xl mb-4';
+            newGameButton.textContent = 'New Game';
+
+            const feedback = document.createElement('div');
+            feedback.className = 'text-white mb-4';
+            feedback.innerHTML = 'I\'m thinking of a number between 1 and 100. Can you guess it?';
+
+            function makeGuess() {
+                if (gameWon) return;
+                
+                const guess = parseInt(input.value);
+                if (isNaN(guess) || guess < 1 || guess > 100) {
+                    feedback.innerHTML = '<span class="text-red-400">Please enter a valid number between 1 and 100</span>';
+                    return;
+                }
+
+                attempts++;
+                
+                if (guess === targetNumber) {
+                    gameWon = true;
+                    feedback.innerHTML = `<span class="text-green-400">🎉 Congratulations! You guessed it in ${attempts} attempts!</span>`;
+                    document.getElementById('gameScore').innerHTML = `<span class="text-green-400">You won in ${attempts} attempts!</span>`;
+                } else if (guess < targetNumber) {
+                    feedback.innerHTML = `<span class="text-yellow-400">Too low! Try a higher number.</span>`;
+                } else {
+                    feedback.innerHTML = `<span class="text-yellow-400">Too high! Try a lower number.</span>`;
+                }
+                
+                if (!gameWon) {
+                    document.getElementById('gameScore').innerHTML = `Attempts: ${attempts}`;
+                }
+                
+                input.value = '';
+            }
+
+            function newGame() {
+                targetNumber = Math.floor(Math.random() * 100) + 1;
+                attempts = 0;
+                gameWon = false;
+                input.value = '';
+                feedback.innerHTML = 'I\'m thinking of a new number between 1 and 100. Can you guess it?';
+                document.getElementById('gameScore').innerHTML = 'Attempts: 0';
+            }
+
+            guessButton.onclick = makeGuess;
+            newGameButton.onclick = newGame;
+            
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') makeGuess();
+            });
+
+            container.appendChild(feedback);
+            container.appendChild(input);
+            container.appendChild(guessButton);
+            container.appendChild(newGameButton);
+            
+            document.getElementById('gameScore').innerHTML = 'Attempts: 0';
+            
+            return container;
+        }
+
+        // Game utilities
+        function showGame(title, gameElement) {
+            document.getElementById('gameTitle').textContent = title;
+            document.getElementById('gameCanvas').innerHTML = '';
+            document.getElementById('gameCanvas').appendChild(gameElement);
+            document.getElementById('gameArea').classList.remove('hidden');
+            
+            // Scroll to game area
+            document.getElementById('gameArea').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function closeGame() {
+            document.getElementById('gameArea').classList.add('hidden');
+            document.getElementById('gameCanvas').innerHTML = '';
+            document.getElementById('gameScore').innerHTML = '';
+        }
+
+        window.playSnakeGame = playSnakeGame;
+        window.playTicTacToe = playTicTacToe;
+        window.playMemoryGame = playMemoryGame;
+        window.playGuessNumber = playGuessNumber;
+        window.closeGame = closeGame;
 
     </script>
 </body>
