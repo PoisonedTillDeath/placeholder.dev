@@ -724,9 +724,48 @@
         }
         
         .theme-forest {
-            --primary-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            --secondary-gradient: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);
-            --accent-gradient: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+            --primary-gradient: linear-gradient(135deg, #2d5016 0%, #3a6b3c 30%, #4a7c59 60%, #5b8266 100%);
+            --secondary-gradient: linear-gradient(135deg, #8bc34a 0%, #689f38 100%);
+            --accent-gradient: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+            --glass-bg: rgba(45, 80, 22, 0.3);
+            --glass-border: rgba(139, 195, 74, 0.4);
+        }
+        
+        /* Forest theme specific enhancements */
+        body.theme-forest {
+            background: var(--primary-gradient);
+            background-attachment: fixed;
+        }
+        
+        body.theme-forest .glass {
+            background: rgba(45, 80, 22, 0.35) !important;
+            backdrop-filter: blur(25px) !important;
+            border: 1px solid rgba(139, 195, 74, 0.3) !important;
+            box-shadow: 0 20px 60px rgba(45, 80, 22, 0.2), inset 0 1px 0 rgba(139, 195, 74, 0.2) !important;
+        }
+        
+        body.theme-forest .text-white {
+            color: #f1f8e9 !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        body.theme-forest [class*="text-white/60"] {
+            color: #c8e6c9 !important;
+        }
+        
+        body.theme-forest [class*="text-white/70"] {
+            color: #a5d6a7 !important;
+        }
+        
+        body.theme-forest .search-input {
+            background: rgba(45, 80, 22, 0.4) !important;
+            border: 2px solid rgba(139, 195, 74, 0.3) !important;
+            color: #f1f8e9 !important;
+        }
+        
+        body.theme-forest .search-input:focus {
+            border-color: rgba(139, 195, 74, 0.6) !important;
+            box-shadow: 0 0 0 8px rgba(139, 195, 74, 0.15) !important;
         }
         
         .theme-neon {
@@ -1330,20 +1369,119 @@
             transform: translateY(0) !important;
         }
         
-        /* Fix for mobile responsiveness */
-        @media (max-width: 640px) {
-            .glass {
-                padding: 1rem !important;
-                margin: 0.5rem !important;
+        /* Scroll animations for all themes */
+        .scroll-fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+        
+        .scroll-fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .scroll-slide-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s ease-out;
+        }
+        
+        .scroll-slide-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .scroll-slide-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s ease-out;
+        }
+        
+        .scroll-slide-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .scroll-scale-up {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.7s ease-out;
+        }
+        
+        .scroll-scale-up.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Forest theme specific scroll animations */
+        body.theme-forest .scroll-fade-in.visible {
+            animation: forestGlow 0.8s ease-out;
+        }
+        
+        @keyframes forestGlow {
+            0% {
+                opacity: 0;
+                box-shadow: 0 0 0 rgba(139, 195, 74, 0);
             }
-            
-            .weather-widget {
-                margin-bottom: 1rem !important;
+            50% {
+                box-shadow: 0 0 20px rgba(139, 195, 74, 0.3);
             }
-            
-            .ai-suggestions {
-                margin-bottom: 1rem !important;
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 0 rgba(139, 195, 74, 0);
             }
+        }
+        
+        /* Enhanced Scroll Effects */
+        .parallax-element {
+            transition: transform 0.1s ease-out;
+        }
+        
+        /* Scroll-triggered animations */
+        @keyframes slideInFromLeft {
+            0% { 
+                opacity: 0; 
+                transform: translateX(-100px); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+        
+        @keyframes slideInFromRight {
+            0% { 
+                opacity: 0; 
+                transform: translateX(100px); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+        
+        @keyframes slideInFromBottom {
+            0% { 
+                opacity: 0; 
+                transform: translateY(50px); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        body.theme-forest .scroll-slide-left.visible {
+            animation: slideInFromLeft 0.8s ease-out;
+        }
+        
+        body.theme-forest .scroll-slide-right.visible {
+            animation: slideInFromRight 0.8s ease-out;
+        }
+        
+        body.theme-forest .scroll-fade-in.visible {
+            animation: slideInFromBottom 0.6s ease-out;
         }
     </style>
 
@@ -1381,7 +1519,6 @@
                 <button onclick="switchTab('history')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-history">History</button>
                 <button onclick="switchTab('analytics')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-analytics">Analytics</button>
                 <button onclick="switchTab('games')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-games">Games</button>
-                <button onclick="switchTab('labs')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-labs">Labs</button>
                 <button onclick="switchTab('settings')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-settings">Settings</button>
                 <button id="themeToggle" class="btn-secondary px-4 py-2 rounded-xl text-sm ml-4">🌙</button>
             </nav>
@@ -1430,18 +1567,8 @@
             </div>
 
             <!-- AI Suggestions Section -->
-            <div class="ai-suggestions fade-in-up delay-150">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="ai-badge">🤖 AI</div>
-                    <h3 class="text-xl font-semibold">Smart Suggestions</h3>
-                </div>
-                <div id="aiSuggestions" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- AI suggestions will be populated here -->
-                </div>
-            </div>
-            
             <!-- Weather Widget Section -->
-            <div class="weather-widget fade-in-up delay-175 mb-8">
+            <div class="weather-widget fade-in-up delay-150 mb-8">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-xl font-semibold">Local Weather</h3>
                     <button onclick="refreshWeather()" class="btn-secondary px-3 py-1 rounded-lg text-sm">🔄</button>
@@ -1470,18 +1597,6 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Smart Categories Section -->
-            <div class="glass rounded-3xl p-8 fade-in-up delay-175">
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="ai-badge">📁</div>
-                    <h3 class="text-xl font-semibold">Smart Categories</h3>
-                    <button onclick="refreshCategories()" class="btn-secondary px-3 py-1 rounded-lg text-sm ml-auto">🔄</button>
-                </div>
-                <div id="smartCategories" class="space-y-4">
-                    <!-- Smart categories will be populated here -->
-                </div>
-            </div>
 
             <!-- Bookmarks Section -->
             <div class="glass rounded-3xl p-8 fade-in-up delay-200">
@@ -1490,7 +1605,7 @@
                         <h3 class="text-2xl font-semibold">Quick Access</h3>
                         <span id="bookmarkCount" class="px-4 py-2 rounded-full bg-white/20 text-sm font-medium">0 bookmarks</span>
                     </div>
-                    <button onclick="exportBookmarks()" class="btn-secondary px-6 py-3 rounded-xl text-sm">Export</button>
+                    <button onclick="addBookmark()" class="btn-primary px-6 py-3 rounded-xl text-sm font-semibold">➕ Add Bookmark</button>
                 </div>
                 
                 <!-- Add search/filter, sort, and folder/tag filter above bookmarks grid -->
@@ -1578,6 +1693,12 @@
                         🕹️ Mini Games
                     </h3>
                     <div class="space-y-4">
+                        <button onclick="play2048Game()" class="w-full btn-primary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3">
+                            🎲 2048 (Auto-Complete Available!)
+                        </button>
+                        <button onclick="playSpacebarClicker()" class="w-full btn-primary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3">
+                            ⚡ Spacebar Clicker
+                        </button>
                         <button onclick="playSnakeGame()" class="w-full btn-primary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3">
                             🐍 Snake Game
                         </button>
@@ -1590,26 +1711,32 @@
                         <button onclick="playGuessNumber()" class="w-full btn-primary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3">
                             🔢 Number Guessing
                         </button>
+                        <button onclick="playTetris()" class="w-full btn-primary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3">
+                            🧩 Tetris
+                        </button>
+                        <button onclick="playBreakout()" class="w-full btn-primary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3">
+                            🏓 Breakout
+                        </button>
                     </div>
                 </div>
 
-                <!-- Popular Game Sites -->
+                <!-- Embedded Games & Websites -->
                 <div class="glass rounded-3xl p-8">
                     <h3 class="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
-                        🌐 Game Websites
+                        🌐 Embedded Games & Sites
                     </h3>
                     <div class="space-y-4">
+                        <button onclick="showPokiGames()" class="w-full btn-secondary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3 hover:scale-105 transition-all">
+                            🕹️ Poki Games (Fullscreen)
+                        </button>
+                        <button onclick="showWebsiteEmbed()" class="w-full btn-secondary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3 hover:scale-105 transition-all">
+                            🌐 Embed Any Website
+                        </button>
                         <a href="https://itch.io" target="_blank" class="w-full btn-secondary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3 hover:scale-105 transition-all">
                             🎮 itch.io - Indie Games
                         </a>
-                        <a href="https://poki.com" target="_blank" class="w-full btn-secondary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3 hover:scale-105 transition-all">
-                            🕹️ Poki - Browser Games
-                        </a>
                         <a href="https://armorgames.com" target="_blank" class="w-full btn-secondary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3 hover:scale-105 transition-all">
                             ⚔️ Armor Games
-                        </a>
-                        <a href="https://kongregate.com" target="_blank" class="w-full btn-secondary py-4 rounded-2xl text-white font-semibold flex items-center justify-center gap-3 hover:scale-105 transition-all">
-                            👑 Kongregate
                         </a>
                     </div>
                 </div>
@@ -1619,31 +1746,22 @@
             <div id="gameArea" class="glass rounded-3xl p-8 hidden">
                 <div class="flex justify-between items-center mb-6">
                     <h3 id="gameTitle" class="text-2xl font-semibold text-white"></h3>
-                    <button onclick="closeGame()" class="btn-secondary px-4 py-2 rounded-xl">Close Game</button>
+                    <div class="flex gap-3">
+                        <button onclick="toggleFullscreen()" id="fullscreenBtn" class="btn-secondary px-4 py-2 rounded-xl">📺 Fullscreen</button>
+                        <button onclick="closeGame()" class="btn-secondary px-4 py-2 rounded-xl">✖️ Close</button>
+                    </div>
                 </div>
-                <div id="gameCanvas" class="flex justify-center items-center min-h-96">
+                <div id="gameCanvas" class="flex justify-center items-center min-h-96" style="position: relative;">
                     <!-- Game content will be inserted here -->
                 </div>
                 <div id="gameScore" class="text-center text-white mt-4"></div>
-            </div>
-        </div>
-
-        <!-- Labs Tab -->
-        <div id="labs-content" class="tab-content hidden">
-            <div class="glass rounded-3xl p-8">
-                <h2 class="text-2xl font-semibold mb-8">Export Bookmarks</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <button onclick="exportBookmarks('json')" class="btn-primary p-6 rounded-2xl text-left">
-                        <h3 class="text-lg font-semibold mb-2">Export as JSON</h3>
-                        <p class="text-white/70">Download your bookmarks as a JSON file</p>
-                    </button>
-                    <button onclick="exportBookmarks('html')" class="btn-primary p-6 rounded-2xl text-left">
-                        <h3 class="text-lg font-semibold mb-2">Export as HTML</h3>
-                        <p class="text-white/70">Download as browser-compatible HTML</p>
-                    </button>
+                <div id="gameControls" class="text-center text-white/70 mt-2 text-sm">
+                    <!-- Game controls info will be shown here -->
                 </div>
             </div>
         </div>
+
+
 
         <!-- Settings Tab -->
         <div id="settings-content" class="tab-content hidden">
@@ -1742,6 +1860,21 @@
                             <option value="low">Low (Minimal)</option>
                             <option value="off">Off (No particles)</option>
                         </select>
+                    </div>
+                </div>
+                
+                <!-- Data Management -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-4">Data Management</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button onclick="exportBookmarks('json')" class="btn-secondary p-4 rounded-xl text-left hover:scale-105 transition-all">
+                            <h4 class="font-semibold mb-2">📁 Export as JSON</h4>
+                            <p class="text-white/70 text-sm">Download your bookmarks as a JSON file</p>
+                        </button>
+                        <button onclick="exportBookmarks('html')" class="btn-secondary p-4 rounded-xl text-left hover:scale-105 transition-all">
+                            <h4 class="font-semibold mb-2">🌐 Export as HTML</h4>
+                            <p class="text-white/70 text-sm">Download as browser-compatible HTML</p>
+                        </button>
                     </div>
                 </div>
                 
@@ -2859,8 +2992,6 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}">${b.name}</A>`).join('\n')}
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             createStars(); // Create the starfield
-            generateAISuggestions(); // Generate AI suggestions
-            generateSmartCategories(); // Generate smart categories
             renderBookmarks();
             document.getElementById('searchInput').focus();
             
@@ -2873,6 +3004,9 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}">${b.name}</A>`).join('\n')}
             
             // Initialize weather system
             getWeatherData();
+            
+            // Initialize scroll animations
+            initScrollAnimations();
             
             // Add parallax effect to stars
             document.addEventListener('mousemove', (e) => {
@@ -3042,18 +3176,33 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}">${b.name}</A>`).join('\n')}
             }
             
             if (visitContainer) {
-                visitContainer.innerHTML = visitHistory.map(item => `
-                    <div class="history-item" onclick="window.open('${item.url}', '_blank')">
-                        <div class="flex items-center gap-3">
-                            <span class="text-xl">🌐</span>
-                            <div class="flex-1">
-                                <div class="font-medium text-white">${item.title}</div>
-                                <div class="text-sm text-white/70">${item.url}</div>
-                                <div class="history-time">${new Date(item.timestamp).toLocaleString()}</div>
+                visitContainer.innerHTML = visitHistory.map(item => {
+                    // Format URL to remove https and show clean domain
+                    let displayUrl = item.url;
+                    try {
+                        const urlObj = new URL(item.url);
+                        displayUrl = urlObj.hostname + urlObj.pathname + urlObj.search;
+                        if (displayUrl.endsWith('/')) {
+                            displayUrl = displayUrl.slice(0, -1);
+                        }
+                    } catch (e) {
+                        // If URL parsing fails, just remove https://
+                        displayUrl = item.url.replace(/^https?:\/\//, '');
+                    }
+                    
+                    return `
+                        <div class="history-item" onclick="window.open('${item.url}', '_blank')">
+                            <div class="flex items-center gap-3">
+                                <span class="text-xl">🔍</span>
+                                <div class="flex-1">
+                                    <div class="font-medium text-white">${item.title}</div>
+                                    <div class="text-sm text-white/70">${displayUrl}</div>
+                                    <div class="history-time">${new Date(item.timestamp).toLocaleString()}</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `).join('') || '<div class="text-white/60 text-center py-4">No visit history yet</div>';
+                    `;
+                }).join('') || '<div class="text-white/60 text-center py-4">No visit history yet</div>';
             }
         }
         
@@ -3540,6 +3689,928 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}">${b.name}</A>`).join('\n')}
             document.getElementById('gameScore').innerHTML = '';
         }
 
+        // 2048 Game
+        function play2048Game() {
+            showGame('2048 - Slide to Reach 2048!', create2048Game());
+        }
+
+        function create2048Game() {
+            const container = document.createElement('div');
+            container.className = 'text-center';
+            
+            let board = Array(4).fill().map(() => Array(4).fill(0));
+            let score = 0;
+            let gameWon = false;
+            let autoCompleting = false;
+
+            const gameBoard = document.createElement('div');
+            gameBoard.className = 'inline-block bg-gray-700 p-4 rounded-xl';
+            gameBoard.style.cssText = 'display: grid; grid-template-columns: repeat(4, 80px); grid-template-rows: repeat(4, 80px); gap: 8px;';
+
+            const autoCompleteButton = document.createElement('button');
+            autoCompleteButton.className = 'btn-primary px-6 py-3 rounded-xl mb-4 mr-4';
+            autoCompleteButton.textContent = '🚀 Auto-Complete';
+            autoCompleteButton.onclick = () => autoComplete2048();
+
+            const newGameButton = document.createElement('button');
+            newGameButton.className = 'btn-secondary px-6 py-3 rounded-xl mb-4';
+            newGameButton.textContent = 'New Game';
+            newGameButton.onclick = () => newGame();
+
+            function updateBoard() {
+                gameBoard.innerHTML = '';
+                for (let i = 0; i < 4; i++) {
+                    for (let j = 0; j < 4; j++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'w-20 h-20 bg-gray-600 rounded-lg flex items-center justify-center text-white font-bold text-lg border-2 border-gray-500';
+                        
+                        if (board[i][j] !== 0) {
+                            cell.textContent = board[i][j];
+                            const hue = Math.log2(board[i][j]) * 30;
+                            cell.style.backgroundColor = `hsl(${hue}, 70%, ${Math.min(70, 30 + Math.log2(board[i][j]) * 3)}%)`;
+                            cell.style.borderColor = `hsl(${hue}, 70%, ${Math.min(80, 40 + Math.log2(board[i][j]) * 3)}%)`;
+                            cell.style.transform = 'scale(1.05)';
+                            cell.style.transition = 'all 0.15s ease-in-out';
+                            
+                            if (board[i][j] === 2048 && !gameWon) {
+                                gameWon = true;
+                                document.getElementById('gameScore').innerHTML = '<span class="text-green-400">🎉 You reached 2048! You can continue playing.</span>';
+                            }
+                        }
+                        gameBoard.appendChild(cell);
+                    }
+                }
+                document.getElementById('gameScore').innerHTML = `Score: ${score}${gameWon ? ' - 🎉 Winner!' : ''}`;
+            }
+
+            function addRandomTile() {
+                const emptyCells = [];
+                for (let i = 0; i < 4; i++) {
+                    for (let j = 0; j < 4; j++) {
+                        if (board[i][j] === 0) {
+                            emptyCells.push([i, j]);
+                        }
+                    }
+                }
+                if (emptyCells.length > 0) {
+                    const [x, y] = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+                    board[x][y] = Math.random() < 0.9 ? 2 : 4;
+                }
+            }
+
+            function move(direction) {
+                let moved = false;
+                const newBoard = board.map(row => [...row]);
+
+                function slideArray(arr) {
+                    const filtered = arr.filter(val => val !== 0);
+                    const missing = 4 - filtered.length;
+                    const zeros = Array(missing).fill(0);
+                    return filtered.concat(zeros);
+                }
+
+                function combineArray(arr) {
+                    for (let i = 0; i < 3; i++) {
+                        if (arr[i] !== 0 && arr[i] === arr[i + 1]) {
+                            arr[i] *= 2;
+                            arr[i + 1] = 0;
+                            score += arr[i];
+                        }
+                    }
+                    return arr;
+                }
+
+                if (direction === 'left') {
+                    for (let i = 0; i < 4; i++) {
+                        const original = [...board[i]];
+                        board[i] = slideArray(combineArray(slideArray(board[i])));
+                        if (JSON.stringify(original) !== JSON.stringify(board[i])) moved = true;
+                    }
+                } else if (direction === 'right') {
+                    for (let i = 0; i < 4; i++) {
+                        const original = [...board[i]];
+                        board[i] = slideArray(combineArray(slideArray(board[i].reverse()))).reverse();
+                        if (JSON.stringify(original) !== JSON.stringify(board[i])) moved = true;
+                    }
+                } else if (direction === 'up') {
+                    for (let j = 0; j < 4; j++) {
+                        const column = [];
+                        for (let i = 0; i < 4; i++) {
+                            column.push(board[i][j]);
+                        }
+                        const original = [...column];
+                        const newColumn = slideArray(combineArray(slideArray(column)));
+                        for (let i = 0; i < 4; i++) {
+                            board[i][j] = newColumn[i];
+                        }
+                        if (JSON.stringify(original) !== JSON.stringify(newColumn)) moved = true;
+                    }
+                } else if (direction === 'down') {
+                    for (let j = 0; j < 4; j++) {
+                        const column = [];
+                        for (let i = 0; i < 4; i++) {
+                            column.push(board[i][j]);
+                        }
+                        const original = [...column];
+                        const newColumn = slideArray(combineArray(slideArray(column.reverse()))).reverse();
+                        for (let i = 0; i < 4; i++) {
+                            board[i][j] = newColumn[i];
+                        }
+                        if (JSON.stringify(original) !== JSON.stringify(newColumn)) moved = true;
+                    }
+                }
+
+                if (moved) {
+                    addRandomTile();
+                    updateBoard();
+                }
+            }
+
+            function autoComplete2048() {
+                if (autoCompleting) return;
+                autoCompleting = true;
+                autoCompleteButton.textContent = '🚀 Auto-Completing...';
+                autoCompleteButton.disabled = true;
+
+                const directions = ['left', 'right', 'up', 'down'];
+                let moves = 0;
+                const maxMoves = 200;
+
+                function makeAutoMove() {
+                    if (moves >= maxMoves || gameWon) {
+                        autoCompleting = false;
+                        autoCompleteButton.textContent = '🚀 Auto-Complete';
+                        autoCompleteButton.disabled = false;
+                        return;
+                    }
+
+                    // Smart AI: prefer moves that create larger numbers
+                    let bestDirection = directions[Math.floor(Math.random() * directions.length)];
+                    let bestScore = -1;
+
+                    for (const dir of directions) {
+                        const testBoard = board.map(row => [...row]);
+                        const originalBoard = board.map(row => [...row]);
+                        const originalScore = score;
+                        
+                        move(dir);
+                        const moveScore = score - originalScore;
+                        
+                        if (moveScore > bestScore) {
+                            bestScore = moveScore;
+                            bestDirection = dir;
+                        }
+                        
+                        // Restore board for next test
+                        board = originalBoard;
+                        score = originalScore;
+                    }
+
+                    move(bestDirection);
+                    moves++;
+
+                    if (!gameWon) {
+                        setTimeout(makeAutoMove, 100); // Fast auto-completion
+                    } else {
+                        autoCompleting = false;
+                        autoCompleteButton.textContent = '🚀 Auto-Complete';
+                        autoCompleteButton.disabled = false;
+                    }
+                }
+
+                makeAutoMove();
+            }
+
+            function newGame() {
+                board = Array(4).fill().map(() => Array(4).fill(0));
+                score = 0;
+                gameWon = false;
+                autoCompleting = false;
+                autoCompleteButton.disabled = false;
+                autoCompleteButton.textContent = '🚀 Auto-Complete';
+                addRandomTile();
+                addRandomTile();
+                updateBoard();
+            }
+
+            // Game controls with scroll prevention
+            function handleKeyPress(e) {
+                if (autoCompleting) return;
+                
+                // Prevent scrolling when in game
+                if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                    e.preventDefault();
+                }
+                
+                switch(e.key) {
+                    case 'ArrowLeft':
+                        move('left');
+                        break;
+                    case 'ArrowRight':
+                        move('right');
+                        break;
+                    case 'ArrowUp':
+                        move('up');
+                        break;
+                    case 'ArrowDown':
+                        move('down');
+                        break;
+                }
+            }
+
+            document.addEventListener('keydown', handleKeyPress);
+
+            const instructions = document.createElement('div');
+            instructions.className = 'text-white mt-4';
+            instructions.innerHTML = 'Use arrow keys to move tiles. Combine tiles with the same number to reach 2048!';
+
+            container.appendChild(autoCompleteButton);
+            container.appendChild(newGameButton);
+            container.appendChild(gameBoard);
+            container.appendChild(instructions);
+            
+            document.getElementById('gameControls').innerHTML = 'Use ⬅️ ➡️ ⬆️ ⬇️ arrow keys to move tiles';
+
+            newGame();
+            return container;
+        }
+
+        // Spacebar Clicker Game
+        function playSpacebarClicker() {
+            showGame('Spacebar Clicker - Click as Fast as You Can!', createSpacebarClicker());
+        }
+
+        function createSpacebarClicker() {
+            const container = document.createElement('div');
+            container.className = 'text-center';
+            
+            let clicks = 0;
+            let timeLeft = 10;
+            let gameActive = false;
+            let gameInterval;
+
+            const clickDisplay = document.createElement('div');
+            clickDisplay.className = 'text-6xl font-bold text-white mb-6';
+            clickDisplay.textContent = '0';
+
+            const timeDisplay = document.createElement('div');
+            timeDisplay.className = 'text-2xl text-white mb-6';
+            timeDisplay.textContent = 'Press SPACEBAR or click the button to start!';
+
+            const clickButton = document.createElement('button');
+            clickButton.className = 'w-64 h-64 rounded-full btn-primary text-4xl font-bold mb-6 hover:scale-105 transition-all';
+            clickButton.textContent = '🚀 CLICK!';
+            clickButton.style.boxShadow = '0 10px 30px rgba(79, 172, 254, 0.5)';
+
+            const resetButton = document.createElement('button');
+            resetButton.className = 'btn-secondary px-6 py-3 rounded-xl ml-4';
+            resetButton.textContent = 'Reset Game';
+
+            function startGame() {
+                if (gameActive) return;
+                
+                gameActive = true;
+                clicks = 0;
+                timeLeft = 10;
+                clickDisplay.textContent = '0';
+                
+                gameInterval = setInterval(() => {
+                    timeLeft--;
+                    timeDisplay.textContent = `Time: ${timeLeft}s`;
+                    
+                    if (timeLeft <= 0) {
+                        endGame();
+                    }
+                }, 1000);
+            }
+
+            function endGame() {
+                gameActive = false;
+                clearInterval(gameInterval);
+                
+                let message = '';
+                if (clicks >= 80) message = '🏆 LEGENDARY CLICKER!';
+                else if (clicks >= 60) message = '🥇 Master Clicker!';
+                else if (clicks >= 40) message = '🥈 Speed Demon!';
+                else if (clicks >= 20) message = '🥉 Good Effort!';
+                else message = '💪 Keep Practicing!';
+                
+                timeDisplay.innerHTML = `Game Over! Final Score: ${clicks} clicks<br>${message}`;
+                document.getElementById('gameScore').innerHTML = `<span class="text-green-400">${message} - ${clicks} clicks in 10 seconds!</span>`;
+            }
+
+            function handleClick() {
+                if (!gameActive) {
+                    startGame();
+                    return;
+                }
+                
+                clicks++;
+                clickDisplay.textContent = clicks;
+                
+                // Visual feedback
+                clickButton.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    clickButton.style.transform = 'scale(1)';
+                }, 100);
+                
+                // Change button color based on clicks
+                const hue = (clicks * 10) % 360;
+                clickButton.style.background = `linear-gradient(135deg, hsl(${hue}, 70%, 60%), hsl(${hue + 30}, 70%, 70%))`;
+            }
+
+            function handleKeyPress(e) {
+                if (e.code === 'Space') {
+                    e.preventDefault(); // Prevent page scroll
+                    handleClick();
+                }
+            }
+
+            function resetGame() {
+                gameActive = false;
+                clearInterval(gameInterval);
+                clicks = 0;
+                timeLeft = 10;
+                clickDisplay.textContent = '0';
+                timeDisplay.textContent = 'Press SPACEBAR or click the button to start!';
+                clickButton.style.background = '';
+                document.getElementById('gameScore').innerHTML = '';
+            }
+
+            clickButton.onclick = handleClick;
+            resetButton.onclick = resetGame;
+            document.addEventListener('keydown', handleKeyPress);
+
+            const instructions = document.createElement('div');
+            instructions.className = 'text-white/80 mt-4';
+            instructions.innerHTML = 'Click the button or press SPACEBAR as fast as you can for 10 seconds!';
+
+            container.appendChild(clickDisplay);
+            container.appendChild(timeDisplay);
+            container.appendChild(clickButton);
+            container.appendChild(resetButton);
+            container.appendChild(instructions);
+            
+            document.getElementById('gameControls').innerHTML = 'Press SPACEBAR or click the button to play!';
+
+            return container;
+        }
+
+        // Tetris Game
+        function playTetris() {
+            showGame('Tetris - Clear Lines by Completing Rows!', createTetrisGame());
+        }
+
+        function createTetrisGame() {
+            const container = document.createElement('div');
+            container.className = 'text-center';
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = 300;
+            canvas.height = 600;
+            canvas.style.border = '2px solid #4facfe';
+            canvas.style.backgroundColor = '#1a1a2e';
+            const ctx = canvas.getContext('2d');
+
+            let board = Array(20).fill().map(() => Array(10).fill(0));
+            let score = 0;
+            let level = 1;
+            let lines = 0;
+            let dropTime = 0;
+            let dropInterval = 1000;
+            let lastTime = 0;
+            let gameRunning = true;
+
+            const pieces = [
+                [[1,1,1,1]], // I
+                [[1,1],[1,1]], // O
+                [[0,1,0],[1,1,1]], // T
+                [[0,1,1],[1,1,0]], // S
+                [[1,1,0],[0,1,1]], // Z
+                [[1,0,0],[1,1,1]], // J
+                [[0,0,1],[1,1,1]]  // L
+            ];
+
+            const colors = ['#00f2fe', '#fee140', '#fa709a', '#4facfe', '#a78bfa', '#10b981', '#f59e0b'];
+
+            let currentPiece = {
+                matrix: pieces[Math.floor(Math.random() * pieces.length)],
+                pos: { x: 3, y: 0 },
+                color: Math.floor(Math.random() * colors.length)
+            };
+
+            function drawMatrix(matrix, offset, color) {
+                matrix.forEach((row, y) => {
+                    row.forEach((value, x) => {
+                        if (value !== 0) {
+                            ctx.fillStyle = colors[color];
+                            ctx.fillRect((x + offset.x) * 30, (y + offset.y) * 30, 30, 30);
+                            ctx.strokeStyle = '#fff';
+                            ctx.strokeRect((x + offset.x) * 30, (y + offset.y) * 30, 30, 30);
+                        }
+                    });
+                });
+            }
+
+            function drawBoard() {
+                ctx.fillStyle = '#1a1a2e';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                board.forEach((row, y) => {
+                    row.forEach((value, x) => {
+                        if (value !== 0) {
+                            ctx.fillStyle = colors[value - 1];
+                            ctx.fillRect(x * 30, y * 30, 30, 30);
+                            ctx.strokeStyle = '#fff';
+                            ctx.strokeRect(x * 30, y * 30, 30, 30);
+                        }
+                    });
+                });
+            }
+
+            function collision() {
+                const [m, o] = [currentPiece.matrix, currentPiece.pos];
+                for (let y = 0; y < m.length; y++) {
+                    for (let x = 0; x < m[y].length; x++) {
+                        if (m[y][x] !== 0 &&
+                           (board[y + o.y] && board[y + o.y][x + o.x]) !== 0) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            function merge() {
+                currentPiece.matrix.forEach((row, y) => {
+                    row.forEach((value, x) => {
+                        if (value !== 0) {
+                            board[y + currentPiece.pos.y][x + currentPiece.pos.x] = currentPiece.color + 1;
+                        }
+                    });
+                });
+            }
+
+            function clearLines() {
+                let linesCleared = 0;
+                outer: for (let y = board.length - 1; y >= 0; y--) {
+                    for (let x = 0; x < board[y].length; x++) {
+                        if (board[y][x] === 0) {
+                            continue outer;
+                        }
+                    }
+                    const row = board.splice(y, 1)[0].fill(0);
+                    board.unshift(row);
+                    y++;
+                    linesCleared++;
+                }
+                
+                if (linesCleared > 0) {
+                    lines += linesCleared;
+                    score += linesCleared * 100 * level;
+                    level = Math.floor(lines / 10) + 1;
+                    dropInterval = Math.max(50, 1000 - (level - 1) * 100);
+                }
+            }
+
+            function drop() {
+                currentPiece.pos.y++;
+                if (collision()) {
+                    currentPiece.pos.y--;
+                    merge();
+                    clearLines();
+                    newPiece();
+                    
+                    if (collision()) {
+                        gameRunning = false;
+                        document.getElementById('gameScore').innerHTML = `<span class="text-red-400">Game Over! Final Score: ${score}</span>`;
+                    }
+                }
+                dropTime = 0;
+            }
+
+            function newPiece() {
+                currentPiece = {
+                    matrix: pieces[Math.floor(Math.random() * pieces.length)],
+                    pos: { x: 3, y: 0 },
+                    color: Math.floor(Math.random() * colors.length)
+                };
+            }
+
+            function rotate() {
+                const rotated = currentPiece.matrix[0].map((_, i) =>
+                    currentPiece.matrix.map(row => row[i]).reverse()
+                );
+                const prevMatrix = currentPiece.matrix;
+                currentPiece.matrix = rotated;
+                if (collision()) {
+                    currentPiece.matrix = prevMatrix;
+                }
+            }
+
+            function handleKeyPress(e) {
+                if (!gameRunning) return;
+                
+                // Prevent scrolling when in game
+                if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                    e.preventDefault();
+                }
+                
+                switch(e.key) {
+                    case 'ArrowLeft':
+                        currentPiece.pos.x--;
+                        if (collision()) currentPiece.pos.x++;
+                        break;
+                    case 'ArrowRight':
+                        currentPiece.pos.x++;
+                        if (collision()) currentPiece.pos.x--;
+                        break;
+                    case 'ArrowDown':
+                        drop();
+                        break;
+                    case 'ArrowUp':
+                        rotate();
+                        break;
+                }
+            }
+
+            function gameLoop(time = 0) {
+                const deltaTime = time - lastTime;
+                lastTime = time;
+                dropTime += deltaTime;
+                
+                if (dropTime > dropInterval) {
+                    drop();
+                }
+                
+                drawBoard();
+                drawMatrix(currentPiece.matrix, currentPiece.pos, currentPiece.color);
+                
+                document.getElementById('gameScore').innerHTML = `Score: ${score} | Level: ${level} | Lines: ${lines}`;
+                
+                if (gameRunning) {
+                    requestAnimationFrame(gameLoop);
+                }
+            }
+
+            document.addEventListener('keydown', handleKeyPress);
+
+            const instructions = document.createElement('div');
+            instructions.className = 'text-white mt-4';
+            instructions.innerHTML = 'Use arrow keys: ⬅️ ➡️ to move, ⬇️ to drop, ⬆️ to rotate';
+
+            container.appendChild(canvas);
+            container.appendChild(instructions);
+            
+            document.getElementById('gameControls').innerHTML = 'Use ⬅️ ➡️ ⬇️ ⬆️ arrow keys to play';
+
+            gameLoop();
+            return container;
+        }
+
+        // Breakout Game
+        function playBreakout() {
+            showGame('Breakout - Break All the Bricks!', createBreakoutGame());
+        }
+
+        function createBreakoutGame() {
+            const container = document.createElement('div');
+            container.className = 'text-center';
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = 800;
+            canvas.height = 600;
+            canvas.style.border = '2px solid #4facfe';
+            canvas.style.backgroundColor = '#1a1a2e';
+            const ctx = canvas.getContext('2d');
+
+            let score = 0;
+            let lives = 3;
+            let gameRunning = true;
+
+            const paddle = {
+                x: canvas.width / 2 - 60,
+                y: canvas.height - 30,
+                width: 120,
+                height: 20,
+                dx: 0
+            };
+
+            const ball = {
+                x: canvas.width / 2,
+                y: canvas.height / 2,
+                radius: 10,
+                dx: 4,
+                dy: -4
+            };
+
+            const bricks = [];
+            const brickRows = 6;
+            const brickCols = 10;
+            const brickWidth = 70;
+            const brickHeight = 20;
+            const brickPadding = 5;
+            const brickOffsetTop = 60;
+            const brickOffsetLeft = 35;
+
+            // Initialize bricks
+            for (let r = 0; r < brickRows; r++) {
+                bricks[r] = [];
+                for (let c = 0; c < brickCols; c++) {
+                    bricks[r][c] = {
+                        x: c * (brickWidth + brickPadding) + brickOffsetLeft,
+                        y: r * (brickHeight + brickPadding) + brickOffsetTop,
+                        status: 1,
+                        color: `hsl(${r * 60}, 70%, 60%)`
+                    };
+                }
+            }
+
+            function drawBall() {
+                ctx.beginPath();
+                ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+                ctx.fillStyle = '#4facfe';
+                ctx.fill();
+                ctx.closePath();
+            }
+
+            function drawPaddle() {
+                ctx.fillStyle = '#fa709a';
+                ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+            }
+
+            function drawBricks() {
+                for (let r = 0; r < brickRows; r++) {
+                    for (let c = 0; c < brickCols; c++) {
+                        if (bricks[r][c].status === 1) {
+                            ctx.fillStyle = bricks[r][c].color;
+                            ctx.fillRect(bricks[r][c].x, bricks[r][c].y, brickWidth, brickHeight);
+                            ctx.strokeStyle = '#fff';
+                            ctx.strokeRect(bricks[r][c].x, bricks[r][c].y, brickWidth, brickHeight);
+                        }
+                    }
+                }
+            }
+
+            function collisionDetection() {
+                for (let r = 0; r < brickRows; r++) {
+                    for (let c = 0; c < brickCols; c++) {
+                        const brick = bricks[r][c];
+                        if (brick.status === 1) {
+                            if (ball.x > brick.x && ball.x < brick.x + brickWidth &&
+                                ball.y > brick.y && ball.y < brick.y + brickHeight) {
+                                ball.dy = -ball.dy;
+                                brick.status = 0;
+                                score += 10;
+                                
+                                // Check if all bricks are destroyed
+                                if (score === brickRows * brickCols * 10) {
+                                    gameRunning = false;
+                                    document.getElementById('gameScore').innerHTML = '<span class="text-green-400">🎉 You Win! All bricks destroyed!</span>';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            function update() {
+                if (!gameRunning) return;
+
+                // Ball movement
+                ball.x += ball.dx;
+                ball.y += ball.dy;
+
+                // Ball collision with walls
+                if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) {
+                    ball.dx = -ball.dx;
+                }
+                if (ball.y - ball.radius < 0) {
+                    ball.dy = -ball.dy;
+                }
+
+                // Ball collision with paddle
+                if (ball.y + ball.radius > paddle.y && ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
+                    ball.dy = -ball.dy;
+                    // Add some spin based on where it hits the paddle
+                    const hitPos = (ball.x - paddle.x) / paddle.width;
+                    ball.dx = 8 * (hitPos - 0.5);
+                }
+
+                // Ball falls below paddle
+                if (ball.y + ball.radius > canvas.height) {
+                    lives--;
+                    if (lives === 0) {
+                        gameRunning = false;
+                        document.getElementById('gameScore').innerHTML = `<span class="text-red-400">Game Over! Final Score: ${score}</span>`;
+                    } else {
+                        ball.x = canvas.width / 2;
+                        ball.y = canvas.height / 2;
+                        ball.dx = 4;
+                        ball.dy = -4;
+                    }
+                }
+
+                // Paddle movement
+                paddle.x += paddle.dx;
+                if (paddle.x < 0) paddle.x = 0;
+                if (paddle.x + paddle.width > canvas.width) paddle.x = canvas.width - paddle.width;
+
+                collisionDetection();
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawBricks();
+                drawBall();
+                drawPaddle();
+                
+                document.getElementById('gameScore').innerHTML = `Score: ${score} | Lives: ${lives}`;
+            }
+
+            function gameLoop() {
+                update();
+                draw();
+                if (gameRunning) {
+                    requestAnimationFrame(gameLoop);
+                }
+            }
+
+            function handleKeyPress(e) {
+                // Prevent scrolling when in game
+                if (['ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                    e.preventDefault();
+                }
+            }
+
+            function handleKeyDown(e) {
+                if (e.key === 'ArrowLeft') {
+                    paddle.dx = -7;
+                } else if (e.key === 'ArrowRight') {
+                    paddle.dx = 7;
+                }
+            }
+
+            function handleKeyUp(e) {
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                    paddle.dx = 0;
+                }
+            }
+
+            document.addEventListener('keydown', handleKeyPress);
+            document.addEventListener('keydown', handleKeyDown);
+            document.addEventListener('keyup', handleKeyUp);
+
+            const instructions = document.createElement('div');
+            instructions.className = 'text-white mt-4';
+            instructions.innerHTML = 'Use ⬅️ ➡️ arrow keys to move the paddle and keep the ball in play!';
+
+            container.appendChild(canvas);
+            container.appendChild(instructions);
+            
+            document.getElementById('gameControls').innerHTML = 'Use ⬅️ ➡️ arrow keys to move paddle';
+
+            gameLoop();
+            return container;
+        }
+
+        // Poki Games Integration
+        function showPokiGames() {
+            showGame('Poki Games - Hundreds of Free Games', createPokiGamesEmbed());
+        }
+
+        function createPokiGamesEmbed() {
+            const container = document.createElement('div');
+            container.className = 'w-full h-full';
+            
+            const iframe = document.createElement('iframe');
+            iframe.src = 'https://poki.com';
+            iframe.style.cssText = 'width: 100%; height: 500px; border: none; border-radius: 12px;';
+            iframe.allow = 'fullscreen';
+            
+            container.appendChild(iframe);
+            
+            document.getElementById('gameControls').innerHTML = 'Choose any game from Poki\'s collection!';
+            
+            return container;
+        }
+
+        // Website Embed
+        function showWebsiteEmbed() {
+            const url = prompt('Enter a website URL to embed (e.g., https://example.com):');
+            if (url) {
+                showGame(`Embedded Website - ${url}`, createWebsiteEmbed(url));
+            }
+        }
+
+        function createWebsiteEmbed(url) {
+            const container = document.createElement('div');
+            container.className = 'w-full h-full';
+            
+            // Ensure URL has protocol
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+            }
+            
+            const iframe = document.createElement('iframe');
+            iframe.src = url;
+            iframe.style.cssText = 'width: 100%; height: 500px; border: none; border-radius: 12px;';
+            iframe.allow = 'fullscreen';
+            iframe.onerror = () => {
+                container.innerHTML = '<div class="text-red-400 text-center p-8">Failed to load website. Some sites may not allow embedding.</div>';
+            };
+            
+            container.appendChild(iframe);
+            
+            document.getElementById('gameControls').innerHTML = 'Website embedded successfully!';
+            
+            return container;
+        }
+
+        // Fullscreen functionality
+        function toggleFullscreen() {
+            const gameArea = document.getElementById('gameArea');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            
+            if (!document.fullscreenElement) {
+                gameArea.requestFullscreen().then(() => {
+                    fullscreenBtn.textContent = '🪟 Exit Fullscreen';
+                    gameArea.style.position = 'fixed';
+                    gameArea.style.top = '0';
+                    gameArea.style.left = '0';
+                    gameArea.style.width = '100vw';
+                    gameArea.style.height = '100vh';
+                    gameArea.style.zIndex = '9999';
+                    gameArea.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+                }).catch(err => {
+                    console.error('Failed to enter fullscreen:', err);
+                });
+            } else {
+                document.exitFullscreen().then(() => {
+                    fullscreenBtn.textContent = '📺 Fullscreen';
+                    gameArea.style.position = '';
+                    gameArea.style.top = '';
+                    gameArea.style.left = '';
+                    gameArea.style.width = '';
+                    gameArea.style.height = '';
+                    gameArea.style.zIndex = '';
+                    gameArea.style.backgroundColor = '';
+                });
+            }
+        }
+
+        // Scroll Animations
+        function initScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            // Add scroll animation classes to elements
+            document.querySelectorAll('.glass').forEach((element, index) => {
+                const animationType = ['scroll-fade-in', 'scroll-slide-left', 'scroll-slide-right', 'scroll-scale-up'][index % 4];
+                element.classList.add(animationType);
+                observer.observe(element);
+            });
+
+            // Add scroll animations to other elements
+            document.querySelectorAll('.btn-primary, .btn-secondary').forEach((element, index) => {
+                if (index % 2 === 0) {
+                    element.classList.add('scroll-fade-in');
+                } else {
+                    element.classList.add('scroll-scale-up');
+                }
+                observer.observe(element);
+            });
+
+            // Add parallax scroll effect
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const parallaxElements = document.querySelectorAll('.parallax-element');
+                
+                parallaxElements.forEach((element, index) => {
+                    const speed = 0.5 + (index % 3) * 0.2;
+                    const yPos = -(scrolled * speed);
+                    element.style.transform = `translateY(${yPos}px)`;
+                });
+            });
+        }
+
+        window.play2048Game = play2048Game;
+        window.playSpacebarClicker = playSpacebarClicker;
+        window.playTetris = playTetris;
+        window.playBreakout = playBreakout;
+        window.showPokiGames = showPokiGames;
+        window.showWebsiteEmbed = showWebsiteEmbed;
+        window.toggleFullscreen = toggleFullscreen;
         window.playSnakeGame = playSnakeGame;
         window.playTicTacToe = playTicTacToe;
         window.playMemoryGame = playMemoryGame;
