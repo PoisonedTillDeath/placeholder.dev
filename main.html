@@ -704,7 +704,7 @@
             }
         }
         
-        /* Theme System */
+        /* Theme System - Enhanced for Browser */
         .theme-cosmic {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
@@ -731,39 +731,26 @@
             --glass-border: rgba(139, 195, 74, 0.4);
         }
         
-        /* Forest theme specific enhancements */
-        body.theme-forest {
-            background: var(--primary-gradient);
-            background-attachment: fixed;
-        }
-        
-        body.theme-forest .glass {
+        /* Forest theme specific enhancements for browser */
+        body.theme-forest .browser-tab {
             background: rgba(45, 80, 22, 0.35) !important;
-            backdrop-filter: blur(25px) !important;
             border: 1px solid rgba(139, 195, 74, 0.3) !important;
-            box-shadow: 0 20px 60px rgba(45, 80, 22, 0.2), inset 0 1px 0 rgba(139, 195, 74, 0.2) !important;
         }
         
-        body.theme-forest .text-white {
-            color: #f1f8e9 !important;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        body.theme-forest .browser-tab.active {
+            background: rgba(139, 195, 74, 0.25) !important;
+            border-color: rgba(139, 195, 74, 0.5) !important;
+            box-shadow: 0 0 20px rgba(139, 195, 74, 0.3) !important;
         }
         
-        body.theme-forest [class*="text-white/60"] {
-            color: #c8e6c9 !important;
+        body.theme-forest #browserFrameContainer,
+        body.theme-forest #addressBar,
+        body.theme-forest .browser-toolbar {
+            background: rgba(45, 80, 22, 0.35) !important;
+            border-color: rgba(139, 195, 74, 0.3) !important;
         }
         
-        body.theme-forest [class*="text-white/70"] {
-            color: #a5d6a7 !important;
-        }
-        
-        body.theme-forest .search-input {
-            background: rgba(45, 80, 22, 0.4) !important;
-            border: 2px solid rgba(139, 195, 74, 0.3) !important;
-            color: #f1f8e9 !important;
-        }
-        
-        body.theme-forest .search-input:focus {
+        body.theme-forest #addressBar:focus {
             border-color: rgba(139, 195, 74, 0.6) !important;
             box-shadow: 0 0 0 8px rgba(139, 195, 74, 0.15) !important;
         }
@@ -772,6 +759,29 @@
             --primary-gradient: linear-gradient(135deg, #ff006e 0%, #8338ec 100%);
             --secondary-gradient: linear-gradient(135deg, #3a86ff 0%, #06ffa5 100%);
             --accent-gradient: linear-gradient(135deg, #ffbe0b 0%, #fb5607 100%);
+        }
+
+        /* Browser theme adaptations */
+        .browser-tab, #browserFrameContainer, #addressBar, .browser-toolbar, .browser-nav-btn {
+            background: var(--glass-bg) !important;
+            border: 1px solid var(--glass-border) !important;
+            backdrop-filter: blur(25px) !important;
+        }
+
+        .browser-tab.active {
+            background: rgba(79, 172, 254, 0.25) !important;
+            border-color: rgba(79, 172, 254, 0.4) !important;
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.3) !important;
+        }
+
+        #addressBar:focus {
+            border-color: rgba(79, 172, 254, 0.6) !important;
+            box-shadow: 0 0 0 8px rgba(79, 172, 254, 0.1) !important;
+        }
+
+        /* Theme change animations */
+        .browser-tab, #browserFrameContainer, #addressBar, .browser-toolbar {
+            transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease !important;
         }
         
         /* Layout Options */
@@ -1438,28 +1448,33 @@
             transition: transform 0.1s ease-out;
         }
 
-        /* Browser Tab Styles */
+        /* Browser Tab Styles - Enhanced for Full Screen */
         .browser-tab {
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
+            padding: 12px 16px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            max-width: 200px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 250px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
         .browser-tab.active {
-            background: rgba(79, 172, 254, 0.2);
+            background: rgba(79, 172, 254, 0.25);
             border-color: rgba(79, 172, 254, 0.4);
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.3);
+            transform: translateY(-2px);
         }
 
         .browser-tab:hover {
             background: rgba(255, 255, 255, 0.15);
             transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
         }
 
         .tab-title {
@@ -1469,7 +1484,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 140px;
+            max-width: 180px;
         }
 
         .tab-close {
@@ -1477,8 +1492,8 @@
             background: none;
             border: none;
             font-size: 1.2rem;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1490,28 +1505,41 @@
         .tab-close:hover {
             background: rgba(255, 255, 255, 0.2);
             color: #ff6b6b;
+            transform: scale(1.1);
         }
 
-        /* Browser Navigation Styles */
+        /* Enhanced Browser Navigation - Full Screen Optimized */
         #browserFrameContainer {
             position: relative;
-            background: #1a1a2e;
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            min-height: 70vh;
         }
 
         #browserFrame {
             background: white;
-            transition: opacity 0.3s ease;
+            transition: all 0.3s ease;
+            border: none;
+            border-radius: 0 0 16px 16px;
+            width: 100%;
+            height: 100%;
+            min-height: 65vh;
         }
 
         #browserFrame.loading {
-            opacity: 0.7;
+            opacity: 0.8;
+            filter: blur(1px);
         }
 
-        /* Loading Animation */
+        /* Loading Animation - Performance Optimized */
         @keyframes browserLoad {
-            0% { transform: translateX(-100%); }
-            50% { transform: translateX(0); }
-            100% { transform: translateX(100%); }
+            0% { transform: translateX(-100%); opacity: 0.8; }
+            50% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(100%); opacity: 0.8; }
         }
 
         .browser-loading {
@@ -1519,26 +1547,181 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
+            height: 4px;
             background: linear-gradient(90deg, #4facfe, #00f2fe);
             animation: browserLoad 2s ease-in-out;
             z-index: 10;
+            border-radius: 4px;
+            will-change: transform, opacity;
         }
 
-        /* Address Bar Styles */
+        /* Enhanced Address Bar - Theme Aware */
         #addressBar {
             color: #ffffff !important;
-            background: rgba(255, 255, 255, 0.1) !important;
+            background: var(--glass-bg) !important;
+            border: 2px solid var(--glass-border) !important;
+            backdrop-filter: blur(25px) !important;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
 
         #addressBar:focus {
             background: rgba(255, 255, 255, 0.15) !important;
             border-color: rgba(79, 172, 254, 0.6) !important;
             box-shadow: 0 0 0 8px rgba(79, 172, 254, 0.1) !important;
+            transform: translateY(-2px) !important;
         }
 
         #addressBar::placeholder {
             color: rgba(255, 255, 255, 0.6) !important;
+        }
+
+        /* Browser Toolbar Enhancement */
+        .browser-toolbar {
+            background: var(--glass-bg) !important;
+            backdrop-filter: blur(25px) !important;
+            border-bottom: 1px solid var(--glass-border) !important;
+            padding: 16px !important;
+        }
+
+        .browser-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .browser-nav-btn {
+            background: var(--glass-bg) !important;
+            border: 1px solid var(--glass-border) !important;
+            backdrop-filter: blur(20px) !important;
+            color: white !important;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .browser-nav-btn:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .browser-nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Full Screen Browser Mode */
+        .browser-fullscreen {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 9999 !important;
+            background: var(--primary-gradient) !important;
+            border-radius: 0 !important;
+        }
+
+        .browser-fullscreen #browserFrame {
+            height: calc(100vh - 120px) !important;
+            border-radius: 0 !important;
+        }
+
+        /* Performance Optimizations for Low-End Devices */
+        @media (max-width: 768px) {
+            .browser-tab {
+                padding: 8px 12px;
+                max-width: 180px;
+            }
+            
+            .tab-title {
+                max-width: 120px;
+                font-size: 0.8rem;
+            }
+            
+            #browserFrameContainer {
+                min-height: 60vh;
+            }
+            
+            #browserFrame {
+                min-height: 55vh;
+            }
+            
+            /* Reduce blur effects on mobile for performance */
+            .browser-tab, #addressBar, .browser-toolbar, .browser-nav-btn {
+                backdrop-filter: blur(15px) !important;
+            }
+            
+            /* Simplify animations on mobile */
+            .browser-tab:hover, .browser-nav-btn:hover {
+                transform: translateY(-1px) !important;
+            }
+            
+            /* Full screen mode optimizations for mobile */
+            .browser-fullscreen {
+                border-radius: 0 !important;
+            }
+            
+            .browser-fullscreen #browserFrame {
+                height: calc(100vh - 100px) !important;
+            }
+        }
+
+        /* Reduce motion for users who prefer it - Performance */
+        @media (prefers-reduced-motion: reduce) {
+            .browser-tab, #addressBar, .browser-nav-btn, #browserFrame {
+                transition: none !important;
+                animation: none !important;
+                transform: none !important;
+            }
+            
+            .browser-loading {
+                animation: none !important;
+                background: #4facfe !important;
+            }
+            
+            /* Disable hover effects for better performance */
+            .browser-tab:hover, .browser-nav-btn:hover {
+                transform: none !important;
+                box-shadow: none !important;
+            }
+        }
+
+        /* High performance mode for low-end devices */
+        @media (max-width: 480px), (max-resolution: 1dppx) {
+            .browser-tab, #browserFrameContainer, #addressBar, .browser-toolbar {
+                backdrop-filter: blur(8px) !important;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+            }
+            
+            .floating-orb {
+                display: none; /* Remove background animations on very low-end devices */
+            }
+            
+            .browser-fullscreen {
+                box-shadow: none !important;
+            }
+        }
+
+        /* GPU acceleration hints for smooth animations */
+        .browser-tab, .browser-nav-btn, #browserFrame, .browser-loading {
+            will-change: transform, opacity;
+            transform: translateZ(0); /* Force GPU layer */
+        }
+
+        /* Optimize rendering for webkit browsers */
+        @supports (-webkit-backdrop-filter: blur(20px)) {
+            .browser-tab, #browserFrameContainer, #addressBar {
+                -webkit-backdrop-filter: blur(20px);
+            }
         }
         
         /* Scroll-triggered animations */
@@ -1761,9 +1944,10 @@
                 <!-- Browser Address Bar -->
                 <div class="flex items-center gap-4">
                     <div class="flex gap-2">
-                        <button onclick="navigateBack()" class="btn-secondary px-3 py-2 rounded-lg text-sm" title="Back">←</button>
-                        <button onclick="navigateForward()" class="btn-secondary px-3 py-2 rounded-lg text-sm" title="Forward">→</button>
-                        <button onclick="refreshPage()" class="btn-secondary px-3 py-2 rounded-lg text-sm" title="Refresh">↻</button>
+                        <button onclick="navigateBack()" class="browser-nav-btn" title="Back">←</button>
+                        <button onclick="navigateForward()" class="browser-nav-btn" title="Forward">→</button>
+                        <button onclick="refreshPage()" class="browser-nav-btn" title="Refresh">↻</button>
+                        <button id="browserFullscreenBtn" onclick="toggleBrowserFullscreen()" class="browser-nav-btn" title="Toggle Fullscreen">📺</button>
                     </div>
                     <div class="flex-1 relative">
                         <input 
@@ -3248,6 +3432,11 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}">${b.name}</A>`).join('\n')}
                     btn.classList.add('border-white/60');
                 }
             });
+            
+            // Update browser theme if browser is initialized
+            if (window.debouncedThemeChange) {
+                window.debouncedThemeChange();
+            }
             
             // Create particle explosion effect
             createParticleExplosion(window.innerWidth / 2, 100, '#f093fb', 20);
@@ -4804,6 +4993,40 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}">${b.name}</A>`).join('\n')}
                 addNewBrowserTab();
             }
             updateAddressBar();
+            
+            // Make browser more full-screen friendly
+            const browserContainer = document.getElementById('browserFrameContainer');
+            if (browserContainer) {
+                // Set minimum height for better full-screen experience
+                browserContainer.style.minHeight = '75vh';
+                browserContainer.style.height = '75vh';
+            }
+        }
+
+        // Enhanced theme change handler for browser
+        function onThemeChange() {
+            // Refresh new tab page if it's currently showing
+            const activeTab = browserTabs.find(tab => tab.id === activeTabId);
+            if (activeTab && (activeTab.url === 'about:blank' || !activeTab.url)) {
+                loadNewTabPage();
+            }
+            
+            // Update browser UI colors
+            updateBrowserTheme();
+        }
+
+        // Update browser UI to match current theme
+        function updateBrowserTheme() {
+            const currentTheme = document.body.className.match(/theme-\w+/) ? document.body.className.match(/theme-\w+/)[0] : 'theme-cosmic';
+            
+            // Force refresh of browser elements with new theme
+            const browserElements = document.querySelectorAll('.browser-tab, #browserFrameContainer, #addressBar, .browser-toolbar, .browser-nav-btn');
+            browserElements.forEach(element => {
+                // Trigger a reflow to apply new CSS variables
+                element.style.display = 'none';
+                element.offsetHeight; // Trigger reflow
+                element.style.display = '';
+            });
         }
 
         // Add a new browser tab
@@ -5000,90 +5223,342 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}">${b.name}</A>`).join('\n')}
         // Load new tab page
         function loadNewTabPage() {
             const browserFrame = document.getElementById('browserFrame');
+            
+            // Get current theme variables
+            const currentTheme = document.body.className.match(/theme-\w+/) ? document.body.className.match(/theme-\w+/)[0] : 'theme-cosmic';
+            
             browserFrame.srcdoc = `
                 <!DOCTYPE html>
                 <html>
                 <head>
                     <title>New Tab</title>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
                     <style>
-                        body {
+                        * { 
                             margin: 0;
-                            padding: 40px;
-                            font-family: 'Inter', sans-serif;
-                            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+                            padding: 0;
+                            box-sizing: border-box;
+                            font-family: 'Inter', sans-serif; 
+                        }
+                        
+                        :root {
+                            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+                            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                            --accent-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+                            --glass-bg: rgba(255, 255, 255, 0.1);
+                            --glass-border: rgba(255, 255, 255, 0.2);
+                        }
+                        
+                        /* Theme Support */
+                        .theme-forest {
+                            --primary-gradient: linear-gradient(135deg, #2d5016 0%, #3a6b3c 30%, #4a7c59 60%, #5b8266 100%);
+                            --secondary-gradient: linear-gradient(135deg, #8bc34a 0%, #689f38 100%);
+                            --accent-gradient: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+                            --glass-bg: rgba(45, 80, 22, 0.3);
+                            --glass-border: rgba(139, 195, 74, 0.4);
+                        }
+                        
+                        .theme-ocean {
+                            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                            --accent-gradient: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
+                        }
+                        
+                        .theme-sunset {
+                            --primary-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+                            --secondary-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+                            --accent-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+                        }
+                        
+                        .theme-neon {
+                            --primary-gradient: linear-gradient(135deg, #ff006e 0%, #8338ec 100%);
+                            --secondary-gradient: linear-gradient(135deg, #3a86ff 0%, #06ffa5 100%);
+                            --accent-gradient: linear-gradient(135deg, #ffbe0b 0%, #fb5607 100%);
+                        }
+
+                        body {
+                            background: var(--primary-gradient);
                             color: white;
                             display: flex;
                             flex-direction: column;
                             align-items: center;
                             justify-content: center;
                             min-height: 100vh;
+                            padding: 2rem;
+                            background-attachment: fixed;
+                            position: relative;
+                            overflow-x: hidden;
                         }
-                        .logo { font-size: 3rem; margin-bottom: 2rem; }
-                        .search-container { width: 100%; max-width: 600px; margin-bottom: 3rem; }
+
+                        /* Glass morphism effects */
+                        .glass {
+                            background: var(--glass-bg) !important;
+                            backdrop-filter: blur(25px) !important;
+                            border: 1px solid var(--glass-border) !important;
+                            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+                        }
+
+                        /* Animated background */
+                        .floating-orb {
+                            position: absolute; 
+                            border-radius: 50%;
+                            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
+                            backdrop-filter: blur(40px);
+                            animation: float-enhanced 25s infinite ease-in-out;
+                            box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
+                            pointer-events: none;
+                        }
+                        
+                        .orb-1 { 
+                            width: 100px; 
+                            height: 100px; 
+                            top: 15%; 
+                            left: 10%; 
+                            animation-delay: 0s;
+                            background: linear-gradient(45deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.1));
+                        }
+                        .orb-2 { 
+                            width: 150px; 
+                            height: 150px; 
+                            top: 70%; 
+                            right: 15%; 
+                            animation-delay: -8s;
+                            background: linear-gradient(45deg, rgba(250, 112, 154, 0.3), rgba(254, 225, 64, 0.1));
+                        }
+                        .orb-3 { 
+                            width: 80px; 
+                            height: 80px; 
+                            bottom: 30%; 
+                            left: 30%; 
+                            animation-delay: -15s;
+                            background: linear-gradient(45deg, rgba(79, 172, 254, 0.3), rgba(0, 242, 254, 0.1));
+                        }
+                        
+                        @keyframes float-enhanced {
+                            0%, 100% { 
+                                transform: translate(0, 0) scale(1) rotate(0deg); 
+                                opacity: 0.4; 
+                            }
+                            25% { 
+                                transform: translate(30px, -20px) scale(1.1) rotate(90deg); 
+                                opacity: 0.6; 
+                            }
+                            50% { 
+                                transform: translate(-20px, 20px) scale(0.9) rotate(180deg); 
+                                opacity: 0.3; 
+                            }
+                            75% { 
+                                transform: translate(25px, 30px) scale(1.05) rotate(270deg); 
+                                opacity: 0.5; 
+                            }
+                        }
+
+                        .logo { 
+                            font-size: 4rem; 
+                            margin-bottom: 2rem; 
+                            animation: float 3s ease-in-out infinite;
+                            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+                        }
+                        
+                        @keyframes float {
+                            0%, 100% { transform: translateY(0px); }
+                            50% { transform: translateY(-10px); }
+                        }
+
+                        .welcome-title {
+                            font-size: 2.5rem;
+                            font-weight: 700;
+                            margin-bottom: 1rem;
+                            background: linear-gradient(135deg, #ffffff, #a1c4fd);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            background-clip: text;
+                        }
+
+                        .welcome-subtitle {
+                            font-size: 1.2rem;
+                            opacity: 0.8;
+                            margin-bottom: 3rem;
+                            text-align: center;
+                        }
+
+                        .search-container { 
+                            width: 100%; 
+                            max-width: 600px; 
+                            margin-bottom: 3rem; 
+                            position: relative;
+                        }
+                        
                         .search-input {
                             width: 100%;
-                            padding: 1rem 1.5rem;
+                            padding: 1.2rem 1.8rem;
                             font-size: 1.2rem;
-                            border: 2px solid rgba(255,255,255,0.2);
+                            border: 2px solid var(--glass-border);
                             border-radius: 2rem;
-                            background: rgba(255,255,255,0.1);
+                            background: var(--glass-bg);
+                            backdrop-filter: blur(25px);
                             color: white;
                             outline: none;
+                            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
                         }
-                        .search-input::placeholder { color: rgba(255,255,255,0.6); }
-                        .search-input:focus { border-color: #4facfe; box-shadow: 0 0 20px rgba(79,172,254,0.3); }
+                        
+                        .search-input::placeholder { 
+                            color: rgba(255,255,255,0.6); 
+                        }
+                        
+                        .search-input:focus { 
+                            border-color: #4facfe; 
+                            box-shadow: 0 0 0 8px rgba(79, 172, 254, 0.15), 0 20px 40px rgba(0, 0, 0, 0.2);
+                            transform: translateY(-2px);
+                        }
+                        
                         .quick-links {
                             display: grid;
                             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                            gap: 1rem;
+                            gap: 1.5rem;
                             width: 100%;
                             max-width: 800px;
                         }
+                        
                         .quick-link {
-                            padding: 1.5rem;
-                            background: rgba(255,255,255,0.1);
-                            border: 1px solid rgba(255,255,255,0.2);
-                            border-radius: 1rem;
+                            padding: 2rem;
+                            background: var(--glass-bg);
+                            border: 1px solid var(--glass-border);
+                            border-radius: 1.5rem;
                             text-decoration: none;
                             color: white;
                             text-align: center;
-                            transition: all 0.3s ease;
+                            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                            backdrop-filter: blur(25px);
+                            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                            position: relative;
+                            overflow: hidden;
                         }
+                        
+                        .quick-link::before {
+                            content: '';
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            height: 2px;
+                            background: var(--accent-gradient);
+                            transform: scaleX(0);
+                            transition: transform 0.3s ease;
+                        }
+                        
+                        .quick-link:hover::before {
+                            transform: scaleX(1);
+                        }
+                        
                         .quick-link:hover {
-                            background: rgba(255,255,255,0.2);
-                            transform: translateY(-5px);
+                            background: rgba(255, 255, 255, 0.15);
+                            transform: translateY(-8px) scale(1.02);
+                            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
                         }
-                        .quick-link-icon { font-size: 2rem; margin-bottom: 0.5rem; }
-                        .quick-link-title { font-weight: 600; margin-bottom: 0.25rem; }
-                        .quick-link-desc { font-size: 0.9rem; opacity: 0.8; }
+                        
+                        .quick-link-icon { 
+                            font-size: 2.5rem; 
+                            margin-bottom: 1rem; 
+                            display: block;
+                            animation: iconFloat 2s ease-in-out infinite;
+                        }
+                        
+                        @keyframes iconFloat {
+                            0%, 100% { transform: translateY(0px); }
+                            50% { transform: translateY(-5px); }
+                        }
+                        
+                        .quick-link-title { 
+                            font-weight: 600; 
+                            margin-bottom: 0.5rem; 
+                            font-size: 1.1rem;
+                        }
+                        
+                        .quick-link-desc { 
+                            font-size: 0.9rem; 
+                            opacity: 0.8; 
+                            line-height: 1.4;
+                        }
+
+                        /* Responsive design */
+                        @media (max-width: 768px) {
+                            .logo { font-size: 3rem; }
+                            .welcome-title { font-size: 2rem; }
+                            .welcome-subtitle { font-size: 1rem; }
+                            .search-input { padding: 1rem 1.5rem; font-size: 1rem; }
+                            .quick-links { grid-template-columns: 1fr; gap: 1rem; }
+                            .quick-link { padding: 1.5rem; }
+                            .quick-link-icon { font-size: 2rem; }
+                            
+                            /* Reduce blur effects on mobile for performance */
+                            .glass, .search-input, .quick-link {
+                                backdrop-filter: blur(15px) !important;
+                            }
+                        }
+
+                        /* Performance optimizations */
+                        @media (prefers-reduced-motion: reduce) {
+                            *, *::before, *::after {
+                                animation-duration: 0.01ms !important;
+                                animation-iteration-count: 1 !important;
+                                transition-duration: 0.01ms !important;
+                            }
+                        }
+
+                        /* GPU acceleration for smooth animations */
+                        .quick-link, .search-input, .floating-orb {
+                            will-change: transform;
+                        }
                     </style>
                 </head>
-                <body>
+                <body class="${currentTheme}">
+                    <div class="floating-orb orb-1"></div>
+                    <div class="floating-orb orb-2"></div>
+                    <div class="floating-orb orb-3"></div>
+                    
                     <div class="logo">🌐</div>
+                    <div class="welcome-title">Welcome to Your Browser</div>
+                    <div class="welcome-subtitle">Search the web or enter a URL to get started</div>
+                    
                     <div class="search-container">
                         <input type="text" class="search-input" placeholder="Search the web or enter a URL..." 
-                               onkeypress="if(event.key==='Enter') parent.postMessage({type:'navigate', url: this.value}, '*')">
+                               onkeypress="if(event.key==='Enter') parent.postMessage({type:'navigate', url: this.value}, '*')"
+                               autofocus>
                     </div>
+                    
                     <div class="quick-links">
-                        <a href="#" class="quick-link" onclick="parent.postMessage({type:'navigate', url: 'https://google.com'}, '*')">
+                        <a href="#" class="quick-link glass" onclick="parent.postMessage({type:'navigate', url: 'https://google.com'}, '*')">
                             <div class="quick-link-icon">🔍</div>
                             <div class="quick-link-title">Google</div>
-                            <div class="quick-link-desc">Search engine</div>
+                            <div class="quick-link-desc">Search the web</div>
                         </a>
-                        <a href="#" class="quick-link" onclick="parent.postMessage({type:'navigate', url: 'https://youtube.com'}, '*')">
+                        <a href="#" class="quick-link glass" onclick="parent.postMessage({type:'navigate', url: 'https://youtube.com'}, '*')">
                             <div class="quick-link-icon">🎥</div>
                             <div class="quick-link-title">YouTube</div>
-                            <div class="quick-link-desc">Videos</div>
+                            <div class="quick-link-desc">Watch videos</div>
                         </a>
-                        <a href="#" class="quick-link" onclick="parent.postMessage({type:'navigate', url: 'https://github.com'}, '*')">
+                        <a href="#" class="quick-link glass" onclick="parent.postMessage({type:'navigate', url: 'https://github.com'}, '*')">
                             <div class="quick-link-icon">💻</div>
                             <div class="quick-link-title">GitHub</div>
-                            <div class="quick-link-desc">Code repository</div>
+                            <div class="quick-link-desc">Code repositories</div>
                         </a>
-                        <a href="#" class="quick-link" onclick="parent.postMessage({type:'navigate', url: 'https://news.ycombinator.com'}, '*')">
+                        <a href="#" class="quick-link glass" onclick="parent.postMessage({type:'navigate', url: 'https://news.ycombinator.com'}, '*')">
                             <div class="quick-link-icon">📰</div>
                             <div class="quick-link-title">Hacker News</div>
-                            <div class="quick-link-desc">Tech news</div>
+                            <div class="quick-link-desc">Tech news & discussions</div>
+                        </a>
+                        <a href="#" class="quick-link glass" onclick="parent.postMessage({type:'navigate', url: 'https://reddit.com'}, '*')">
+                            <div class="quick-link-icon">🗨️</div>
+                            <div class="quick-link-title">Reddit</div>
+                            <div class="quick-link-desc">Social discussions</div>
+                        </a>
+                        <a href="#" class="quick-link glass" onclick="parent.postMessage({type:'navigate', url: 'https://stackoverflow.com'}, '*')">
+                            <div class="quick-link-icon">❓</div>
+                            <div class="quick-link-title">Stack Overflow</div>
+                            <div class="quick-link-desc">Programming Q&A</div>
                         </a>
                     </div>
                 </body>
@@ -5259,14 +5734,63 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}">${b.name}</A>`).join('\n')}
             }
         });
 
+        // Toggle browser fullscreen mode
+        function toggleBrowserFullscreen() {
+            const browserContainer = document.getElementById('browserFrameContainer');
+            const fullscreenBtn = document.getElementById('browserFullscreenBtn');
+            
+            if (!browserContainer.classList.contains('browser-fullscreen')) {
+                browserContainer.classList.add('browser-fullscreen');
+                if (fullscreenBtn) fullscreenBtn.textContent = '🪟 Exit Fullscreen';
+                document.body.style.overflow = 'hidden';
+                showToast('Browser in fullscreen mode', 'info');
+            } else {
+                browserContainer.classList.remove('browser-fullscreen');
+                if (fullscreenBtn) fullscreenBtn.textContent = '📺 Fullscreen';
+                document.body.style.overflow = '';
+                showToast('Exited fullscreen mode', 'info');
+            }
+        }
+
+        // Enhanced tab switching with performance optimization
+        function switchToTab(tabId) {
+            const tab = browserTabs.find(t => t.id === tabId);
+            if (!tab || tabId === activeTabId) return;
+            
+            activeTabId = tabId;
+            renderBrowserTabs();
+            updateAddressBar();
+            
+            // Performance: Use requestAnimationFrame for smooth transition
+            requestAnimationFrame(() => {
+                const browserFrame = document.getElementById('browserFrame');
+                if (tab.url && tab.url !== 'about:blank') {
+                    loadUrlInFrame(tab.url);
+                } else {
+                    loadNewTabPage();
+                }
+            });
+        }
+
+        // Performance optimization: Debounced theme change
+        let themeChangeTimeout;
+        function debouncedThemeChange() {
+            clearTimeout(themeChangeTimeout);
+            themeChangeTimeout = setTimeout(onThemeChange, 100);
+        }
+
         // Make browser functions globally available
         window.initializeBrowser = initializeBrowser;
         window.addNewBrowserTab = addNewBrowserTab;
         window.closeBrowserTab = closeBrowserTab;
+        window.switchToTab = switchToTab;
         window.navigateToUrl = navigateToUrl;
         window.navigateBack = navigateBack;
         window.navigateForward = navigateForward;
         window.refreshPage = refreshPage;
+        window.toggleBrowserFullscreen = toggleBrowserFullscreen;
+        window.onThemeChange = onThemeChange;
+        window.debouncedThemeChange = debouncedThemeChange;
 
     </script>
 </body>
