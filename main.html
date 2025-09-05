@@ -1437,6 +1437,109 @@
         .parallax-element {
             transition: transform 0.1s ease-out;
         }
+
+        /* Browser Tab Styles */
+        .browser-tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            max-width: 200px;
+        }
+
+        .browser-tab.active {
+            background: rgba(79, 172, 254, 0.2);
+            border-color: rgba(79, 172, 254, 0.4);
+        }
+
+        .browser-tab:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .tab-title {
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 140px;
+        }
+
+        .tab-close {
+            color: rgba(255, 255, 255, 0.6);
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ff6b6b;
+        }
+
+        /* Browser Navigation Styles */
+        #browserFrameContainer {
+            position: relative;
+            background: #1a1a2e;
+        }
+
+        #browserFrame {
+            background: white;
+            transition: opacity 0.3s ease;
+        }
+
+        #browserFrame.loading {
+            opacity: 0.7;
+        }
+
+        /* Loading Animation */
+        @keyframes browserLoad {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(0); }
+            100% { transform: translateX(100%); }
+        }
+
+        .browser-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            animation: browserLoad 2s ease-in-out;
+            z-index: 10;
+        }
+
+        /* Address Bar Styles */
+        #addressBar {
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        #addressBar:focus {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-color: rgba(79, 172, 254, 0.6) !important;
+            box-shadow: 0 0 0 8px rgba(79, 172, 254, 0.1) !important;
+        }
+
+        #addressBar::placeholder {
+            color: rgba(255, 255, 255, 0.6) !important;
+        }
         
         /* Scroll-triggered animations */
         @keyframes slideInFromLeft {
@@ -1516,6 +1619,7 @@
             
             <nav class="flex gap-3">
                 <button onclick="switchTab('dashboard')" class="btn-secondary active px-6 py-3 rounded-xl text-sm font-medium" id="tab-dashboard">Dashboard</button>
+                <button onclick="switchTab('browser')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-browser">🌐 Browser</button>
                 <button onclick="switchTab('history')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-history">History</button>
                 <button onclick="switchTab('analytics')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-analytics">Analytics</button>
                 <button onclick="switchTab('games')" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium" id="tab-games">Games</button>
@@ -1636,6 +1740,62 @@
                     </div>
                     <h3 class="text-2xl font-semibold mb-2">No bookmarks yet</h3>
                     <p class="text-lg">Add some to get started!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Browser Tab -->
+        <div id="browser-content" class="tab-content hidden">
+            <!-- Browser Tab Bar -->
+            <div class="glass rounded-3xl p-4 mb-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="flex gap-2" id="browserTabs">
+                        <div class="browser-tab active" data-tab-id="0">
+                            <span class="tab-title">New Tab</span>
+                            <button class="tab-close" onclick="closeBrowserTab(0)">×</button>
+                        </div>
+                    </div>
+                    <button onclick="addNewBrowserTab()" class="btn-secondary px-3 py-2 rounded-lg text-sm">+ New Tab</button>
+                </div>
+                
+                <!-- Browser Address Bar -->
+                <div class="flex items-center gap-4">
+                    <div class="flex gap-2">
+                        <button onclick="navigateBack()" class="btn-secondary px-3 py-2 rounded-lg text-sm" title="Back">←</button>
+                        <button onclick="navigateForward()" class="btn-secondary px-3 py-2 rounded-lg text-sm" title="Forward">→</button>
+                        <button onclick="refreshPage()" class="btn-secondary px-3 py-2 rounded-lg text-sm" title="Refresh">↻</button>
+                    </div>
+                    <div class="flex-1 relative">
+                        <input 
+                            type="text" 
+                            id="addressBar" 
+                            class="w-full px-4 py-3 rounded-xl bg-white/10 border-2 border-white/20 text-white"
+                            placeholder="Enter URL or search..."
+                            onkeypress="if(event.key==='Enter') navigateToUrl()"
+                        >
+                        <button onclick="navigateToUrl()" class="absolute right-2 top-1/2 transform -translate-y-1/2 btn-primary px-4 py-2 rounded-lg text-sm">Go</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Browser Content Area -->
+            <div class="glass rounded-3xl overflow-hidden" style="height: calc(100vh - 300px);">
+                <div id="browserFrameContainer" class="w-full h-full">
+                    <iframe 
+                        id="browserFrame" 
+                        class="w-full h-full border-0" 
+                        sandbox="allow-same-origin allow-scripts allow-forms allow-links allow-popups"
+                        src="about:blank">
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- Browser Status Bar -->
+            <div class="flex justify-between items-center mt-4 text-sm text-white/60">
+                <div id="browserStatus">Ready</div>
+                <div class="flex gap-4">
+                    <span id="loadingIndicator" class="hidden">Loading...</span>
+                    <span id="securityIndicator">🔒 Secure Proxy</span>
                 </div>
             </div>
         </div>
@@ -1974,6 +2134,16 @@
             // Create particle explosion effect
             createParticleExplosion(input.offsetLeft + input.offsetWidth / 2, input.offsetTop + input.offsetHeight / 2, '#4facfe', 20);
 
+            // If browser tab is available, use it
+            if (typeof browserTabs !== 'undefined' && browserTabs.length > 0) {
+                switchTab('browser');
+                navigateToUrl(url);
+                input.value = '';
+                trackAnalytics('search');
+                return;
+            }
+
+            // Fallback to original behavior for backward compatibility
             // Create loading iframe
             const iframe = document.createElement('iframe');
             iframe.src = 'loading.html';
@@ -2046,6 +2216,9 @@
             
             // Render appropriate content
             switch(tabName) {
+                case 'browser':
+                    initializeBrowser();
+                    break;
                 case 'analytics':
                     renderAnalytics();
                     break;
@@ -4616,6 +4789,484 @@ ${bookmarks.map(b => `    <DT><A HREF="${b.url}">${b.name}</A>`).join('\n')}
         window.playMemoryGame = playMemoryGame;
         window.playGuessNumber = playGuessNumber;
         window.closeGame = closeGame;
+
+        // ================================
+        // BROWSER FUNCTIONALITY
+        // ================================
+        
+        let browserTabs = [];
+        let activeTabId = 0;
+        let tabIdCounter = 1;
+
+        // Initialize browser functionality
+        function initializeBrowser() {
+            if (browserTabs.length === 0) {
+                addNewBrowserTab();
+            }
+            updateAddressBar();
+        }
+
+        // Add a new browser tab
+        function addNewBrowserTab(url = null) {
+            const tabId = tabIdCounter++;
+            const tab = {
+                id: tabId,
+                title: 'New Tab',
+                url: url || 'about:blank',
+                history: [],
+                historyIndex: -1
+            };
+            
+            browserTabs.push(tab);
+            activeTabId = tabId;
+            
+            renderBrowserTabs();
+            
+            if (url) {
+                navigateToUrl(url);
+            } else {
+                loadNewTabPage();
+            }
+            
+            showToast(`New tab opened`, 'success');
+        }
+
+        // Close browser tab
+        function closeBrowserTab(tabId) {
+            if (browserTabs.length <= 1) {
+                showToast('Cannot close the last tab', 'warning');
+                return;
+            }
+            
+            const tabIndex = browserTabs.findIndex(tab => tab.id === tabId);
+            if (tabIndex === -1) return;
+            
+            browserTabs.splice(tabIndex, 1);
+            
+            // Switch to another tab if the closed tab was active
+            if (activeTabId === tabId) {
+                activeTabId = browserTabs[Math.max(0, tabIndex - 1)].id;
+                switchToTab(activeTabId);
+            }
+            
+            renderBrowserTabs();
+            showToast('Tab closed', 'info');
+        }
+
+        // Switch to a specific tab
+        function switchToTab(tabId) {
+            const tab = browserTabs.find(t => t.id === tabId);
+            if (!tab) return;
+            
+            activeTabId = tabId;
+            renderBrowserTabs();
+            updateAddressBar();
+            
+            // Load the tab's current page
+            const browserFrame = document.getElementById('browserFrame');
+            if (tab.url && tab.url !== 'about:blank') {
+                loadUrlInFrame(tab.url);
+            } else {
+                loadNewTabPage();
+            }
+        }
+
+        // Render browser tabs UI
+        function renderBrowserTabs() {
+            const tabContainer = document.getElementById('browserTabs');
+            if (!tabContainer) return;
+            
+            tabContainer.innerHTML = browserTabs.map(tab => `
+                <div class="browser-tab ${tab.id === activeTabId ? 'active' : ''}" onclick="switchToTab(${tab.id})" data-tab-id="${tab.id}">
+                    <span class="tab-title" title="${tab.title}">${tab.title}</span>
+                    <button class="tab-close" onclick="event.stopPropagation(); closeBrowserTab(${tab.id})">×</button>
+                </div>
+            `).join('');
+        }
+
+        // Navigate to URL
+        function navigateToUrl(url = null) {
+            const addressBar = document.getElementById('addressBar');
+            const targetUrl = url || addressBar.value.trim();
+            
+            if (!targetUrl || targetUrl === 'about:blank') {
+                loadNewTabPage();
+                return;
+            }
+            
+            const activeTab = browserTabs.find(tab => tab.id === activeTabId);
+            if (!activeTab) return;
+            
+            // Prepare URL
+            let finalUrl = targetUrl;
+            if (!finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
+                if (finalUrl.includes('.') && !finalUrl.includes(' ')) {
+                    finalUrl = 'https://' + finalUrl;
+                } else {
+                    // Treat as search query
+                    finalUrl = getSearchEngineUrl(finalUrl);
+                }
+            }
+            
+            // Add to tab history
+            activeTab.url = finalUrl;
+            activeTab.history.push(finalUrl);
+            activeTab.historyIndex = activeTab.history.length - 1;
+            
+            // Update UI
+            updateAddressBar();
+            updateBrowserStatus('Loading...');
+            showLoadingIndicator(true);
+            
+            // Load in frame via proxy
+            loadUrlInFrame(finalUrl);
+            
+            // Add to global history
+            addToVisitHistory(finalUrl, 'Loading...');
+        }
+
+        // Load URL in iframe via proxy
+        function loadUrlInFrame(url) {
+            const browserFrame = document.getElementById('browserFrame');
+            const loadingDiv = document.querySelector('.browser-loading');
+            
+            if (loadingDiv) {
+                loadingDiv.remove();
+            }
+            
+            // Create loading bar
+            const loading = document.createElement('div');
+            loading.className = 'browser-loading';
+            document.getElementById('browserFrameContainer').appendChild(loading);
+            
+            try {
+                const proxyUrl = `/proxy/${encodeURIComponent(url)}`;
+                browserFrame.src = proxyUrl;
+                
+                // Handle frame load events
+                browserFrame.onload = function() {
+                    handleFrameLoad(url);
+                };
+                
+                browserFrame.onerror = function() {
+                    handleFrameError(url);
+                };
+                
+                // Set timeout for loading
+                setTimeout(() => {
+                    if (loading.parentNode) {
+                        loading.remove();
+                    }
+                }, 10000);
+                
+            } catch (error) {
+                console.error('Failed to load URL:', error);
+                handleFrameError(url);
+            }
+        }
+
+        // Handle successful frame load
+        function handleFrameLoad(url) {
+            const loading = document.querySelector('.browser-loading');
+            if (loading) {
+                loading.remove();
+            }
+            
+            showLoadingIndicator(false);
+            updateBrowserStatus('Done');
+            
+            // Try to get page title
+            getPageMetadata(url).then(metadata => {
+                updateTabTitle(metadata.title);
+                updateAddressBar();
+            });
+        }
+
+        // Handle frame load error
+        function handleFrameError(url) {
+            const loading = document.querySelector('.browser-loading');
+            if (loading) {
+                loading.remove();
+            }
+            
+            showLoadingIndicator(false);
+            updateBrowserStatus('Failed to load');
+            showToast('Failed to load page', 'error');
+            
+            // Load error page
+            loadErrorPage(url);
+        }
+
+        // Load new tab page
+        function loadNewTabPage() {
+            const browserFrame = document.getElementById('browserFrame');
+            browserFrame.srcdoc = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>New Tab</title>
+                    <style>
+                        body {
+                            margin: 0;
+                            padding: 40px;
+                            font-family: 'Inter', sans-serif;
+                            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+                            color: white;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            min-height: 100vh;
+                        }
+                        .logo { font-size: 3rem; margin-bottom: 2rem; }
+                        .search-container { width: 100%; max-width: 600px; margin-bottom: 3rem; }
+                        .search-input {
+                            width: 100%;
+                            padding: 1rem 1.5rem;
+                            font-size: 1.2rem;
+                            border: 2px solid rgba(255,255,255,0.2);
+                            border-radius: 2rem;
+                            background: rgba(255,255,255,0.1);
+                            color: white;
+                            outline: none;
+                        }
+                        .search-input::placeholder { color: rgba(255,255,255,0.6); }
+                        .search-input:focus { border-color: #4facfe; box-shadow: 0 0 20px rgba(79,172,254,0.3); }
+                        .quick-links {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                            gap: 1rem;
+                            width: 100%;
+                            max-width: 800px;
+                        }
+                        .quick-link {
+                            padding: 1.5rem;
+                            background: rgba(255,255,255,0.1);
+                            border: 1px solid rgba(255,255,255,0.2);
+                            border-radius: 1rem;
+                            text-decoration: none;
+                            color: white;
+                            text-align: center;
+                            transition: all 0.3s ease;
+                        }
+                        .quick-link:hover {
+                            background: rgba(255,255,255,0.2);
+                            transform: translateY(-5px);
+                        }
+                        .quick-link-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+                        .quick-link-title { font-weight: 600; margin-bottom: 0.25rem; }
+                        .quick-link-desc { font-size: 0.9rem; opacity: 0.8; }
+                    </style>
+                </head>
+                <body>
+                    <div class="logo">🌐</div>
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search the web or enter a URL..." 
+                               onkeypress="if(event.key==='Enter') parent.postMessage({type:'navigate', url: this.value}, '*')">
+                    </div>
+                    <div class="quick-links">
+                        <a href="#" class="quick-link" onclick="parent.postMessage({type:'navigate', url: 'https://google.com'}, '*')">
+                            <div class="quick-link-icon">🔍</div>
+                            <div class="quick-link-title">Google</div>
+                            <div class="quick-link-desc">Search engine</div>
+                        </a>
+                        <a href="#" class="quick-link" onclick="parent.postMessage({type:'navigate', url: 'https://youtube.com'}, '*')">
+                            <div class="quick-link-icon">🎥</div>
+                            <div class="quick-link-title">YouTube</div>
+                            <div class="quick-link-desc">Videos</div>
+                        </a>
+                        <a href="#" class="quick-link" onclick="parent.postMessage({type:'navigate', url: 'https://github.com'}, '*')">
+                            <div class="quick-link-icon">💻</div>
+                            <div class="quick-link-title">GitHub</div>
+                            <div class="quick-link-desc">Code repository</div>
+                        </a>
+                        <a href="#" class="quick-link" onclick="parent.postMessage({type:'navigate', url: 'https://news.ycombinator.com'}, '*')">
+                            <div class="quick-link-icon">📰</div>
+                            <div class="quick-link-title">Hacker News</div>
+                            <div class="quick-link-desc">Tech news</div>
+                        </a>
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            updateTabTitle('New Tab');
+            updateBrowserStatus('Ready');
+        }
+
+        // Load error page
+        function loadErrorPage(url) {
+            const browserFrame = document.getElementById('browserFrame');
+            browserFrame.srcdoc = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Page Not Found</title>
+                    <style>
+                        body {
+                            margin: 0;
+                            padding: 40px;
+                            font-family: 'Inter', sans-serif;
+                            background: #1a1a2e;
+                            color: white;
+                            text-align: center;
+                        }
+                        .error-icon { font-size: 4rem; margin-bottom: 1rem; }
+                        .error-title { font-size: 2rem; margin-bottom: 1rem; color: #ff6b6b; }
+                        .error-message { font-size: 1.1rem; margin-bottom: 2rem; opacity: 0.8; }
+                        .error-url { 
+                            background: rgba(255,255,255,0.1); 
+                            padding: 1rem; 
+                            border-radius: 0.5rem; 
+                            font-family: monospace; 
+                            word-break: break-all;
+                            margin-bottom: 2rem;
+                        }
+                        .error-actions button {
+                            background: #4facfe;
+                            color: white;
+                            border: none;
+                            padding: 1rem 2rem;
+                            border-radius: 0.5rem;
+                            font-size: 1rem;
+                            cursor: pointer;
+                            margin: 0 0.5rem;
+                        }
+                        .error-actions button:hover { background: #3d8bfe; }
+                    </style>
+                </head>
+                <body>
+                    <div class="error-icon">⚠️</div>
+                    <div class="error-title">Failed to Load Page</div>
+                    <div class="error-message">The page you're trying to reach is unavailable or doesn't allow embedding.</div>
+                    <div class="error-url">${url}</div>
+                    <div class="error-actions">
+                        <button onclick="parent.postMessage({type:'navigate', url: 'about:blank'}, '*')">New Tab</button>
+                        <button onclick="parent.postMessage({type:'refresh'}, '*')">Try Again</button>
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            updateTabTitle('Error');
+        }
+
+        // Browser navigation functions
+        function navigateBack() {
+            const activeTab = browserTabs.find(tab => tab.id === activeTabId);
+            if (!activeTab || activeTab.historyIndex <= 0) {
+                showToast('No previous page', 'warning');
+                return;
+            }
+            
+            activeTab.historyIndex--;
+            const url = activeTab.history[activeTab.historyIndex];
+            activeTab.url = url;
+            loadUrlInFrame(url);
+            updateAddressBar();
+        }
+
+        function navigateForward() {
+            const activeTab = browserTabs.find(tab => tab.id === activeTabId);
+            if (!activeTab || activeTab.historyIndex >= activeTab.history.length - 1) {
+                showToast('No next page', 'warning');
+                return;
+            }
+            
+            activeTab.historyIndex++;
+            const url = activeTab.history[activeTab.historyIndex];
+            activeTab.url = url;
+            loadUrlInFrame(url);
+            updateAddressBar();
+        }
+
+        function refreshPage() {
+            const activeTab = browserTabs.find(tab => tab.id === activeTabId);
+            if (!activeTab) return;
+            
+            if (activeTab.url && activeTab.url !== 'about:blank') {
+                loadUrlInFrame(activeTab.url);
+            } else {
+                loadNewTabPage();
+            }
+            showToast('Page refreshed', 'info');
+        }
+
+        // Helper functions
+        function updateAddressBar() {
+            const addressBar = document.getElementById('addressBar');
+            const activeTab = browserTabs.find(tab => tab.id === activeTabId);
+            
+            if (addressBar && activeTab) {
+                addressBar.value = activeTab.url === 'about:blank' ? '' : activeTab.url;
+            }
+        }
+
+        function updateTabTitle(title) {
+            const activeTab = browserTabs.find(tab => tab.id === activeTabId);
+            if (activeTab) {
+                activeTab.title = title.length > 20 ? title.substring(0, 20) + '...' : title;
+                renderBrowserTabs();
+            }
+        }
+
+        function updateBrowserStatus(status) {
+            const statusElement = document.getElementById('browserStatus');
+            if (statusElement) {
+                statusElement.textContent = status;
+            }
+        }
+
+        function showLoadingIndicator(show) {
+            const indicator = document.getElementById('loadingIndicator');
+            if (indicator) {
+                indicator.style.display = show ? 'block' : 'none';
+            }
+        }
+
+        // Get page metadata via API
+        async function getPageMetadata(url) {
+            try {
+                const response = await fetch(`/api/metadata/${encodeURIComponent(url)}`);
+                if (response.ok) {
+                    return await response.json();
+                }
+            } catch (error) {
+                console.error('Failed to get metadata:', error);
+            }
+            
+            // Fallback
+            return {
+                title: new URL(url).hostname,
+                description: '',
+                icon: '',
+                url: url,
+                hostname: new URL(url).hostname
+            };
+        }
+
+        // Listen for messages from iframes
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type) {
+                switch(event.data.type) {
+                    case 'navigate':
+                        navigateToUrl(event.data.url);
+                        break;
+                    case 'refresh':
+                        refreshPage();
+                        break;
+                }
+            }
+        });
+
+        // Make browser functions globally available
+        window.initializeBrowser = initializeBrowser;
+        window.addNewBrowserTab = addNewBrowserTab;
+        window.closeBrowserTab = closeBrowserTab;
+        window.navigateToUrl = navigateToUrl;
+        window.navigateBack = navigateBack;
+        window.navigateForward = navigateForward;
+        window.refreshPage = refreshPage;
 
     </script>
 </body>
