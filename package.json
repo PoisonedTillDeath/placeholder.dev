@@ -1,0 +1,25 @@
+{
+  "name": "placeholder-dev-proxy",
+  "version": "1.0.0",
+  "description": "A web proxy browser with tab functionality",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "http-proxy-middleware": "^2.0.6",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "compression": "^1.7.4",
+    "node-fetch": "^3.3.2",
+    "jsdom": "^22.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": ["proxy", "browser", "web", "privacy"],
+  "author": "Placeholder.dev",
+  "license": "MIT"
+}
