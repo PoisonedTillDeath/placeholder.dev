@@ -1,1 +1,1 @@
-window.location.href="https://PoisonedTillDeath.github.io/placeholder.dev/main.html"
+window.location.href="https://google.com"
