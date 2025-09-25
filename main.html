@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Placeholder.dev - Advanced Search Dashboard</title>
+    <title>Privana - Advanced Search Dashboard</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -277,11 +277,6 @@
             filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
         }
         
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(2deg); }
-        }
-        
         /* Depth Layers */
         .depth-1 { transform: translateZ(10px); }
         .depth-2 { transform: translateZ(20px); }
@@ -289,29 +284,30 @@
         .depth-4 { transform: translateZ(40px); }
         
         /* Perspective Scrolling */
-        .perspective-container {
-            perspective: 1000px;
-            perspective-origin: center center;
-        }
-        
         .perspective-scroll {
             transform-style: preserve-3d;
             transition: transform 0.1s ease-out;
         }
-        
+
         .glass::before {
             content: '';
             position: absolute;
             top: 0;
-            left: 0;
-            right: 0;
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
         }
-        
-        .glass-dark {
-            background: var(--dark-glass);
-            backdrop-filter: blur(25px);
+
+        /* Enhanced Buttons */
+        .btn-primary {
+            background: var(--secondary-gradient) !important;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3) !important;
+        }
+            .btn-primary {
+                backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
@@ -1509,7 +1505,7 @@
         <nav class="flex justify-between items-center max-w-7xl mx-auto" aria-label="Main Navigation">
             <div class="flex items-center gap-4">
                 <div>
-                    <h1 class="text-3xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">Placeholder.dev</h1>
+                    <h1 class="text-3xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">Privana</h1>
                     <p class="text-sm text-white/60">Advanced Search Dashboard</p>
                 </div>
             </div>
@@ -1889,7 +1885,7 @@
     <!-- Footer -->
     <footer class="glass mt-auto p-6">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <p class="text-white/60">Placeholder.dev - Advanced Search Dashboard</p>
+            <p class="text-white/60">Privana - Advanced Search Dashboard</p>
             <div class="flex items-center gap-4 text-sm text-white/60">
                 <span id="footerBookmarkCount">0 bookmarks</span>
                 <span>•</span>
