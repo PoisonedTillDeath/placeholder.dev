@@ -1,1 +1,1 @@
-window.location.href="https://baconz.tech"
+window.location.href="https://google.com"
